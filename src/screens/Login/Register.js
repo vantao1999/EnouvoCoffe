@@ -96,7 +96,7 @@ const Register = () => {
     const data = { email, username, password };
     const result = await dispatch(register(data));
     if (register.fulfilled.match(result)) {
-      NavigationUtils.startMainContent();
+      NavigationUtils.startLoginContent();
     } else {
       if (result.payload) {
         Alert.alert('Error', result.payload.message || 'error');

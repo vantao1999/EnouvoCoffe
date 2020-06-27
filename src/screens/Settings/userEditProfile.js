@@ -38,7 +38,7 @@ const userEditProfile = (props) => {
     Keyboard.dismiss();
     const result = await dispatch(updateProfile({ username, address, phone }))
       .then(unwrapResult)
-      .then((result) => {
+      .then((success) => {
         Alert.alert('Updated successfully');
         NavigationUtils.pop();
       })

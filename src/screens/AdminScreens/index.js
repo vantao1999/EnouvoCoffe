@@ -51,21 +51,22 @@ const Index = () => {
     }
   };
   const Item = ({ item }) => (
-    <View style={styles.viewUser}>
-      <Image source={require('../../assets/Images/user.jpeg')} style={styles.imageUser} />
-      <View style={styles.viewIn}>
-        <Text style={styles.userTitle}>{item.username}</Text>
-        <Text style={styles.userBalance}>750.000 vnd</Text>
+    <TouchableOpacity
+      onPress={() => {
+        getUserData(item.id);
+      }}
+    >
+      <View style={styles.viewUser}>
+        <Image source={require('../../assets/Images/user.jpeg')} style={styles.imageUser} />
+        <View style={styles.viewIn}>
+          <Text style={styles.userTitle}>{item.username}</Text>
+          <Text style={styles.userBalance}>{item.accountBalance}</Text>
+        </View>
+        <View style={styles.btnViewUser}>
+          <Text>Details</Text>
+        </View>
       </View>
-      <TouchableOpacity
-        style={styles.btnViewUser}
-        onPress={() => {
-          getUserData(item.id);
-        }}
-      >
-        <Text>Details</Text>
-      </TouchableOpacity>
-    </View>
+    </TouchableOpacity>
   );
 
   return (

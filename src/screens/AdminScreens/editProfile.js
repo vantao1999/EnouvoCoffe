@@ -6,19 +6,18 @@ import Feather from 'react-native-vector-icons/Feather';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useFormik } from 'formik';
 import { useDispatch } from 'react-redux';
-import { updateOne } from '../../redux/AuthRedux/operations';
+import { updateOne, getMany } from '../../redux/AuthRedux/operations';
+import { unwrapResult } from '@reduxjs/toolkit';
 
 const UserProfile = (props) => {
   const dispatch = useDispatch();
   // const userData = props.userData;
   const formik = useFormik({
     initialValues: {
-      useId: props.userData.id,
-      user: {
-        username: props.userData.username,
-        address: props.userData.address,
-        phone: props.userData.phone,
-      },
+      userId: props.userData.id,
+      username: props.userData.username,
+      address: props.userData.address || '',
+      phone: props.userData.phone || '',
     },
     onSubmit: (values) => {
       updateUser(values);
@@ -26,19 +25,21 @@ const UserProfile = (props) => {
   });
 
   const updateUser = async (values) => {
-    console.log('values', values);
-
-    const result = dispatch(updateOne(values));
-    if (updateOne.fulfilled.match(result)) {
-      Alert.alert('Update successful');
-      NavigationUtils.pop();
-    } else {
-      if (result.payload) {
-        Alert.alert('Error', result.payload.message || 'error');
-      } else {
-        Alert.alert('Error', result.error || 'error');
-      }
-    }
+    const result = dispatch(updateOne(values))
+      .then(unwrapResult)
+      .then((success) => {
+        Alert.alert('Updated successfully');
+        NavigationUtils.pop();
+      })
+      .catch((err) => {
+        if (result.payload) {
+          Alert.alert('Error', err.payload.message || 'error');
+        } else {
+          Alert.alert('Error', err.error || 'Something was not incorrect, Please try again');
+        }
+      });
+    const getUser = await dispatch(getMany(''));
+    console.log('USerData', getUser);
   };
   return (
     <View style={styles.container}>
@@ -69,9 +70,9 @@ const UserProfile = (props) => {
             <Text style={styles.textTitle}>Name</Text>
             <TextInput
               style={styles.textContent}
-              defaultValue={formik.values.user.username}
+              defaultValue={formik.values.username}
               placeholder="Enter name"
-              onChangeText={formik.handleChange('name')}
+              onChangeText={formik.handleChange('username')}
               autoFocus={true}
               returnKeyType="next"
             />
@@ -80,7 +81,7 @@ const UserProfile = (props) => {
             <Text style={styles.textTitle}>Address</Text>
             <TextInput
               style={styles.textContent}
-              defaultValue={formik.values.user.address}
+              defaultValue={formik.values.address}
               placeholder="Enter address"
               onChangeText={formik.handleChange('address')}
               returnKeyType="next"
@@ -90,7 +91,7 @@ const UserProfile = (props) => {
             <Text style={styles.textTitle}>Phone Number</Text>
             <TextInput
               style={styles.textContent}
-              defaultValue={formik.values.user.phone}
+              defaultValue={formik.values.phone}
               placeholder="Enter phone number"
               onChangeText={formik.handleChange('phone')}
               returnKeyType="go"

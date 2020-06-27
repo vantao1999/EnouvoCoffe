@@ -38,7 +38,6 @@ export const forgotPassword = createAsyncThunk(
   'auth/forgotPassword',
   async (data, { rejectWithValue }) => {
     try {
-      // const response = await axios.post(`${config.API_URL}/auth/forgotPassword`, data);
       const response = await AuthApis.forgotPasswordApi(data);
       return response?.data;
     } catch (err) {
@@ -55,7 +54,6 @@ export const resetPassword = createAsyncThunk(
   'auth/confirmCode',
   async (data, { rejectWithValue }) => {
     try {
-      // const response = await axios.post(`${config.API_URL}/auth/resetPassword`, data);
       const response = await AuthApis.resetPasswordApi(data);
       return response?.data;
     } catch (err) {
@@ -137,7 +135,7 @@ export const createOne = createAsyncThunk(
 );
 
 export const getOne = createAsyncThunk(
-  'admin/getOne/',
+  'admin/getOne',
   async (userId, { rejectWithValue, getState }) => {
     try {
       const accessToken = getState().auth.token;
@@ -154,25 +152,23 @@ export const getOne = createAsyncThunk(
 );
 
 export const updateOne = createAsyncThunk(
-  'admin/updateOne/',
+  'admin/updateOne',
   async (data, { rejectWithValue, getState }) => {
     try {
       const accessToken = getState().auth.token;
       await AuthApis.setToken(accessToken);
       console.log('aaaa', data);
       const userData = {
-        address: data && data.address ? data.address : data.user.address,
-        phone: data && data.phone ? data.phone : data.user.phone,
-        username: data && data.name ? data.name : data.user.username,
+        username: data.username,
+        address: data.address,
+        phone: data.phone,
       };
-      console.log('USERDATA', userData);
-
       const response = await AuthApis.updateOne(data.userId, userData);
       console.log('RESPONESE', response);
-
       return response?.data;
     } catch (err) {
       if (!err.data) {
+        console.log(err.data);
         throw err;
       }
       return rejectWithValue(err.data);
