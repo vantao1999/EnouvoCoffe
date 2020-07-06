@@ -15,7 +15,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { NavigationUtils } from '../../navigation';
 import { useFormik } from 'formik';
 import { useDispatch } from 'react-redux';
-import { resetPassword } from '../../redux/AuthRedux/operations';
+import { resetPassword } from '../../redux/UserRedux/operations';
 
 const VerifyCode = () => {
   const [data, setData] = React.useState({
@@ -70,7 +70,7 @@ const VerifyCode = () => {
     const result = await dispatch(resetPassword({ code, newPassword }));
 
     if (resetPassword.fulfilled.match(result)) {
-      NavigationUtils.push({ screen: 'Home' });
+      NavigationUtils.startLoginContent();
     } else {
       if (result.payload) {
         Alert.alert('Error', result.payload.message || 'error');

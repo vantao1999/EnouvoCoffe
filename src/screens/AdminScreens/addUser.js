@@ -18,8 +18,8 @@ import { TouchableOpacity, ScrollView } from 'react-native-gesture-handler';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { useDispatch } from 'react-redux';
-import { createOne } from '../../redux/AuthRedux/operations';
-import { getMany } from '../../redux/AuthRedux/operations';
+import { createOne } from '../../redux/UserRedux/operations';
+import { getMany } from '../../redux/UserRedux/operations';
 
 const TEXT_INPUT_USERNAME = 'TEXT_INPUT_USERNAME';
 const TEXT_INPUT_EMAIL = 'TEXT_INPUT_EMAIL';

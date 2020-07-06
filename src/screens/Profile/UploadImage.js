@@ -4,7 +4,7 @@ import ImagePicker from 'react-native-image-picker';
 import { StyleSheet, Text, View, Image, Alert } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { connect } from 'react-redux';
-import * as actions from '../../redux/AuthRedux/operations';
+import * as actions from '../../redux/UserRedux/operations';
 import axios from 'axios';
 
 class UploadImage extends Component {

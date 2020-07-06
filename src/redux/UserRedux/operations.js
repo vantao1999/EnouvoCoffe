@@ -98,6 +98,23 @@ export const updateProfile = createAsyncThunk(
     }
   },
 );
+
+export const getAccount = createAsyncThunk(
+  'user/accountbalance',
+  async (data, { rejectWithValue, getState }) => {
+    try {
+      const accessToken = getState().auth.token;
+      await AuthApis.setToken(accessToken);
+      const response = await AuthApis.accountBalance(data);
+      return response?.data;
+    } catch (err) {
+      if (!err.data) {
+        throw err;
+      }
+      return rejectWithValue(err.data);
+    }
+  },
+);
 //Admin Doing
 export const getMany = createAsyncThunk(
   'admin/getMany',

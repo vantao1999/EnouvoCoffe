@@ -6154,7 +6154,7 @@ react-native-geocoder-reborn@^0.8.3:
   resolved "https://registry.yarnpkg.com/react-native-geocoder-reborn/-/react-native-geocoder-reborn-0.8.3.tgz#68fefb638316ee6b9864b2a195a1e95687441d29"
   integrity sha512-IBUh28dblhH2siSjGM6N5oXlVE72wk1/IqFYpy93PHMEOUzGcdAuaQGhU08T4bSGhQVcfbAHhgMhlF9UeRXYdA==
 
-react-native-gesture-handler@^1.5.3:
+react-native-gesture-handler@^1.6.1:
   version "1.6.1"
   resolved "https://registry.yarnpkg.com/react-native-gesture-handler/-/react-native-gesture-handler-1.6.1.tgz#678e2dce250ed66e93af409759be22cd6375dd17"
   integrity sha512-gQgIKhDiYf754yzhhliagLuLupvGb6ZyBdzYzr7aus3Fyi87TLOw63ers+r4kGw0h26oAWTAdHd34JnF4NeL6Q==
@@ -6217,6 +6217,13 @@ react-native-paper@3.9.0:
     color "^3.1.2"
     react-native-safe-area-view "^0.14.6"
 
+react-native-reanimated@^1.9.0:
+  version "1.9.0"
+  resolved "https://registry.yarnpkg.com/react-native-reanimated/-/react-native-reanimated-1.9.0.tgz#38676c99dd585504fdc7331efb45e5f48ec7339a"
+  integrity sha512-Aj+spgIHRiVv7ezGADxnSH1EoKrQRD2+XaSiGY0MiB/pvRNNrZPSJ+3NVpvLwWf9lZMOP7dwqqyJIzoZgBDt8w==
+  dependencies:
+    fbjs "^1.0.0"
+
 react-native-safe-area-view@^0.14.6:
   version "0.14.9"
   resolved "https://registry.yarnpkg.com/react-native-safe-area-view/-/react-native-safe-area-view-0.14.9.tgz#90ee8383037010d9a5055a97cf97e4c1da1f0c3d"
@@ -6235,6 +6242,11 @@ react-native-schemes-manager@^2.0.0:
     plist "^3.0.1"
     xcode "^2.0.0"
     yargs "^13.2.1"
+
+react-native-tab-view@^2.14.4:
+  version "2.14.4"
+  resolved "https://registry.yarnpkg.com/react-native-tab-view/-/react-native-tab-view-2.14.4.tgz#740007e62c8723c6813b8c8a05caaaf82c816620"
+  integrity sha512-oqkCflPFuZwDTbyY2WaN0377akSsmcttuYACR9LT7htZfO/tKR2Z/ynj1tbv2cz2esGuVICoga9cetN1lPimog==
 
 react-native-vector-icons@^6.6.0:
   version "6.6.0"

@@ -1,19 +1,18 @@
+/* eslint-disable react-native/no-inline-styles */
+/* eslint-disable no-unused-vars */
 import React from 'react';
 import { View, Text, Alert, StyleSheet, Image, TextInput, TouchableOpacity } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import Feather from 'react-native-vector-icons/Feather';
 import { useFormik } from 'formik';
 import { NavigationUtils } from '../../navigation';
-import { disable } from '../../redux/AuthRedux/operations';
-import { useDispatch } from 'react-redux';
-import { updateOne, getMany } from '../../redux/AuthRedux/operations';
+import { disable } from '../../redux/UserRedux/operations';
+import { useDispatch, useSelector } from 'react-redux';
+import { updateOne, getMany } from '../../redux/UserRedux/operations';
 import { unwrapResult } from '@reduxjs/toolkit';
 
 const UserProfile = (props) => {
   const [userInfo, setData] = React.useState({
-    username: '',
-    address: '',
-    phone: '',
     isEdit: false,
   });
   const dispatch = useDispatch();
@@ -52,7 +51,21 @@ const UserProfile = (props) => {
         }
       });
     const getUser = await dispatch(getMany(''));
-    console.log('USerData', getUser);
+  };
+
+  const navigateToPlus = (userData) => {
+    NavigationUtils.push({
+      screen: 'plusMoney',
+      isTopBarEnable: false,
+      passProps: { userData },
+    });
+  };
+  const navigateToMinus = (userData) => {
+    NavigationUtils.push({
+      screen: 'minusMoney',
+      isTopBarEnable: false,
+      passProps: { userData },
+    });
   };
   return (
     <View style={styles.container}>
@@ -89,7 +102,7 @@ const UserProfile = (props) => {
           )}
         </View>
         <Image source={require('../../assets/Images/user.jpeg')} style={styles.imageUser} />
-        <Text style={styles.textBalance}>Balance: 750.000 VND</Text>
+        <Text style={styles.textBalance}>{props.userData.accountBalance} VND</Text>
       </View>
       <KeyboardAwareScrollView>
         <View style={styles.footer}>
@@ -100,6 +113,7 @@ const UserProfile = (props) => {
               defaultValue={props.userData.username}
               editable={userInfo.isEdit}
               placeholder="Enter name"
+              autoFocus={true}
               onChangeText={formik.handleChange('username')}
               returnKeyType="next"
             />
@@ -116,7 +130,7 @@ const UserProfile = (props) => {
               style={userInfo.isEdit ? styles.textEditContent : styles.textContent}
               defaultValue={props.userData.address}
               editable={userInfo.isEdit}
-              placeholder="Enter name"
+              placeholder="Enter address"
               onChangeText={formik.handleChange('address')}
               returnKeyType="next"
             />
@@ -128,10 +142,28 @@ const UserProfile = (props) => {
               style={userInfo.isEdit ? styles.textEditContent : styles.textContent}
               defaultValue={props.userData.phone}
               editable={userInfo.isEdit}
-              placeholder="Enter name"
+              placeholder="Enter phone"
               onChangeText={formik.handleChange('phone')}
               returnKeyType="next"
             />
+          </View>
+          <View style={styles.btnAction}>
+            <TouchableOpacity
+              onPress={() => {
+                navigateToPlus(props.userData);
+              }}
+              style={styles.btnPlus}
+            >
+              <Text style={styles.textTransfer}>+ Plus Money</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                navigateToMinus(props.userData);
+              }}
+              style={[styles.btnPlus, { backgroundColor: '#ff8282' }]}
+            >
+              <Text style={styles.textTransfer}>- Minus Money</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </KeyboardAwareScrollView>
@@ -192,6 +224,7 @@ const styles = StyleSheet.create({
     fontSize: 25,
     color: '#4ba0f4',
   },
+
   // Styles for TextInput
   textSave: {
     fontFamily: 'Roboto-Regular',
@@ -202,5 +235,24 @@ const styles = StyleSheet.create({
     fontSize: 22,
     marginTop: 5,
     fontFamily: 'Roboto',
+  },
+  btnAction: {
+    marginTop: 30,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  btnPlus: {
+    flex: 1,
+    backgroundColor: '#4ba0f4',
+    alignItems: 'center',
+    paddingVertical: 5,
+    marginHorizontal: 20,
+    borderRadius: 20,
+  },
+  textTransfer: {
+    fontFamily: 'Roboto-regular',
+    fontSize: 18,
+    color: 'white',
   },
 });

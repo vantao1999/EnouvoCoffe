@@ -13,13 +13,13 @@ import Feather from 'react-native-vector-icons/Feather';
 import { NavigationUtils } from '../../navigation';
 import { useSelector, useDispatch } from 'react-redux';
 import { get } from 'lodash';
-import { getOne } from '../../redux/AuthRedux/operations';
+import { getOne } from '../../redux/UserRedux/operations';
 import { unwrapResult } from '@reduxjs/toolkit';
 
 const Index = () => {
+  const [searchTxt, setSearchTxt] = React.useState('');
   const dispatch = useDispatch();
   const userInfo = useSelector((state) => get(state, 'auth.listUser', null));
-  console.log('UserInfo', userInfo);
 
   const navigateAdduser = () => {
     NavigationUtils.push({
@@ -30,10 +30,8 @@ const Index = () => {
 
   const getUserData = async (userId) => {
     const result = await dispatch(getOne(userId));
-    console.log('USER GET ID', result);
     if (getOne.fulfilled.match(result)) {
       const userData = unwrapResult(result);
-      console.log('UNWRAP RESULT ', userData);
 
       if (userData) {
         NavigationUtils.push({
@@ -79,12 +77,20 @@ const Index = () => {
         />
         <Text style={styles.textIncome}> INCOME IN THIS WEEK: </Text>
         <View style={styles.viewBalance}>
-          <Text style={styles.textBalance}>+ 2.560.000 VDN</Text>
+          <Text style={styles.textBalance}>+ 2.560.000 VND</Text>
         </View>
       </View>
       <View style={styles.footer}>
         <View style={styles.viewSearch}>
-          <TextInput style={styles.searchBar} placeholder="Search by username or email" />
+          <TextInput
+            style={styles.searchBar}
+            placeholder="Search by username or email"
+            value={searchTxt}
+            autoCorrect={false}
+            onChangeText={(text) => {
+              setSearchTxt(text);
+            }}
+          />
           <TouchableOpacity style={styles.btnSearch}>
             <Feather name="search" size={20} />
           </TouchableOpacity>
@@ -98,7 +104,7 @@ const Index = () => {
         </View>
         <FlatList
           showsVerticalScrollIndicator={false}
-          data={userInfo}
+          data={userInfo.filter((item) => item.roleId !== 1)}
           renderItem={Item}
           keyExtractor={(item) => item.email}
         />

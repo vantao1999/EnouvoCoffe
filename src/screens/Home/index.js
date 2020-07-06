@@ -1,11 +1,33 @@
-import React from 'react';
-import { Text, View, StyleSheet, ScrollView, Image, SafeAreaView } from 'react-native';
+import React, { useEffect } from 'react';
+import {
+  Text,
+  View,
+  StyleSheet,
+  ScrollView,
+  Image,
+  SafeAreaView,
+  TouchableOpacity,
+} from 'react-native';
 import * as Animatable from 'react-native-animatable';
+import { NavigationUtils } from '../../navigation';
 import { useSelector } from 'react-redux';
-const Home = () => {
-  const data = useSelector((state) => state);
-  console.log('token', data.auth.token);
+import { get } from 'lodash';
 
+const Home = () => {
+  const [userData, setData] = React.useState({});
+  const account = useSelector((state) => get(state, 'auth.account', null));
+
+  useEffect(() => {
+    if (account) {
+      setData(account);
+    }
+  }, [account]);
+
+  const navigate = () => {
+    NavigationUtils.push({
+      screen: 'transferMoney',
+    });
+  };
   return (
     <SafeAreaView style={styles.container}>
       <Animatable.View style={styles.header} animation="bounceInLeft">
@@ -14,31 +36,17 @@ const Home = () => {
       </Animatable.View>
 
       <Animatable.View style={styles.balance} animation="bounceInRight">
-        <Text style={styles.textBalance}>756,000 VND</Text>
+        <Text style={styles.textAccount}>Account Balance:</Text>
+        <Text style={styles.textBalance}>{userData.accountBalance} VND</Text>
       </Animatable.View>
 
       <Animatable.View style={styles.footer} animation="fadeInUp" duration={700}>
         <ScrollView showsVerticalScrollIndicator={false}>
-          <Text style={styles.textDate}>Jun 11th</Text>
+          <Text style={styles.texFeature}>Features</Text>
           <View style={styles.action}>
-            <Text style={styles.textDid}>1 orange juice</Text>
-            <Text style={styles.textPrice}>35,000 VND</Text>
-          </View>
-
-          <View style={styles.action}>
-            <Text style={styles.textDid}>1 Salt juice</Text>
-            <Text style={styles.textPrice}>35,000 VND</Text>
-          </View>
-
-          <Text style={styles.textDate}>Jun 15th</Text>
-          <View style={styles.action}>
-            <Text style={styles.textDid}>1 milk coffee</Text>
-            <Text style={styles.textPrice}>35,000 VND</Text>
-          </View>
-
-          <View style={styles.action}>
-            <Text style={styles.textDid}>1 Coco`a Pad, 2 Lemon juices`</Text>
-            <Text style={styles.textPrice}>80,000 VND</Text>
+            <TouchableOpacity onPress={navigate} style={styles.btnTransfer}>
+              <Text style={styles.textTransfer}>Transfer Money</Text>
+            </TouchableOpacity>
           </View>
         </ScrollView>
       </Animatable.View>
@@ -73,7 +81,6 @@ const styles = StyleSheet.create({
     height: 100,
     borderRadius: 50,
   },
-
   balance: {
     opacity: 0.7,
     flex: 1,
@@ -84,6 +91,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  textAccount: {
+    fontFamily: 'Roboto-regular',
+  },
   textBalance: {
     fontSize: 40,
     fontWeight: 'bold',
@@ -93,34 +103,33 @@ const styles = StyleSheet.create({
     flex: 4,
     backgroundColor: '#f7f7f7',
     borderRadius: 20,
-    paddingHorizontal: 20,
     marginHorizontal: 20,
     marginTop: 10,
   },
-  textDate: {
+  texFeature: {
     marginTop: 20,
+    marginLeft: 20,
     fontSize: 20,
     fontWeight: 'bold',
   },
   action: {
     backgroundColor: '#ffffff',
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 10,
-    paddingVertical: 20,
+    paddingVertical: 5,
     borderRadius: 10,
     marginTop: 20,
+    paddingHorizontal: 20,
     flexDirection: 'row',
   },
-  textDid: {
-    flex: 1,
+  btnTransfer: {
+    paddingVertical: 20,
+    paddingHorizontal: 10,
+    backgroundColor: '#ffcc00',
     fontSize: 16,
+    borderWidth: 2,
+    borderColor: '#e1e1e1',
   },
-  textPrice: {
-    fontSize: 20,
-    fontWeight: '600',
-    color: 'red',
-    width: 100,
-    paddingLeft: 10,
+  textTransfer: {
+    fontFamily: 'Roboto',
+    fontSize: 16,
   },
 });

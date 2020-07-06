@@ -10,32 +10,40 @@ import Loading from '../screens/Utils/Loading';
 import InAppNotification from '../screens/Utils/InAppNotification';
 import IntroScreen from '../screens/Intro';
 import Home from '../screens/Home';
+import History from '../screens/UserScreens/userHistory';
 import UploadImage from '../screens/Profile/UploadImage';
-import Setting from '../screens/Settings';
+import User from '../screens/UserScreens';
+import transferMoney from '../screens/Home/transferMoney';
+import userTransfer from '../screens/UserScreens/userTransfer';
 
 //Admin Screens
 import Admin from '../screens/AdminScreens';
 import userProfile from '../screens/AdminScreens/userProfile';
-import editProfile from '../screens/AdminScreens/editProfile';
-import userEditProfile from '../screens/Settings/userEditProfile';
 import addUser from '../screens/AdminScreens/addUser';
+import plusMoney from '../screens/AdminScreens/plusMoney';
+import minusMoney from '../screens/AdminScreens/minusMoney';
+import adminHistory from '../screens/AdminScreens/adminHistory';
 
 const SCREENS_WITH_REDUX = {
   Login,
   Register,
   ForgetPassword,
   VerifyCode,
+  userTransfer,
 
   IntroScreen,
   Home,
+  History,
+  transferMoney,
   UploadImage,
-  Setting,
+  User,
 
   Admin,
   userProfile,
-  editProfile,
-  userEditProfile,
+  plusMoney,
+  minusMoney,
   addUser,
+  adminHistory,
 };
 const SCREENS = {
   Loading,

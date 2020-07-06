@@ -10,6 +10,7 @@ const authSlice = createSlice({
     fcmToken: null,
     token: null,
     listUser: [],
+    account: null,
   },
   reducers: {
     login: (state, action) => {},
@@ -60,6 +61,10 @@ const authSlice = createSlice({
     [operations.getMany.fulfilled]: (state, { payload }) => {
       state.loading = false;
       state.listUser = payload;
+    },
+    [operations.getAccount.fulfilled]: (state, { payload }) => {
+      state.loading = false;
+      state.account = payload;
     },
   },
 });

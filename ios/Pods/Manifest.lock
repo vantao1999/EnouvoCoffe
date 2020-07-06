@@ -428,6 +428,8 @@ PODS:
     - RSKImageCropper
   - RNLocalize (1.1.4):
     - React
+  - RNReanimated (1.9.0):
+    - React
   - RNVectorIcons (6.6.0):
     - React
   - RSKImageCropper (2.2.3)
@@ -509,6 +511,7 @@ DEPENDENCIES:
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNImageCropPicker (from `../node_modules/react-native-image-crop-picker`)
   - RNLocalize (from `../node_modules/react-native-localize`)
+  - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
@@ -634,6 +637,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-image-crop-picker"
   RNLocalize:
     :path: "../node_modules/react-native-localize"
+  RNReanimated:
+    :path: "../node_modules/react-native-reanimated"
   RNVectorIcons:
     :path: "../node_modules/react-native-vector-icons"
   Yoga:
@@ -711,6 +716,7 @@ SPEC CHECKSUMS:
   RNGestureHandler: 8f09cd560f8d533eb36da5a6c5a843af9f056b38
   RNImageCropPicker: 9d1a7eea4f8368fc479cbd2bf26459bd3c74d9aa
   RNLocalize: 62a949d2ec5bee0eb8f39a80a48f01e2f4f67080
+  RNReanimated: b5ccb50650ba06f6e749c7c329a1bc3ae0c88b43
   RNVectorIcons: 0bb4def82230be1333ddaeee9fcba45f0b288ed4
   RSKImageCropper: a446db0e8444a036b34f3c43db01b2373baa4b2a
   SDWebImage: 84000f962cbfa70c07f19d2234cbfcf5d779b5dc

@@ -50,8 +50,8 @@ const mainTab = (profileScreen) => {
       bottomTabs: {
         children: [
           BottomTab('Home', 'md-home', defaultTopBar, 'Home', 'ic-done'),
-          BottomTab('Setting', 'md-person', defaultTopBar, 'Profile'),
-          // BottomTab('Admin', 'ios-people', defaultTopBar, 'Users'),
+          BottomTab('History', 'md-clock', defaultTopBar, 'History'),
+          BottomTab('User', 'md-person', defaultTopBar, 'Profile'),
         ],
         options: {
           bottomTabs: {
@@ -72,7 +72,8 @@ const mainTabAdmin = (adminScreen) => {
         children: [
           BottomTab('Home', 'md-home', defaultTopBar, 'Home', 'ic-done'),
           BottomTab('Admin', 'ios-people', defaultTopBar, 'Users'),
-          BottomTab('Setting', 'md-person', defaultTopBar, 'Profile'),
+          BottomTab('adminHistory', 'md-clock', defaultTopBar, 'History'),
+          BottomTab('User', 'md-person', defaultTopBar, 'Profile'),
         ],
         options: {
           bottomTabs: {

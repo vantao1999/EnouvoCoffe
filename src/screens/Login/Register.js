@@ -18,21 +18,18 @@ import { TouchableOpacity, ScrollView } from 'react-native-gesture-handler';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { useDispatch } from 'react-redux';
-import { register } from '../../redux/AuthRedux/operations';
+import { register } from '../../redux/UserRedux/operations';
 // import { values } from 'lodash';
 
 const TEXT_INPUT_USERNAME = 'TEXT_INPUT_USERNAME';
 const TEXT_INPUT_EMAIL = 'TEXT_INPUT_EMAIL';
 const TEXT_INPUT_PASSWORD = 'TEXT_INPUT_PASSWORD';
-const TEXT_INPUT_CONFIRM_PASSWORD = 'TEXT_INPUT_PASSWORD';
 
 const Register = () => {
   const [DATA, setData] = React.useState({
     email: '',
     emailErr: '',
     secureTextEntry: true,
-    confirm_secureTextEntry: true,
-    errorPassword: '',
   });
   const showSecureTextEntry = () => {
     setData({
@@ -41,44 +38,17 @@ const Register = () => {
     });
   };
 
-  const checkConfirmPass = () => {
-    const pass = formik.values.password;
-    const confirmPass = formik.values.confirmPassword;
-    console.log('CONSOLE PASS', pass);
-    console.log('CONSOLE CONFIRM_PASS', confirmPass);
-    if (pass !== confirmPass) {
-      setData({
-        ...DATA,
-        errorPassword: 'Confirm password does not match',
-        // disabled: DATA.disabled,
-      });
-    } else {
-      setData({
-        ...DATA,
-        errorPassword: '',
-        // disabled: !DATA.disabled,
-      });
-    }
-  };
-  const showConfirm_Password = () => {
-    setData({
-      ...DATA,
-      confirm_secureTextEntry: !DATA.confirm_secureTextEntry,
-    });
-  };
   const dispatch = useDispatch();
 
   let usernameRef = useRef(null);
   let emailRef = useRef(null);
   let passRef = useRef(null);
-  let confirmPassRef = useRef(null);
 
   const formik = useFormik({
     initialValues: {
       email: '',
       username: '',
       password: '',
-      confirmPassword: '',
     },
     // validationSchema: Yup.object().shape({
     //   email: Yup.string().email('Invalid email').required('Required'),
@@ -114,11 +84,7 @@ const Register = () => {
       passRef.current?.focus();
     }
     if (field === TEXT_INPUT_PASSWORD) {
-      passRef.current?.focus();
-    }
-    if (field === TEXT_INPUT_CONFIRM_PASSWORD) {
-      confirmPassRef.current?.blur();
-      formik.handleSubmit();
+      passRef.current?.blur();
     }
   };
 
@@ -142,14 +108,12 @@ const Register = () => {
               ref={emailRef}
               value={formik.values.email}
               placeholder="Your email"
-              // onBlur={validateEmail}
               onChangeText={formik.handleChange('email')}
               onSubmitEditing={() => onSubmitEditing(TEXT_INPUT_EMAIL)}
               errorMessage={formik.errors.email}
               returnKeyType="next"
             />
           </View>
-          {/* <Text style={{ color: 'red' }}>{DATA.emailErr}</Text> */}
 
           <Text style={[styles.text_footer, { marginTop: 20 }]}>User Name</Text>
           <View style={styles.action}>
@@ -188,34 +152,6 @@ const Register = () => {
               )}
             </TouchableOpacity>
           </View>
-
-          <Text style={[styles.text_footer, { marginTop: 20 }]}>Confirm Password</Text>
-          <View style={styles.action}>
-            <Feather name="lock" color="#05375a" size={20} />
-            <TextInput
-              style={styles.textInput}
-              type="confirmPassword"
-              ref={confirmPassRef}
-              value={formik.values.confirmPassword}
-              placeholder="Confirm Your Password"
-              onChangeText={formik.handleChange('confirmPassword')}
-              onSubmitEditing={() => onSubmitEditing(TEXT_INPUT_CONFIRM_PASSWORD)}
-              secureTextEntry={DATA.confirm_secureTextEntry ? true : false}
-              errorMessage={formik.errors.confirmPassword}
-              returnKeyType="go"
-              onBlur={() => {
-                checkConfirmPass();
-              }}
-            />
-            <TouchableOpacity onPress={showConfirm_Password}>
-              {DATA.confirm_secureTextEntry ? (
-                <Feather name="eye-off" color="#05375a" size={20} />
-              ) : (
-                <Feather name="eye" color="#05375a" size={20} />
-              )}
-            </TouchableOpacity>
-          </View>
-          <Text style={{ color: 'red', fontFamily: 'Roboto-Light' }}>{DATA.errorPassword}</Text>
           <View style={styles.button}>
             <TouchableOpacity onPress={formik.handleSubmit}>
               <LinearGradient colors={['#fcdb55', '#f7e188']} style={styles.signIn}>

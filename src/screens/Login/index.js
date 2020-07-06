@@ -15,21 +15,28 @@ import LinearGradient from 'react-native-linear-gradient';
 import * as Animatable from 'react-native-animatable';
 import { useFormik } from 'formik';
 import { NavigationUtils } from '../../navigation';
-import { useDispatch, useSelector } from 'react-redux';
-import { login } from '../../redux/AuthRedux/operations';
+import { useDispatch } from 'react-redux';
 import Feather from 'react-native-vector-icons/Feather';
-import { get } from 'lodash';
 import { unwrapResult } from '@reduxjs/toolkit';
-import { getMany } from '../../redux/AuthRedux/operations';
+import {
+  getMany,
+  getAccount,
+  login,
+  // getHistoryIn,
+  // getHistoryOut,
+} from '../../redux/UserRedux/operations';
+import {
+  userHistoryTransferOut,
+  userHistoryTransferIn,
+  getUserHistoryIn,
+  getUserHistoryOut,
+} from '../../redux/TransactionRedux/operations';
 
 const TEXT_INPUT_EMAIL = 'TEXT_INPUT_EMAIL';
 const TEXT_INPUT_PASSWORD = 'TEXT_INPUT_PASSWORD';
 
 const Login = () => {
   const dispatch = useDispatch();
-  const scope = useSelector((state) => get(state, 'auth.user.scope', null));
-  console.log('SCOPE', scope);
-
   const [data, setData] = React.useState({
     secureTextEntry: true,
   });
@@ -61,8 +68,8 @@ const Login = () => {
   };
   const formik = useFormik({
     initialValues: {
-      email: 'admin@gmail.com',
-      password: 'admin123',
+      email: 'vantao.dev@gmail.com',
+      password: '123456',
     },
 
     onSubmit: (values) => {
@@ -71,17 +78,14 @@ const Login = () => {
   });
   const handleLogin = async ({ email, password }) => {
     Keyboard.dismiss();
-
-    const getUser = await dispatch(getMany(''));
-    console.log('USerData', getUser);
-
     const result = await dispatch(login({ email, password }));
 
     if (login.fulfilled.match(result)) {
       const user = unwrapResult(result);
-      console.log('user', user);
 
       if (user && user.scope === 'admin') {
+        // await dispatch(getHistoryIn(''));
+        // await dispatch(getHistoryOut(''));
         NavigationUtils.startMainAdminContent();
       } else {
         NavigationUtils.startMainContent();
@@ -93,9 +97,13 @@ const Login = () => {
         Alert.alert('Error', result.error || 'error');
       }
     }
+    await dispatch(getMany(''));
+    await dispatch(getAccount(''));
+    await dispatch(getUserHistoryIn(''));
+    await dispatch(getUserHistoryOut(''));
+    await dispatch(userHistoryTransferIn(''));
+    await dispatch(userHistoryTransferOut(''));
   };
-  console.log('error', formik.errors);
-  // console.log('Ref', emailRef);
 
   return (
     <KeyboardAvoidingView

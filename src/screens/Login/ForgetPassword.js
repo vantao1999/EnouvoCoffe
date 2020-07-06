@@ -13,7 +13,7 @@ import Feather from 'react-native-vector-icons/Feather';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { NavigationUtils } from '../../navigation';
 import { useFormik } from 'formik';
-import { forgotPassword } from '../../redux/AuthRedux/operations';
+import { forgotPassword } from '../../redux/UserRedux/operations';
 import { useDispatch } from 'react-redux';
 
 const ForgetPassword = () => {
