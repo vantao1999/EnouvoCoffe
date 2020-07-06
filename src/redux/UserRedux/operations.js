@@ -11,9 +11,6 @@ export const login = createAsyncThunk('auth/login', async (data, { rejectWithVal
     if (!err.data) {
       throw err;
     }
-    console.log('====================================');
-    console.log('aaaaa', err.data);
-    console.log('====================================');
     return rejectWithValue(err.data);
   }
 });
@@ -21,9 +18,6 @@ export const login = createAsyncThunk('auth/login', async (data, { rejectWithVal
 export const register = createAsyncThunk('auth/register', async (data, { rejectWithValue }) => {
   try {
     const response = await AuthApis.register(data);
-    console.log('====================================');
-    console.log('response', response);
-    console.log('====================================');
     return response?.data;
   } catch (err) {
     if (!err.data) {
@@ -181,7 +175,6 @@ export const updateOne = createAsyncThunk(
         phone: data.phone,
       };
       const response = await AuthApis.updateOne(data.userId, userData);
-      console.log('RESPONESE', response);
       return response?.data;
     } catch (err) {
       if (!err.data) {

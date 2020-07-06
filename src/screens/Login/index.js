@@ -10,12 +10,13 @@ import {
   KeyboardAvoidingView,
   Keyboard,
   TouchableOpacity,
+  ActivityIndicator,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import * as Animatable from 'react-native-animatable';
 import { useFormik } from 'formik';
 import { NavigationUtils } from '../../navigation';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Feather from 'react-native-vector-icons/Feather';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { getMany, getAccount, login } from '../../redux/UserRedux/operations';
@@ -34,6 +35,7 @@ const TEXT_INPUT_PASSWORD = 'TEXT_INPUT_PASSWORD';
 
 const Login = () => {
   const dispatch = useDispatch();
+  const loading = useSelector((state) => state.auth.loading);
   const [data, setData] = React.useState({
     secureTextEntry: true,
   });
@@ -173,6 +175,11 @@ const Login = () => {
           </TouchableOpacity>
         </View>
       </Animatable.View>
+      {loading ? (
+        <View style={styles.loading}>
+          <ActivityIndicator size="large" color="#ffcc00" />
+        </View>
+      ) : null}
     </KeyboardAvoidingView>
   );
 };
@@ -245,5 +252,14 @@ const styles = StyleSheet.create({
     color: 'white',
     fontWeight: 'bold',
   },
-  btnForgot: {},
+  loading: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: 'rgba(0,0,0,0.2)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 });

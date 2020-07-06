@@ -12,6 +12,7 @@ import * as Animatable from 'react-native-animatable';
 import { NavigationUtils } from '../../navigation';
 import { useSelector } from 'react-redux';
 import { get } from 'lodash';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 const Home = () => {
   const [userData, setData] = React.useState({});
@@ -41,11 +42,12 @@ const Home = () => {
       </Animatable.View>
 
       <Animatable.View style={styles.footer} animation="fadeInUp" duration={700}>
+        <Text style={styles.texFeature}>Features</Text>
         <ScrollView showsVerticalScrollIndicator={false}>
-          <Text style={styles.texFeature}>Features</Text>
           <View style={styles.action}>
             <TouchableOpacity onPress={navigate} style={styles.btnTransfer}>
-              <Text style={styles.textTransfer}>Transfer Money</Text>
+              <Icon name="money" size={30} />
+              <Text style={styles.textTransfer}>Transfer</Text>
             </TouchableOpacity>
           </View>
         </ScrollView>
@@ -102,12 +104,11 @@ const styles = StyleSheet.create({
   footer: {
     flex: 4,
     backgroundColor: '#f7f7f7',
-    borderRadius: 20,
     marginHorizontal: 20,
     marginTop: 10,
   },
   texFeature: {
-    marginTop: 20,
+    marginTop: 10,
     marginLeft: 20,
     fontSize: 20,
     fontWeight: 'bold',
@@ -121,7 +122,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   btnTransfer: {
-    paddingVertical: 20,
+    alignItems: 'center',
+    paddingVertical: 10,
     paddingHorizontal: 10,
     backgroundColor: '#ffcc00',
     fontSize: 16,

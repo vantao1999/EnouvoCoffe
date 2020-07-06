@@ -4,6 +4,7 @@ import { View, Text, StyleSheet, Image, FlatList } from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
 import { useSelector } from 'react-redux';
 import { get } from 'lodash';
+import moment from 'moment';
 
 const AdminHistory = () => {
   const historyIn = useSelector((state) => get(state, 'trans.listAdminHistoryIn', null));
@@ -11,7 +12,7 @@ const AdminHistory = () => {
 
   const AddMoney = () => (
     <View style={styles.scene}>
-      <FlatList data={historyIn} renderItem={In} keyExtractor={(item) => item.id} />
+      <FlatList data={historyIn} renderItem={Plus} keyExtractor={(item) => item.id} />
     </View>
   );
 
@@ -19,7 +20,7 @@ const AdminHistory = () => {
     <View style={styles.scene}>
       <FlatList
         data={historyOut}
-        renderItem={Out}
+        renderItem={Minus}
         refreshing={true}
         keyExtractor={(item) => item.id}
       />
@@ -46,13 +47,15 @@ const AdminHistory = () => {
     />
   );
 
-  const In = ({ item }) => (
+  const Plus = ({ item }) => (
     <View>
-      <Text style={styles.textDate}>Date: {item.createdAt}</Text>
+      <Text style={styles.textDate}>
+        Date: {moment(item.createdAt).format('MMMM D, YYYY - h:mm a')}
+      </Text>
       <View style={styles.historyContainer}>
         <View style={styles.textContainer}>
           <Text style={styles.textHistoryTitle}>Add money for {item.username}:</Text>
-          <Text style={styles.textPayment}>{item.payment} vnd</Text>
+          <Text style={styles.textPayment}>+{item.payment} vnd</Text>
         </View>
         <View style={styles.textContainer}>
           <Text style={styles.textTitleNotes}>Message:</Text>
@@ -62,9 +65,11 @@ const AdminHistory = () => {
     </View>
   );
 
-  const Out = ({ item }) => (
+  const Minus = ({ item }) => (
     <View>
-      <Text style={styles.textDate}>Date: {item.createdAt}</Text>
+      <Text style={styles.textDate}>
+        Date: {moment(item.createdAt).format('MMMM DD, YYYY - h:mm a')}
+      </Text>
       <View style={styles.historyContainer}>
         <View style={styles.textContainer}>
           <Text style={styles.textHistoryTitle}>Minus {item.username}'s account:</Text>

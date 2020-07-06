@@ -4,6 +4,7 @@ import { View, Text, StyleSheet, Image, FlatList } from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
 import { useSelector } from 'react-redux';
 import { get } from 'lodash';
+import moment from 'moment';
 
 const History = () => {
   const userHistoryIn = useSelector((state) => get(state, 'trans.listHistoryTransactionIn', null));
@@ -74,11 +75,13 @@ const History = () => {
 
   const In = ({ item }) => (
     <View>
-      <Text style={styles.textDate}>Date: {item.createdAt}</Text>
+      <Text style={styles.textDate}>
+        Date: {moment(item.createdAt).format('MMMM D, YYYY - h:mm a')}
+      </Text>
       <View style={styles.historyContainer}>
         <View style={styles.textContainer}>
           <Text style={styles.textHistoryTitle}>Enouvo Cafe plus money:</Text>
-          <Text style={styles.textPayment}>{item.payment} vnd</Text>
+          <Text style={styles.textPayment}>+{item.payment} vnd</Text>
         </View>
         <View style={styles.textContainer}>
           <Text style={styles.textTitleNotes}>Message:</Text>
@@ -90,7 +93,9 @@ const History = () => {
 
   const Out = ({ item }) => (
     <View>
-      <Text style={styles.textDate}>Date: {item.createdAt}</Text>
+      <Text style={styles.textDate}>
+        Date: {moment(item.createdAt).format('MMMM D, YYYY - h:mm a')}
+      </Text>
       <View style={styles.historyContainer}>
         <View style={styles.textContainer}>
           <Text style={styles.textHistoryTitle}>Enouvo Cafe minus:</Text>
@@ -106,11 +111,13 @@ const History = () => {
 
   const Received = ({ item }) => (
     <View>
-      <Text style={styles.textDate}>Date: {item.createdAt}</Text>
+      <Text style={styles.textDate}>
+        Date: {moment(item.createdAt).format('MMMM D, YYYY - h:mm a')}
+      </Text>
       <View style={styles.historyContainer}>
         <View style={styles.textContainer}>
           <Text style={styles.textHistoryTitle}>{item.username} has transferred to you:</Text>
-          <Text style={styles.textPayment}>{item.payment} vnd</Text>
+          <Text style={styles.textPayment}>+{item.payment} vnd</Text>
         </View>
         <View style={styles.textContainer}>
           <Text style={styles.textTitleNotes}>Message:</Text>
@@ -121,7 +128,9 @@ const History = () => {
   );
   const TransferOut = ({ item }) => (
     <View>
-      <Text style={styles.textDate}>Date: {item.createdAt}</Text>
+      <Text style={styles.textDate}>
+        Date: {moment(item.createdAt).format('MMMM D, YYYY - h:mm a')}
+      </Text>
       <View style={styles.historyContainer}>
         <View style={styles.textContainer}>
           <Text style={styles.textHistoryTitle}>You has transferred to {item.username}:</Text>

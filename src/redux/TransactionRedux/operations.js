@@ -138,7 +138,7 @@ export const minusMoney = createAsyncThunk(
 
 // Admin getHistory for action plus and minus
 export const getHistoryIn = createAsyncThunk(
-  'user/transaction/historyTransactionIn',
+  'admin/transaction/historyTransactionIn',
   async (data, { rejectWithValue, getState }) => {
     try {
       const accessToken = getState().auth.token;
@@ -154,7 +154,7 @@ export const getHistoryIn = createAsyncThunk(
   },
 );
 export const getHistoryOut = createAsyncThunk(
-  'user/transaction/historyTransactionOut',
+  'admin/transaction/historyTransactionOut',
   async (data, { rejectWithValue, getState }) => {
     try {
       const accessToken = getState().auth.token;
