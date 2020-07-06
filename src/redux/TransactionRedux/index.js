@@ -9,6 +9,10 @@ const tranSlice = createSlice({
     listHistoryTransferIn: [],
     listHistoryTransactionIn: [],
     listHistoryTransactionOut: [],
+    //Admin
+    errMessage: null,
+    listAdminHistoryIn: [],
+    listAdminHistoryOut: [],
   },
   reducers: {},
   extraReducers: {
@@ -65,6 +69,54 @@ const tranSlice = createSlice({
       state.listHistoryTransactionOut = payload;
     },
     [operations.getUserHistoryOut.rejected]: (state, { payload }) => {
+      state.loading = false;
+    },
+
+    /******************************************/
+    /************ Side Admin *************/
+    /******************************************/
+    [operations.plusMoney.pending]: (state) => {
+      state.loading = true;
+    },
+    [operations.plusMoney.fulfilled]: (state, { payload }) => {
+      state.loading = false;
+      state.errMessage = payload;
+    },
+    [operations.plusMoney.rejected]: (state, { payload }) => {
+      state.loading = false;
+      state.errMessage = payload;
+    },
+    [operations.minusMoney.pending]: (state) => {
+      state.loading = true;
+    },
+    [operations.minusMoney.fulfilled]: (state, { payload }) => {
+      state.loading = false;
+      state.errMessage = payload;
+    },
+    [operations.minusMoney.rejected]: (state, { payload }) => {
+      state.loading = false;
+      state.errMessage = payload.message;
+    },
+    //History when plus money
+    [operations.getHistoryIn.pending]: (state) => {
+      state.loading = true;
+    },
+    [operations.getHistoryIn.fulfilled]: (state, { payload }) => {
+      state.loading = false;
+      state.listAdminHistoryIn = payload;
+    },
+    [operations.getHistoryIn.rejected]: (state, { payload }) => {
+      state.loading = false;
+    },
+    //History when minus money
+    [operations.getHistoryOut.pending]: (state) => {
+      state.loading = true;
+    },
+    [operations.getHistoryOut.fulfilled]: (state, { payload }) => {
+      state.loading = false;
+      state.listAdminHistoryOut = payload;
+    },
+    [operations.getHistoryOut.rejected]: (state, { payload }) => {
       state.loading = false;
     },
   },

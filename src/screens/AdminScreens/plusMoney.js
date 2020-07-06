@@ -5,7 +5,8 @@ import { NavigationUtils } from '../../navigation';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useFormik } from 'formik';
 import { useDispatch } from 'react-redux';
-import { plusMoney, getMany, getHistoryIn } from '../../redux/UserRedux/operations';
+import { getMany } from '../../redux/UserRedux/operations';
+import { plusMoney, getHistoryIn } from '../../redux/TransactionRedux/operations';
 import { unwrapResult } from '@reduxjs/toolkit';
 
 const AddMoney = (props) => {
@@ -25,7 +26,7 @@ const AddMoney = (props) => {
     const result = dispatch(plusMoney(values))
       .then(unwrapResult)
       .then((success) => {
-        Alert.alert('Updated successfully');
+        Alert.alert('Add money successfully');
         NavigationUtils.push({
           screen: 'Admin',
           isTopBarEnable: false,

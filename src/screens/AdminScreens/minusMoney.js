@@ -5,12 +5,14 @@ import { NavigationUtils } from '../../navigation';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useFormik } from 'formik';
 import { useDispatch, useSelector } from 'react-redux';
-import { minusMoney, getMany, getHistoryOut } from '../../redux/UserRedux/operations';
+import { getMany } from '../../redux/UserRedux/operations';
+import { minusMoney, getHistoryOut } from '../../redux/TransactionRedux/operations';
 import { unwrapResult } from '@reduxjs/toolkit';
 
 const MinusMoney = (props) => {
   const dispatch = useDispatch();
-  const err = useSelector((state) => state.auth.err);
+  const errMessage = useSelector((state) => state.trans.errMessage);
+
   const formik = useFormik({
     initialValues: {
       userId: props.userData.id,
@@ -26,7 +28,7 @@ const MinusMoney = (props) => {
     const result = dispatch(minusMoney(values))
       .then(unwrapResult)
       .then((success) => {
-        Alert.alert('Updated successfully');
+        Alert.alert('Minus successfully');
         NavigationUtils.push({
           screen: 'Admin',
           isTopBarEnable: false,
@@ -35,9 +37,9 @@ const MinusMoney = (props) => {
       })
       .catch((error) => {
         if (result.payload) {
-          Alert.alert('Error', result.payload.message || 'error');
+          Alert.alert('Error', result.errMessage || 'error');
         } else {
-          Alert.alert('Error', err || 'Something was not incorrect, Please try again');
+          Alert.alert('Error', errMessage || 'Something was not incorrect, Please try again');
         }
       });
     await dispatch(getMany(''));

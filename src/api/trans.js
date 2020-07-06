@@ -23,3 +23,19 @@ export async function getHistoryTransactionIn() {
 export async function getHistoryTransactionOut() {
   return http.get('/user/transaction/historyTransactionOut');
 }
+/******************************************/
+/************ Side Admin *************/
+/******************************************/
+
+export async function plusMoney(userId, data) {
+  return http.post(`/admin/transaction/plusMoney/${userId}`, data);
+}
+export async function minusMoney(userId, data) {
+  return http.post(`/admin/transaction/minusMoney/${userId}`, data);
+}
+export async function adminGetHistoryTransactionIn() {
+  return http.get('/admin/transaction/historyTransactionIn');
+}
+export async function adminGetHistoryTransactionOut() {
+  return http.get('/admin/transaction/historyTransactionOut');
+}

@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import React from 'react';
 import { View, Text, StyleSheet, TextInput, Image, Alert } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
@@ -6,7 +5,7 @@ import { NavigationUtils } from '../../navigation';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useFormik } from 'formik';
 import { useDispatch } from 'react-redux';
-import { getMany, getUserHistoryOut, getAccount } from '../../redux/UserRedux/operations';
+import { getMany, getAccount } from '../../redux/UserRedux/operations';
 import { userHistoryTransferOut, transferMoney } from '../../redux/TransactionRedux/operations';
 import { unwrapResult } from '@reduxjs/toolkit';
 
@@ -39,7 +38,6 @@ const UserTransfer = (props) => {
       });
     await dispatch(getMany(''));
     await dispatch(getAccount(''));
-    // await dispatch(getUserHistoryOut(''));
     await dispatch(userHistoryTransferOut(''));
   };
   return (

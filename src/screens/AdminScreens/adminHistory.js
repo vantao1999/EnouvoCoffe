@@ -6,24 +6,18 @@ import { useSelector } from 'react-redux';
 import { get } from 'lodash';
 
 const AdminHistory = () => {
-  const historyIn = useSelector((state) => get(state, 'auth.listAdminHistoryIn', null));
-  const historyOut = useSelector((state) => get(state, 'auth.listAdminHistoryOut', null));
+  const historyIn = useSelector((state) => get(state, 'trans.listAdminHistoryIn', null));
+  const historyOut = useSelector((state) => get(state, 'trans.listAdminHistoryOut', null));
 
   const AddMoney = () => (
     <View style={styles.scene}>
-      <FlatList
-        showsVerticalScrollIndicator={false}
-        data={historyIn}
-        renderItem={In}
-        keyExtractor={(item) => item.id}
-      />
+      <FlatList data={historyIn} renderItem={In} keyExtractor={(item) => item.id} />
     </View>
   );
 
   const MinusMoney = () => (
     <View style={styles.scene}>
       <FlatList
-        showsVerticalScrollIndicator={false}
         data={historyOut}
         renderItem={Out}
         refreshing={true}
@@ -183,6 +177,7 @@ const styles = StyleSheet.create({
   },
   textContainer: {
     flexDirection: 'row',
+    flexWrap: 'wrap',
   },
   textHistoryTitle: {
     fontFamily: 'Roboto-regular',

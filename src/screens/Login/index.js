@@ -18,18 +18,15 @@ import { NavigationUtils } from '../../navigation';
 import { useDispatch } from 'react-redux';
 import Feather from 'react-native-vector-icons/Feather';
 import { unwrapResult } from '@reduxjs/toolkit';
-import {
-  getMany,
-  getAccount,
-  login,
-  // getHistoryIn,
-  // getHistoryOut,
-} from '../../redux/UserRedux/operations';
+import { getMany, getAccount, login } from '../../redux/UserRedux/operations';
 import {
   userHistoryTransferOut,
   userHistoryTransferIn,
   getUserHistoryIn,
   getUserHistoryOut,
+  //admin
+  getHistoryIn,
+  getHistoryOut,
 } from '../../redux/TransactionRedux/operations';
 
 const TEXT_INPUT_EMAIL = 'TEXT_INPUT_EMAIL';
@@ -68,8 +65,8 @@ const Login = () => {
   };
   const formik = useFormik({
     initialValues: {
-      email: 'vantao.dev@gmail.com',
-      password: '123456',
+      email: 'admin@gmail.com',
+      password: 'admin123',
     },
 
     onSubmit: (values) => {
@@ -84,8 +81,8 @@ const Login = () => {
       const user = unwrapResult(result);
 
       if (user && user.scope === 'admin') {
-        // await dispatch(getHistoryIn(''));
-        // await dispatch(getHistoryOut(''));
+        await dispatch(getHistoryIn(''));
+        await dispatch(getHistoryOut(''));
         NavigationUtils.startMainAdminContent();
       } else {
         NavigationUtils.startMainContent();
