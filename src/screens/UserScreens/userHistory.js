@@ -1,20 +1,38 @@
 import React from 'react';
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
-import { View, Text, StyleSheet, Image, FlatList } from 'react-native';
+import {
+  ActivityIndicator,
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  FlatList,
+  TouchableOpacity,
+} from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { get } from 'lodash';
 import moment from 'moment';
+import {
+  userHistoryTransferOut,
+  userHistoryTransferIn,
+  getUserHistoryIn,
+  getUserHistoryOut,
+} from '../../redux/TransactionRedux/operations';
 
 const History = () => {
+  const dispatch = useDispatch();
+  const loading = useSelector((state) => get(state, 'trans.loading', null));
+
+  console.log('LOADING', loading);
   const userHistoryIn = useSelector((state) => get(state, 'trans.listHistoryTransactionIn', null));
   const userHistoryOut = useSelector((state) =>
     get(state, 'trans.listHistoryTransactionOut', null),
   );
-  const userHistoryTransferIn = useSelector((state) =>
+  const getUserHistoryTransferIn = useSelector((state) =>
     get(state, 'trans.listHistoryTransferIn', null),
   );
-  const userHistoryTransferOut = useSelector((state) =>
+  const getUserHistoryTransferOut = useSelector((state) =>
     get(state, 'trans.listHistoryTransfer', null),
   );
   const FirstRoute = () => (
@@ -32,7 +50,7 @@ const History = () => {
   const ThirdRoute = () => (
     <View style={styles.scene}>
       <FlatList
-        data={userHistoryTransferIn}
+        data={getUserHistoryTransferIn}
         renderItem={Received}
         keyExtractor={(item) => item.id}
       />
@@ -42,7 +60,7 @@ const History = () => {
   const FourthRoute = () => (
     <View style={styles.scene}>
       <FlatList
-        data={userHistoryTransferOut}
+        data={getUserHistoryTransferOut}
         renderItem={TransferOut}
         keyExtractor={(item) => item.id}
       />
@@ -144,6 +162,12 @@ const History = () => {
     </View>
   );
 
+  const refresh = async () => {
+    await dispatch(getUserHistoryIn(''));
+    await dispatch(getUserHistoryOut(''));
+    await dispatch(userHistoryTransferIn(''));
+    await dispatch(userHistoryTransferOut(''));
+  };
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -156,10 +180,11 @@ const History = () => {
       </View>
 
       <View style={styles.content}>
-        <View style={styles.viewTitle}>
+        <TouchableOpacity style={styles.viewTitle} onPress={refresh}>
           <Text style={styles.textTitle}>HISTORY</Text>
           <Feather name="clock" size={20} color="#56aaff" />
-        </View>
+        </TouchableOpacity>
+        {loading ? <ActivityIndicator size="small" color="#ffcc00" /> : null}
         <TabView
           navigationState={{ index, routes }}
           renderScene={renderScene}

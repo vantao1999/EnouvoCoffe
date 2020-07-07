@@ -16,8 +16,8 @@ export async function resetPasswordApi(data) {
   return http.post('/auth/confirmCode', data);
 }
 
-export async function uploadFile(data) {
-  return http.postUploadFile('/user/uploadFile', data);
+export async function uploadImageProfile(data) {
+  return http.postUploadFile('/user/upload', data);
 }
 
 export async function accountBalance() {

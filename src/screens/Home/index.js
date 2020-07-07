@@ -32,7 +32,7 @@ const Home = () => {
   return (
     <SafeAreaView style={styles.container}>
       <Animatable.View style={styles.header} animation="bounceInLeft">
-        <Text style={styles.title}>Balance</Text>
+        <Text style={styles.title}>Welcome Back!</Text>
         <Image source={require('../../assets/Images/user.jpeg')} style={styles.logo} />
       </Animatable.View>
 

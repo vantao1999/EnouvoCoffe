@@ -13,7 +13,7 @@ const UserTransfer = (props) => {
   const dispatch = useDispatch();
   const formik = useFormik({
     initialValues: {
-      userId: props.userData.id,
+      userId: props.data.id,
       payment: '',
       notes: '',
     },
@@ -45,7 +45,7 @@ const UserTransfer = (props) => {
       <View style={styles.header}>
         <Image source={require('../../assets/Images/user.jpeg')} style={styles.imageUser} />
         <View />
-        <Text style={styles.textName}>{props.userData.username}</Text>
+        <Text style={styles.textName}>{props.data.username}</Text>
       </View>
       <KeyboardAwareScrollView>
         <View style={styles.footer}>

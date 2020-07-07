@@ -18,7 +18,7 @@ import { useFormik } from 'formik';
 import { get } from 'lodash';
 import { updateProfile } from '../../redux/UserRedux/operations';
 import { unwrapResult } from '@reduxjs/toolkit';
-const Setting = () => {
+const Index = () => {
   const [userData, setData] = React.useState({
     isEdit: false,
   });
@@ -61,6 +61,12 @@ const Setting = () => {
         }
       });
   };
+  const navigate = () => {
+    NavigationUtils.push({
+      screen: 'UploadImage',
+      isTopBarEnable: false,
+    });
+  };
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -89,7 +95,13 @@ const Setting = () => {
             </TouchableOpacity>
           )}
         </View>
-        <Image source={require('../../assets/Images/user.jpeg')} style={styles.imageUser} />
+        {userData.isEdit ? (
+          <TouchableOpacity onPress={navigate}>
+            <Image source={require('../../assets/Images/user.jpeg')} style={styles.imageUser} />
+          </TouchableOpacity>
+        ) : (
+          <Image source={require('../../assets/Images/user.jpeg')} style={styles.imageUser} />
+        )}
         <TouchableOpacity style={styles.btnLogout} onPress={LogOut}>
           <Text style={styles.textLogout}>LogOut</Text>
         </TouchableOpacity>
@@ -145,7 +157,7 @@ const Setting = () => {
   );
 };
 
-export default Setting;
+export default Index;
 const styles = StyleSheet.create({
   container: {
     flex: 1,

@@ -1,24 +1,15 @@
-/* eslint-disable react-native/no-inline-styles */
-import React, { Component } from 'react';
+import React from 'react';
 import ImagePicker from 'react-native-image-picker';
-import { StyleSheet, Text, View, Image, Alert } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
-import { connect } from 'react-redux';
-import * as actions from '../../redux/UserRedux/operations';
+import { StyleSheet, Text, View, Image, Alert, TouchableOpacity } from 'react-native';
+import { useSelector } from 'react-redux';
+import { get } from 'lodash';
 import axios from 'axios';
 
-class UploadImage extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      fileUri: '',
-      image: {},
-      fileData: null,
-    };
-    this.launchImageLibrary();
-  }
+const UploadImage = () => {
+  const [fileData, setFileDta] = React.useState(null);
+  const token = useSelector((state) => get(state, 'auth.token', null));
 
-  launchImageLibrary = () => {
+  const launchImageLibrary = () => {
     let options = {
       storageOptions: {
         skipBackup: true,
@@ -26,64 +17,31 @@ class UploadImage extends Component {
       },
     };
     ImagePicker.launchImageLibrary(options, (response) => {
-      console.log('Response = ', response);
-
       if (response.didCancel) {
-        console.log('User cancelled image picker');
       } else if (response.error) {
-        console.log('ImagePicker Error: ', response.error);
       } else if (response.customButton) {
-        console.log('User tapped custom button: ', response.customButton);
         Alert(response.customButton);
       } else {
-        const source = { uri: response.uri };
-        console.log('response', JSON.stringify(response));
-        this.setState({
-          filePath: response,
+        setFileDta({
+          ...fileData,
           fileData: response.data,
-          fileUri: response.uri,
-          // image: response
         });
       }
     });
   };
-  renderFileUri() {
-    if (this.state.fileUri) {
-      return <Image source={{ uri: this.state.fileUri }} style={styles.images} />;
-    } else {
-      return <Image source={require('../../assets/Images/gallery.png')} style={styles.images} />;
-    }
-  }
 
-  renderFileData() {
-    if (this.state.fileData) {
-      return (
-        <Image
-          source={{ uri: 'data:image/jpeg;base64,' + this.state.fileData }}
-          style={styles.images}
-        />
-      );
-    } else {
-      return <Image source={require('../../assets/Images/gallery.png')} style={styles.images} />;
-    }
-  }
-  onUpload = () => {
-    // console.log('fileData', this.state.fileData);
-    console.log('this.state.fileUri', this.state.fileUri);
-
+  const onUpload = () => {
     const formData = new FormData();
-    formData.append('file', this.state.fileUri);
+    formData.append('file', fileData);
     console.log('FormDATA', formData);
 
     axios({
-      url: 'https://enouvowallet-api.herokuapp.com/api/v1/user/uploadFile',
+      url: 'https://enouvowallet-api.herokuapp.com/api/v1/user/upload',
       method: 'POST',
       data: formData,
       headers: {
         Accept: '*',
-        Authorization:
-          'Bearer ' +
-          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlRhbyIsImlkIjo0LCJlbWFpbCI6InZhbnRhby5kZXZAZ21haWwuY29tIiwic2NvcGUiOiJ1c2VyIiwidHRsIjozNjAwMDAwLCJpYXQiOjE1OTI0NTQ0MzB9._qIxDMRDjBEhXSxcq1hFcQcg7nTjxxyrHbicWd_Ig0Y',
+        Authorization: 'Bearer ' + token,
         'Content-Type': 'multipart/form-data',
       },
     })
@@ -93,30 +51,43 @@ class UploadImage extends Component {
       .catch(function (error) {
         console.log('error from image :', error);
       });
-    // this.props.upLoadImage(data);
   };
+  console.log('FILEDATA', fileData);
 
-  render() {
-    return (
-      <View style={styles.body}>
-        <View style={styles.ImageSections}>
-          {/* <View>{this.renderFileUri()}</View> */}
-          <View>{this.renderFileData()}</View>
-          <TouchableOpacity style={styles.buttonSave} onPress={this.onUpload}>
-            <Text style={styles.textSave}>Save</Text>
-          </TouchableOpacity>
+  return (
+    <View style={styles.body}>
+      <View style={styles.ImageSections}>
+        <View>
+          {fileData ? (
+            <View>
+              <Image source={{ uri: 'data:image/jpeg;base64,' + fileData }} style={styles.images} />
+            </View>
+          ) : (
+            <View>
+              <Image source={require('../../assets/Images/gallery.png')} style={styles.images} />
+            </View>
+          )}
         </View>
+        <TouchableOpacity
+          onPress={() => {
+            launchImageLibrary();
+          }}
+        >
+          <Text style={styles.textPick}>Choose Image</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.buttonSave}
+          onPress={() => {
+            onUpload();
+          }}
+        >
+          <Text style={styles.textSave}>Save</Text>
+        </TouchableOpacity>
       </View>
-    );
-  }
-}
-
-const mapStateToProps = (state) => ({});
-
-const mapDispatchToProps = (dispatch) => ({
-  upLoadImage: (data) => dispatch(actions.uploadImage(data)),
-});
-export default connect(mapStateToProps, mapDispatchToProps)(UploadImage);
+    </View>
+  );
+};
+export default UploadImage;
 
 const styles = StyleSheet.create({
   body: {
@@ -133,8 +104,8 @@ const styles = StyleSheet.create({
     height: 200,
     marginHorizontal: 3,
   },
-  buttonSave: {
-    marginTop: 20,
+  textPick: {
+    color: '#007fff',
   },
   textSave: {
     fontFamily: 'Roboto-bold',

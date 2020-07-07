@@ -61,10 +61,10 @@ export const resetPassword = createAsyncThunk(
 );
 
 export const uploadImage = createAsyncThunk(
-  'user/uploadFile',
+  'user/uploadImageProfile',
   async (data, { rejectWithValue }) => {
     try {
-      const response = await AuthApis.uploadFile(data);
+      const response = await AuthApis.uploadImageProfile(data);
       return response?.data;
     } catch (err) {
       if (!err.data) {
