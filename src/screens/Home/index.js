@@ -45,9 +45,13 @@ const Home = () => {
         <Text style={styles.texFeature}>Features</Text>
         <ScrollView showsVerticalScrollIndicator={false}>
           <View style={styles.action}>
-            <TouchableOpacity onPress={navigate} style={styles.btnTransfer}>
+            <TouchableOpacity onPress={navigate} style={styles.btnAction}>
               <Icon name="money" size={30} />
               <Text style={styles.textTransfer}>Transfer</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.btnAction}>
+              <Icon name="credit-card" size={30} />
+              <Text style={styles.textTransfer}>Payment</Text>
             </TouchableOpacity>
           </View>
         </ScrollView>
@@ -116,12 +120,10 @@ const styles = StyleSheet.create({
   action: {
     backgroundColor: '#ffffff',
     paddingVertical: 5,
-    borderRadius: 10,
-    marginTop: 20,
-    paddingHorizontal: 20,
+    marginTop: 10,
     flexDirection: 'row',
   },
-  btnTransfer: {
+  btnAction: {
     alignItems: 'center',
     paddingVertical: 10,
     paddingHorizontal: 10,
@@ -129,6 +131,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     borderWidth: 2,
     borderColor: '#e1e1e1',
+    marginLeft: 10,
   },
   textTransfer: {
     fontFamily: 'Roboto',

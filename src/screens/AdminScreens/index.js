@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Text,
   TextInput,
@@ -12,14 +12,31 @@ import {
 import Feather from 'react-native-vector-icons/Feather';
 import { NavigationUtils } from '../../navigation';
 import { useSelector, useDispatch } from 'react-redux';
-import { get } from 'lodash';
+import { get, includes, toLower } from 'lodash';
 import { getOne } from '../../redux/UserRedux/operations';
 import { unwrapResult } from '@reduxjs/toolkit';
 
 const Index = () => {
   const [searchTxt, setSearchTxt] = React.useState('');
+  const [userData, setUserData] = useState([]);
   const dispatch = useDispatch();
   const userInfo = useSelector((state) => get(state, 'auth.listUser', null));
+
+  useEffect(() => {
+    if (userInfo) {
+      setUserData(userInfo);
+    }
+  }, [userInfo]);
+
+  useEffect(() => {
+    if (searchTxt) {
+      const temp = userInfo.filter((i) => includes(toLower(i.username), toLower(searchTxt)));
+      setUserData(temp);
+    } else {
+      setUserData(userInfo);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchTxt]);
 
   const navigateAdduser = () => {
     NavigationUtils.push({
@@ -31,13 +48,13 @@ const Index = () => {
   const getUserData = async (userId) => {
     const result = await dispatch(getOne(userId));
     if (getOne.fulfilled.match(result)) {
-      const userData = unwrapResult(result);
+      const data = unwrapResult(result);
 
-      if (userData) {
+      if (data) {
         NavigationUtils.push({
           screen: 'userProfile',
           title: 'User Profile Details',
-          passProps: { userData },
+          passProps: { userData: data },
         });
       }
     } else {
@@ -82,18 +99,16 @@ const Index = () => {
       </View>
       <View style={styles.footer}>
         <View style={styles.viewSearch}>
+          <Feather name="search" size={20} />
           <TextInput
             style={styles.searchBar}
-            placeholder="Search by username or email"
+            placeholder=" Search by username or email"
             value={searchTxt}
             autoCorrect={false}
             onChangeText={(text) => {
               setSearchTxt(text);
             }}
           />
-          <TouchableOpacity style={styles.btnSearch}>
-            <Feather name="search" size={20} />
-          </TouchableOpacity>
         </View>
         <View style={styles.action}>
           <Text style={styles.textUser}>Recent Contact</Text>
@@ -104,7 +119,7 @@ const Index = () => {
         </View>
         <FlatList
           showsVerticalScrollIndicator={false}
-          data={userInfo.filter((item) => item.roleId !== 1)}
+          data={userData.filter((item) => item.roleId !== 1)}
           renderItem={Item}
           keyExtractor={(item) => item.email}
         />
@@ -151,22 +166,15 @@ const styles = StyleSheet.create({
   viewSearch: {
     marginHorizontal: 20,
     marginVertical: 15,
+    borderWidth: 0.5,
+    borderRadius: 15,
+    borderColor: '#7f7f7f',
+    alignItems: 'center',
     flexDirection: 'row',
   },
   searchBar: {
-    borderWidth: 0.5,
-    borderRadius: 15,
-    paddingHorizontal: 10,
     paddingVertical: 10,
-    borderColor: '#7f7f7f',
     flex: 1,
-    marginRight: 10,
-  },
-  btnSearch: {
-    alignItems: 'center',
-    paddingHorizontal: 10,
-    paddingVertical: 10,
-    backgroundColor: '#ffcc00',
   },
   action: {
     flexDirection: 'row',

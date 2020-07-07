@@ -1,12 +1,14 @@
 import React from 'react';
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
-import { View, Text, StyleSheet, Image, FlatList } from 'react-native';
+import { View, Text, StyleSheet, Image, FlatList, TouchableOpacity } from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { get } from 'lodash';
 import moment from 'moment';
+import { getHistoryIn, getHistoryOut } from '../../redux/TransactionRedux/operations';
 
 const AdminHistory = () => {
+  const dispatch = useDispatch();
   const historyIn = useSelector((state) => get(state, 'trans.listAdminHistoryIn', null));
   const historyOut = useSelector((state) => get(state, 'trans.listAdminHistoryOut', null));
 
@@ -83,6 +85,10 @@ const AdminHistory = () => {
     </View>
   );
 
+  const refresh = async () => {
+    await dispatch(getHistoryIn(''));
+    await dispatch(getHistoryOut(''));
+  };
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -95,10 +101,10 @@ const AdminHistory = () => {
       </View>
 
       <View style={styles.content}>
-        <View style={styles.viewTitle}>
+        <TouchableOpacity style={styles.viewTitle} onPress={refresh}>
           <Text style={styles.textTitle}>HISTORY</Text>
           <Feather name="clock" size={20} color="#56aaff" />
-        </View>
+        </TouchableOpacity>
         <TabView
           navigationState={{ index, routes }}
           renderScene={renderScene}

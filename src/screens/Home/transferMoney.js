@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Text,
   View,
@@ -14,27 +14,45 @@ import { useSelector, useDispatch } from 'react-redux';
 import { NavigationUtils } from '../../navigation';
 import Feather from 'react-native-vector-icons/Feather';
 import { unwrapResult } from '@reduxjs/toolkit';
-import { get } from 'lodash';
+import { get, includes, toLower } from 'lodash';
+
 import { getOne, getMany } from '../../redux/UserRedux/operations';
 
 const TransferMoney = () => {
   const dispatch = useDispatch();
+  const [searchTxt, setSearchTxt] = React.useState('');
+  const [userData, setUserData] = useState([]);
   const { id: currentUserId } = useSelector((state) => state.auth.user);
   const userInfo = useSelector((state) => get(state, 'auth.listUser', null));
+  useEffect(() => {
+    if (userInfo) {
+      setUserData(userInfo);
+    }
+  }, [userInfo]);
+
+  useEffect(() => {
+    if (searchTxt) {
+      const temp = userInfo.filter((i) => includes(toLower(i.username), toLower(searchTxt)));
+      setUserData(temp);
+    } else {
+      setUserData(userInfo);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchTxt]);
 
   const getUserData = async (userId) => {
     await dispatch(getMany(''));
     const result = await dispatch(getOne(userId));
     console.log('USER GET ID', result);
     if (getOne.fulfilled.match(result)) {
-      const userData = unwrapResult(result);
-      console.log('UNWRAP RESULT ', userData);
+      const data = unwrapResult(result);
+      console.log('UNWRAP RESULT ', data);
 
-      if (userData) {
+      if (data) {
         NavigationUtils.push({
           screen: 'userTransfer',
           title: 'Transfer to EnouvoCafe Wallet',
-          passProps: { userData },
+          passProps: { data },
         });
       }
     } else {
@@ -64,7 +82,15 @@ const TransferMoney = () => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.viewSearch}>
-        <TextInput style={styles.searchBar} placeholder="Search by username or email" />
+        <TextInput
+          style={styles.searchBar}
+          placeholder="Search by username or email"
+          value={searchTxt}
+          autoCorrect={false}
+          onChangeText={(text) => {
+            setSearchTxt(text);
+          }}
+        />
         <TouchableOpacity style={styles.btnSearch}>
           <Feather name="search" size={20} />
         </TouchableOpacity>
@@ -74,7 +100,7 @@ const TransferMoney = () => {
       </View>
       <FlatList
         showsVerticalScrollIndicator={false}
-        data={userInfo.filter((item) => item.id !== currentUserId)}
+        data={userData.filter((item) => item.id !== currentUserId)}
         renderItem={Item}
         keyExtractor={(item) => item.email}
       />
