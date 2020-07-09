@@ -67,8 +67,8 @@ const Login = () => {
   };
   const formik = useFormik({
     initialValues: {
-      email: 'vantao.dev@gmail.com',
-      password: '123456',
+      email: 'admin@gmail.com',
+      password: 'admin123',
     },
 
     onSubmit: (values) => {
@@ -175,11 +175,11 @@ const Login = () => {
           </TouchableOpacity>
         </View>
       </Animatable.View>
-      {loading ? (
+      {/* {loading ? (
         <View style={styles.loading}>
           <ActivityIndicator size="large" color="#ffcc00" />
         </View>
-      ) : null}
+      ) : null} */}
     </KeyboardAvoidingView>
   );
 };
@@ -252,14 +252,14 @@ const styles = StyleSheet.create({
     color: 'white',
     fontWeight: 'bold',
   },
-  loading: {
-    position: 'absolute',
-    top: 0,
-    bottom: 0,
-    left: 0,
-    right: 0,
-    backgroundColor: 'rgba(0,0,0,0.2)',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
+  // loading: {
+  //   position: 'absolute',
+  //   top: 0,
+  //   bottom: 0,
+  //   left: 0,
+  //   right: 0,
+  //   backgroundColor: 'rgba(0,0,0,0.2)',
+  //   justifyContent: 'center',
+  //   alignItems: 'center',
+  // },
 });

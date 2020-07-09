@@ -2,7 +2,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import * as TransApis from '../../api/trans';
 
 export const transferMoney = createAsyncThunk(
-  'user/transaction/transactionTransfer',
+  'client/transactionTransfer',
   async (data, { rejectWithValue, getState }) => {
     try {
       const accessToken = getState().auth.token;
@@ -25,7 +25,7 @@ export const transferMoney = createAsyncThunk(
 
 //getHistory User transfer
 export const userHistoryTransferOut = createAsyncThunk(
-  'user/transaction/historyTransferOut',
+  'client/transactionOut/history',
   async (data, { rejectWithValue, getState }) => {
     try {
       const accessToken = getState().auth.token;
@@ -41,7 +41,7 @@ export const userHistoryTransferOut = createAsyncThunk(
   },
 );
 export const userHistoryTransferIn = createAsyncThunk(
-  'user/transaction/historyTransferIn',
+  'client/transactionIn/history',
   async (data, { rejectWithValue, getState }) => {
     try {
       const accessToken = getState().auth.token;
@@ -58,7 +58,7 @@ export const userHistoryTransferIn = createAsyncThunk(
 );
 // User getHistory side admin doing
 export const getUserHistoryIn = createAsyncThunk(
-  'user/transaction/historyTransactionIn',
+  'client/transactionTransfer/historyTransferIn',
   async (data, { rejectWithValue, getState }) => {
     try {
       const accessToken = getState().auth.token;
@@ -74,7 +74,7 @@ export const getUserHistoryIn = createAsyncThunk(
   },
 );
 export const getUserHistoryOut = createAsyncThunk(
-  'user/transaction/historyTransactionOut',
+  'client/transactionTransfer/historyTransferOut',
   async (data, { rejectWithValue, getState }) => {
     try {
       const accessToken = getState().auth.token;
@@ -94,7 +94,7 @@ export const getUserHistoryOut = createAsyncThunk(
 /******************************************/
 
 export const plusMoney = createAsyncThunk(
-  'admin/transaction/plusMoney',
+  'admin/transactions/changeMoney',
   async (data, { rejectWithValue, getState }) => {
     try {
       const accessToken = getState().auth.token;
@@ -115,7 +115,7 @@ export const plusMoney = createAsyncThunk(
   },
 );
 export const minusMoney = createAsyncThunk(
-  'admin/transaction/minusMoney',
+  'admin/transactions/changeMoney',
   async (data, { rejectWithValue, getState }) => {
     try {
       const accessToken = getState().auth.token;
@@ -138,7 +138,7 @@ export const minusMoney = createAsyncThunk(
 
 // Admin getHistory for action plus and minus
 export const getHistoryIn = createAsyncThunk(
-  'admin/transaction/historyTransactionIn',
+  'admin/transactionIn',
   async (data, { rejectWithValue, getState }) => {
     try {
       const accessToken = getState().auth.token;
@@ -154,7 +154,7 @@ export const getHistoryIn = createAsyncThunk(
   },
 );
 export const getHistoryOut = createAsyncThunk(
-  'admin/transaction/historyTransactionOut',
+  'admin/transactionOut',
   async (data, { rejectWithValue, getState }) => {
     try {
       const accessToken = getState().auth.token;

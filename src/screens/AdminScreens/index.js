@@ -21,6 +21,7 @@ const Index = () => {
   const [userData, setUserData] = useState([]);
   const dispatch = useDispatch();
   const userInfo = useSelector((state) => get(state, 'auth.listUser', null));
+  console.log('LISTUSEr', userInfo);
 
   useEffect(() => {
     if (userInfo) {
@@ -45,30 +46,30 @@ const Index = () => {
     });
   };
 
-  const getUserData = async (userId) => {
-    const result = await dispatch(getOne(userId));
-    if (getOne.fulfilled.match(result)) {
-      const data = unwrapResult(result);
+  const getUserData = async (item) => {
+    // const result = await dispatch(getOne(userId));
+    // if (getOne.fulfilled.match(result)) {
+    //   const data = unwrapResult(result);
 
-      if (data) {
-        NavigationUtils.push({
-          screen: 'userProfile',
-          title: 'User Profile Details',
-          passProps: { userData: data },
-        });
-      }
-    } else {
-      if (result.payload) {
-        Alert.alert('Error', result.payload.message || 'error');
-      } else {
-        Alert.alert('Error', result.error || 'error');
-      }
-    }
+    //   if (data) {
+    NavigationUtils.push({
+      screen: 'userProfile',
+      title: 'User Profile Details',
+      passProps: { item },
+    });
+    //   }
+    // } else {
+    //   if (result.payload) {
+    //     Alert.alert('Error', result.payload.message || 'error');
+    //   } else {
+    //     Alert.alert('Error', result.error || 'error');
+    //   }
+    // }
   };
   const Item = ({ item }) => (
     <TouchableOpacity
       onPress={() => {
-        getUserData(item.id);
+        getUserData(item);
       }}
     >
       <View style={styles.viewUser}>
@@ -121,7 +122,7 @@ const Index = () => {
           showsVerticalScrollIndicator={false}
           data={userData.filter((item) => item.roleId !== 1)}
           renderItem={Item}
-          keyExtractor={(item) => item.email}
+          keyExtractor={(item) => item.username}
         />
       </View>
     </View>

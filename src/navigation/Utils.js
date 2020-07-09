@@ -131,6 +131,14 @@ class NavigationUtils {
   startMainAdminContent(adminScreen) {
     Root.mainTabAdmin();
   }
+  popTo({ id, screen }) {
+    Navigation.popTo(this.currentScreenId, {
+      component: {
+        name: screen,
+        is: id,
+      },
+    });
+  }
 
   push({
     id,

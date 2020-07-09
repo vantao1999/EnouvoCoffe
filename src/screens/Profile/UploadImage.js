@@ -24,7 +24,7 @@ const UploadImage = () => {
       } else {
         setFileDta({
           ...fileData,
-          fileData: response.data,
+          fileData: response?.data,
         });
       }
     });
@@ -32,11 +32,10 @@ const UploadImage = () => {
 
   const onUpload = () => {
     const formData = new FormData();
-    formData.append('file', fileData);
-    console.log('FormDATA', formData);
-
+    const dataUri = `data:image/png;base64,${fileData.fileData}`;
+    formData.append('file', dataUri);
     axios({
-      url: 'https://enouvowallet-api.herokuapp.com/api/v1/user/upload',
+      url: 'https://enouvocoffee.hoanglive.me/api/v1/user/upload',
       method: 'POST',
       data: formData,
       headers: {
@@ -46,13 +45,12 @@ const UploadImage = () => {
       },
     })
       .then(function (response) {
-        console.log('response :', response);
+        console.log('response image:', response);
       })
       .catch(function (error) {
         console.log('error from image :', error);
       });
   };
-  console.log('FILEDATA', fileData);
 
   return (
     <View style={styles.body}>
@@ -60,7 +58,10 @@ const UploadImage = () => {
         <View>
           {fileData ? (
             <View>
-              <Image source={{ uri: 'data:image/jpeg;base64,' + fileData }} style={styles.images} />
+              <Image
+                source={{ uri: 'data:image/jpeg;base64,' + fileData.fileData }}
+                style={styles.images}
+              />
             </View>
           ) : (
             <View>
@@ -72,16 +73,17 @@ const UploadImage = () => {
           onPress={() => {
             launchImageLibrary();
           }}
+          style={styles.btnUpload}
         >
-          <Text style={styles.textPick}>Choose Image</Text>
+          <Text style={styles.textUpload}>Choose Image</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={styles.buttonSave}
+          style={styles.btnUpload}
           onPress={() => {
             onUpload();
           }}
         >
-          <Text style={styles.textSave}>Save</Text>
+          <Text style={styles.textUpload}>Save</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -104,12 +106,16 @@ const styles = StyleSheet.create({
     height: 200,
     marginHorizontal: 3,
   },
-  textPick: {
-    color: '#007fff',
+  btnUpload: {
+    marginTop: 15,
+    width: '40%',
+    paddingVertical: 2,
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    backgroundColor: '#ffcc00',
   },
-  textSave: {
-    fontFamily: 'Roboto-bold',
-    color: '#007fff',
+  textUpload: {
+    fontFamily: 'Roboto',
     fontSize: 18,
   },
 });

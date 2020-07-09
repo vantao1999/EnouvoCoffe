@@ -6,36 +6,36 @@ export async function setToken(accessToken) {
 }
 
 export async function transferMoney(userId, data) {
-  return http.post(`/user/transaction/transactionTransfer/${userId}`, data);
+  return http.post(`/client/transactionTransfer/${userId}`, data);
 }
 //get User history transferred
 export async function getHistoryTransferIn() {
-  return http.get('/user/transaction/historyTransferIn');
+  return http.get('/client/transactionIn/history');
 }
 export async function getHistoryTransferOut() {
-  return http.get('/user/transaction/historyTransferOut');
+  return http.get('/client/transactionOut/history');
 }
 //get User history when admin did actions
 export async function getHistoryTransactionIn() {
-  return http.get('/user/transaction/historyTransactionIn');
+  return http.get('/client/transactionTransfer/historyTransferIn');
 }
 
 export async function getHistoryTransactionOut() {
-  return http.get('/user/transaction/historyTransactionOut');
+  return http.get('/client/transactionTransfer/historyTransferOut');
 }
 /******************************************/
 /************ Side Admin *************/
 /******************************************/
 
 export async function plusMoney(userId, data) {
-  return http.post(`/admin/transaction/plusMoney/${userId}`, data);
+  return http.post(`/admin/transactions/changeMoney/${userId}?type=in`, data);
 }
 export async function minusMoney(userId, data) {
-  return http.post(`/admin/transaction/minusMoney/${userId}`, data);
+  return http.post(`/admin/transactions/changeMoney/${userId}?type=out`, data);
 }
 export async function adminGetHistoryTransactionIn() {
-  return http.get('/admin/transaction/historyTransactionIn');
+  return http.get('/admin/transactions?type=in');
 }
 export async function adminGetHistoryTransactionOut() {
-  return http.get('/admin/transaction/historyTransactionOut');
+  return http.get('/admin/transactions?type=out');
 }

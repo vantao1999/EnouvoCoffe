@@ -70,7 +70,7 @@ const http = {
       type: 'image/jpg',
       name: `${new Date().getTime()}.jpg`,
     });
-    return this.post(url, formData);
+    return axios.post(url, formData);
   },
 };
 

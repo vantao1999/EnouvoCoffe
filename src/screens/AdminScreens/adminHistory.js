@@ -1,6 +1,14 @@
 import React from 'react';
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
-import { View, Text, StyleSheet, Image, FlatList, TouchableOpacity } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  FlatList,
+  TouchableOpacity,
+  ActivityIndicator,
+} from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
 import { useDispatch, useSelector } from 'react-redux';
 import { get } from 'lodash';
@@ -9,6 +17,7 @@ import { getHistoryIn, getHistoryOut } from '../../redux/TransactionRedux/operat
 
 const AdminHistory = () => {
   const dispatch = useDispatch();
+  const loading = useSelector((state) => get(state, 'trans.loading', null));
   const historyIn = useSelector((state) => get(state, 'trans.listAdminHistoryIn', null));
   const historyOut = useSelector((state) => get(state, 'trans.listAdminHistoryOut', null));
 
@@ -24,7 +33,7 @@ const AdminHistory = () => {
         data={historyOut}
         renderItem={Minus}
         refreshing={true}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item.username}
       />
     </View>
   );
@@ -112,6 +121,11 @@ const AdminHistory = () => {
           renderTabBar={renderTabBar}
         />
       </View>
+      {loading ? (
+        <View style={styles.loading}>
+          <ActivityIndicator size="large" color="#ffcc00" />
+        </View>
+      ) : null}
     </View>
   );
 };
@@ -209,5 +223,15 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: '#ff5656',
     marginLeft: 5,
+  },
+  loading: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: 'rgba(0,0,0,0.2)',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

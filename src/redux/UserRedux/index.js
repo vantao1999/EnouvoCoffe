@@ -11,6 +11,7 @@ const authSlice = createSlice({
     token: null,
     listUser: [],
     account: null,
+    data: null,
   },
   reducers: {
     login: (state, action) => {},

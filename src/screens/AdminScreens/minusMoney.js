@@ -12,10 +12,12 @@ import { unwrapResult } from '@reduxjs/toolkit';
 const MinusMoney = (props) => {
   const dispatch = useDispatch();
   const errMessage = useSelector((state) => state.trans.errMessage);
+  let num = 1000000;
+  console.log(num.toFixed(2));
 
   const formik = useFormik({
     initialValues: {
-      userId: props.userData.id,
+      userId: props.item.id,
       payment: '',
       notes: '',
     },
@@ -29,11 +31,7 @@ const MinusMoney = (props) => {
       .then(unwrapResult)
       .then((success) => {
         Alert.alert('Minus successfully');
-        NavigationUtils.push({
-          screen: 'Admin',
-          isTopBarEnable: false,
-          isBottomTabsEnable: true,
-        });
+        NavigationUtils.popToRoot();
       })
       .catch((error) => {
         if (result.payload) {
@@ -50,7 +48,7 @@ const MinusMoney = (props) => {
       <View style={styles.header}>
         <Image source={require('../../assets/Images/user.jpeg')} style={styles.imageUser} />
         <View />
-        <Text style={styles.textName}>{props.userData.username}</Text>
+        <Text style={styles.textName}>{props.item.username}</Text>
       </View>
       <KeyboardAwareScrollView>
         <View style={styles.footer}>

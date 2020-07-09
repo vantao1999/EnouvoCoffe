@@ -20,7 +20,7 @@ const defaultColors = {
   tabBackground: 'rgb(33,35,46)',
 
   // Global
-  primary: '#ffcd17',
+  primary: '#ffcc00',
   secondary: '#FF6F61',
   tertiary: '#ffffff',
 

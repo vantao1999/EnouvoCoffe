@@ -21,7 +21,7 @@ export async function uploadImageProfile(data) {
 }
 
 export async function accountBalance() {
-  return http.get('/user/accountbalance');
+  return http.get('client/users/accountbalance');
 }
 
 //Set Token before user can updateProfile
@@ -30,20 +30,20 @@ export async function setToken(accessToken) {
 }
 
 export async function updateProfile(data) {
-  return http.put('/user/updateProfile', data);
+  return http.put('/client/users/me/updateProfile', data);
 }
 //For admin
 export async function getMany(data) {
-  return http.get('/admin/getMany');
+  return http.get('/admin/users');
 }
 export async function createOne(data) {
-  return http.post('admin/createOne', data);
+  return http.post('admin/users', data);
 }
 export async function getOne(userId) {
-  return http.get(`/admin/getOne/${userId}`);
+  return http.get(`/admin/users/${userId}`);
 }
 export async function updateOne(userId, data) {
-  return http.put(`/admin/updateOne/${userId}`, data);
+  return http.put(`/admin/users/${userId}`, data);
 }
 export async function disable(userId, data) {
   return http.put(`/admin/disable/${userId}`, data);

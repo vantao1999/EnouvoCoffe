@@ -1,10 +1,20 @@
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable no-unused-vars */
 import React from 'react';
-import { View, Text, Alert, StyleSheet, Image, TextInput, TouchableOpacity } from 'react-native';
+import {
+  View,
+  Text,
+  Alert,
+  StyleSheet,
+  Image,
+  TextInput,
+  TouchableOpacity,
+  ActivityIndicator,
+} from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import Feather from 'react-native-vector-icons/Feather';
 import { useFormik } from 'formik';
+import { get } from 'lodash';
 import { NavigationUtils } from '../../navigation';
 import { disable } from '../../redux/UserRedux/operations';
 import { useDispatch, useSelector } from 'react-redux';
@@ -12,6 +22,7 @@ import { updateOne, getMany } from '../../redux/UserRedux/operations';
 import { unwrapResult } from '@reduxjs/toolkit';
 
 const UserProfile = (props) => {
+  const loading = useSelector((state) => get(state, 'trans.loading', null));
   const [userInfo, setData] = React.useState({
     isEdit: false,
   });
@@ -22,10 +33,10 @@ const UserProfile = (props) => {
 
   const formik = useFormik({
     initialValues: {
-      userId: props.userData.id,
-      username: props.userData.username,
-      address: props.userData.address || '',
-      phone: props.userData.phone || '',
+      userId: props.item.id,
+      username: props.item.username,
+      address: props.item.address || '',
+      phone: props.item.phone || '',
     },
     onSubmit: (values) => {
       updateUser(values);
@@ -37,11 +48,7 @@ const UserProfile = (props) => {
       .then(unwrapResult)
       .then((success) => {
         Alert.alert('Updated successfully');
-        NavigationUtils.push({
-          screen: 'Admin',
-          isTopBarEnable: false,
-          isBottomTabsEnable: true,
-        });
+        NavigationUtils.pop();
       })
       .catch((err) => {
         if (result.payload) {
@@ -53,18 +60,18 @@ const UserProfile = (props) => {
     const getUser = await dispatch(getMany(''));
   };
 
-  const navigateToPlus = (userData) => {
+  const navigateToPlus = (item) => {
     NavigationUtils.push({
       screen: 'plusMoney',
       isTopBarEnable: false,
-      passProps: { userData },
+      passProps: { item },
     });
   };
-  const navigateToMinus = (userData) => {
+  const navigateToMinus = (item) => {
     NavigationUtils.push({
       screen: 'minusMoney',
       isTopBarEnable: false,
-      passProps: { userData },
+      passProps: { item },
     });
   };
   return (
@@ -78,7 +85,7 @@ const UserProfile = (props) => {
           ) : (
             <TouchableOpacity
               onPress={() => {
-                disableUser(props.userData.id);
+                disableUser(props.item.id);
               }}
             >
               <Feather name="trash-2" size={20} />
@@ -102,7 +109,7 @@ const UserProfile = (props) => {
           )}
         </View>
         <Image source={require('../../assets/Images/user.jpeg')} style={styles.imageUser} />
-        <Text style={styles.textBalance}>{props.userData.accountBalance} VND</Text>
+        <Text style={styles.textBalance}>{props.item.accountBalance} VND</Text>
       </View>
       <KeyboardAwareScrollView>
         <View style={styles.footer}>
@@ -110,7 +117,7 @@ const UserProfile = (props) => {
             <Text style={styles.textTitle}>Name</Text>
             <TextInput
               style={userInfo.isEdit ? styles.textEditContent : styles.textContent}
-              defaultValue={props.userData.username}
+              defaultValue={props.item.username}
               editable={userInfo.isEdit}
               placeholder="Enter name"
               autoFocus={true}
@@ -121,14 +128,14 @@ const UserProfile = (props) => {
 
           <View style={styles.action}>
             <Text style={styles.textTitle}>Email</Text>
-            <Text style={styles.textContent}>{props.userData.email}</Text>
+            <Text style={styles.textContent}>{props.item.email}</Text>
           </View>
 
           <View style={styles.action}>
             <Text style={styles.textTitle}>Address</Text>
             <TextInput
               style={userInfo.isEdit ? styles.textEditContent : styles.textContent}
-              defaultValue={props.userData.address}
+              defaultValue={props.item.address}
               editable={userInfo.isEdit}
               placeholder="Enter address"
               onChangeText={formik.handleChange('address')}
@@ -140,7 +147,7 @@ const UserProfile = (props) => {
             <Text style={styles.textTitle}>Phone</Text>
             <TextInput
               style={userInfo.isEdit ? styles.textEditContent : styles.textContent}
-              defaultValue={props.userData.phone}
+              defaultValue={props.item.phone}
               editable={userInfo.isEdit}
               placeholder="Enter phone"
               onChangeText={formik.handleChange('phone')}
@@ -150,7 +157,7 @@ const UserProfile = (props) => {
           <View style={styles.btnAction}>
             <TouchableOpacity
               onPress={() => {
-                navigateToPlus(props.userData);
+                navigateToPlus(props.item);
               }}
               style={styles.btnPlus}
             >
@@ -158,7 +165,7 @@ const UserProfile = (props) => {
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
-                navigateToMinus(props.userData);
+                navigateToMinus(props.item);
               }}
               style={[styles.btnPlus, { backgroundColor: '#ff8282' }]}
             >
@@ -166,6 +173,11 @@ const UserProfile = (props) => {
             </TouchableOpacity>
           </View>
         </View>
+        {loading ? (
+          <View style={styles.loading}>
+            <ActivityIndicator size="large" color="#ffcc00" />
+          </View>
+        ) : null}
       </KeyboardAwareScrollView>
     </View>
   );
@@ -254,5 +266,15 @@ const styles = StyleSheet.create({
     fontFamily: 'Roboto-regular',
     fontSize: 18,
     color: 'white',
+  },
+  loading: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: 'rgba(0,0,0,0.2)',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

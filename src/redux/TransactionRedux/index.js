@@ -86,6 +86,7 @@ const tranSlice = createSlice({
       state.loading = false;
       state.errMessage = payload;
     },
+    //Minus
     [operations.minusMoney.pending]: (state) => {
       state.loading = true;
     },

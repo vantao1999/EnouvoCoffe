@@ -13,7 +13,7 @@ const AddMoney = (props) => {
   const dispatch = useDispatch();
   const formik = useFormik({
     initialValues: {
-      userId: props.userData.id,
+      userId: props.item.id,
       payment: '',
       notes: '',
     },
@@ -27,11 +27,7 @@ const AddMoney = (props) => {
       .then(unwrapResult)
       .then((success) => {
         Alert.alert('Add money successfully');
-        NavigationUtils.push({
-          screen: 'Admin',
-          isTopBarEnable: false,
-          isBottomTabsEnable: true,
-        });
+        NavigationUtils.popToRoot();
       })
       .catch((err) => {
         if (result.payload) {
@@ -49,7 +45,7 @@ const AddMoney = (props) => {
       <View style={styles.header}>
         <Image source={require('../../assets/Images/user.jpeg')} style={styles.imageUser} />
         <View />
-        <Text style={styles.textName}>{props.userData.username}</Text>
+        <Text style={styles.textName}>{props.item.username}</Text>
       </View>
       <KeyboardAwareScrollView>
         <View style={styles.footer}>
@@ -59,7 +55,7 @@ const AddMoney = (props) => {
               value={formik.values.payment}
               placeholder="Enter money"
               onChangeText={formik.handleChange('payment')}
-              keyboardType="decimal-pad"
+              keyboardType="numeric"
               maxLength={8}
               autoFocus={true}
               returnKeyType="next"

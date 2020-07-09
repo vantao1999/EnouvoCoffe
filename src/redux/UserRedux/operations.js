@@ -77,7 +77,7 @@ export const uploadImage = createAsyncThunk(
 );
 
 export const updateProfile = createAsyncThunk(
-  'user/updateProfile',
+  '/client/users/me/updateProfile',
   async (data, { rejectWithValue, getState }) => {
     try {
       const accessToken = getState().auth.token;
@@ -94,7 +94,7 @@ export const updateProfile = createAsyncThunk(
 );
 
 export const getAccount = createAsyncThunk(
-  'user/accountbalance',
+  'client/users/accountbalance',
   async (data, { rejectWithValue, getState }) => {
     try {
       const accessToken = getState().auth.token;
@@ -111,7 +111,7 @@ export const getAccount = createAsyncThunk(
 );
 //Admin Doing
 export const getMany = createAsyncThunk(
-  'admin/getMany',
+  'admin/users',
   async (data, { rejectWithValue, getState }) => {
     try {
       const accessToken = getState().auth.token;
@@ -129,7 +129,7 @@ export const getMany = createAsyncThunk(
 );
 
 export const createOne = createAsyncThunk(
-  'admin/createOne',
+  'admin/users',
   async (data, { rejectWithValue, getState }) => {
     try {
       const accessToken = getState().auth.token;
@@ -146,7 +146,7 @@ export const createOne = createAsyncThunk(
 );
 
 export const getOne = createAsyncThunk(
-  'admin/getOne',
+  'admin/users',
   async (userId, { rejectWithValue, getState }) => {
     try {
       const accessToken = getState().auth.token;
@@ -163,7 +163,7 @@ export const getOne = createAsyncThunk(
 );
 
 export const updateOne = createAsyncThunk(
-  'admin/updateOne',
+  'admin/users/update',
   async (data, { rejectWithValue, getState }) => {
     try {
       const accessToken = getState().auth.token;

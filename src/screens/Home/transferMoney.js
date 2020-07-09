@@ -23,6 +23,7 @@ const TransferMoney = () => {
   const [searchTxt, setSearchTxt] = React.useState('');
   const [userData, setUserData] = useState([]);
   const { id: currentUserId } = useSelector((state) => state.auth.user);
+
   const userInfo = useSelector((state) => get(state, 'auth.listUser', null));
   useEffect(() => {
     if (userInfo) {
@@ -40,34 +41,35 @@ const TransferMoney = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchTxt]);
 
-  const getUserData = async (userId) => {
-    await dispatch(getMany(''));
-    const result = await dispatch(getOne(userId));
-    console.log('USER GET ID', result);
-    if (getOne.fulfilled.match(result)) {
-      const data = unwrapResult(result);
-      console.log('UNWRAP RESULT ', data);
+  const getUserData = async (item) => {
+    // const result = await dispatch(getOne(userId));
+    // console.log('USER GET ID', result);
+    // if (getOne.fulfilled.match(result)) {
+    //   const data = unwrapResult(result);
+    //   console.log('UNWRAP RESULT ', data);
 
-      if (data) {
-        NavigationUtils.push({
-          screen: 'userTransfer',
-          title: 'Transfer to EnouvoCafe Wallet',
-          passProps: { data },
-        });
-      }
-    } else {
-      if (result.payload) {
-        Alert.alert('Error', result.payload.message || 'error');
-      } else {
-        Alert.alert('Error', result.error || 'error');
-      }
-    }
+    //   if (data) {
+    NavigationUtils.push({
+      screen: 'userTransfer',
+      title: 'Transfer to EnouvoCafe Wallet',
+      passProps: { item },
+    });
+    await dispatch(getMany(''));
+
+    //   }
+    // } else {
+    //   if (result.payload) {
+    //     Alert.alert('Error', result.payload.message || 'error');
+    //   } else {
+    //     Alert.alert('Error', result.error || 'error');
+    //   }
+    // }
   };
 
   const Item = ({ item }) => (
     <TouchableOpacity
       onPress={() => {
-        getUserData(item.id);
+        getUserData(item);
       }}
     >
       <View style={styles.viewUser}>
