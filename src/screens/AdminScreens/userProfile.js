@@ -43,11 +43,15 @@ const UserProfile = (props) => {
     },
   });
 
+  const reLoad = async () => {
+    await dispatch(getMany(''));
+  };
   const updateUser = async (values) => {
     const result = dispatch(updateOne(values))
       .then(unwrapResult)
       .then((success) => {
         Alert.alert('Updated successfully');
+        reLoad();
         NavigationUtils.popToRoot();
       })
       .catch((err) => {
@@ -57,7 +61,6 @@ const UserProfile = (props) => {
           Alert.alert('Error', err || 'Something was not incorrect, Please try again');
         }
       });
-    const getUser = await dispatch(getMany(''));
   };
 
   const navigateToPlus = (item) => {

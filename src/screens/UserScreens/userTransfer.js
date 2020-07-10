@@ -22,11 +22,17 @@ const UserTransfer = (props) => {
     },
   });
 
+  const reLoad = async () => {
+    await dispatch(getMany(''));
+    await dispatch(getAccount(''));
+    await dispatch(userHistoryTransferOut(''));
+  };
   const usertransferMoney = async (values) => {
     const result = dispatch(transferMoney(values))
       .then(unwrapResult)
       .then((success) => {
         Alert.alert('Transfer successfully');
+        reLoad();
         NavigationUtils.startMainContent();
       })
       .catch((err) => {
@@ -36,9 +42,6 @@ const UserTransfer = (props) => {
           Alert.alert('Error', err.error || 'Something was not incorrect, Please try again');
         }
       });
-    await dispatch(getMany(''));
-    await dispatch(getAccount(''));
-    await dispatch(userHistoryTransferOut(''));
   };
   return (
     <View style={styles.container}>

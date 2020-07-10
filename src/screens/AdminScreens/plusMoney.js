@@ -33,11 +33,16 @@ const AddMoney = (props) => {
     },
   });
 
+  const reLoad = async () => {
+    await dispatch(getMany(''));
+    await dispatch(getHistoryIn(''));
+  };
   const plusUserMoney = async (values) => {
     const result = dispatch(plusMoney(values))
       .then(unwrapResult)
       .then((success) => {
         Alert.alert('Add money successfully');
+        reLoad();
         NavigationUtils.popToRoot();
       })
       .catch((err) => {
@@ -47,8 +52,6 @@ const AddMoney = (props) => {
           Alert.alert('Error', err.error || 'Something was not incorrect, Please try again');
         }
       });
-    await dispatch(getMany(''));
-    await dispatch(getHistoryIn(''));
   };
 
   return (

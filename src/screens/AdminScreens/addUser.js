@@ -54,6 +54,10 @@ const AddUser = () => {
     },
   });
 
+  const reLoad = async () => {
+    await dispatch(getMany(''));
+  };
+
   const handleAddUser = async ({ email, username, password }) => {
     Keyboard.dismiss();
     const data = { email, username, password };
@@ -61,6 +65,7 @@ const AddUser = () => {
     const result = await dispatch(createOne(data));
     if (createOne.fulfilled.match(result)) {
       Alert.alert('Add successful');
+      reLoad();
       NavigationUtils.pop();
     } else {
       if (result.payload) {
@@ -69,7 +74,6 @@ const AddUser = () => {
         Alert.alert('Error', result.error || 'error');
       }
     }
-    await dispatch(getMany(''));
   };
 
   const onSubmitEditing = (field) => {

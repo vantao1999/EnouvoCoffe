@@ -26,11 +26,17 @@ const MinusMoney = (props) => {
     },
   });
 
+  const reLoad = async () => {
+    await dispatch(getMany(''));
+    await dispatch(getHistoryOut(''));
+  };
+
   const minusUserMoney = async (values) => {
     const result = dispatch(minusMoney(values))
       .then(unwrapResult)
       .then((success) => {
         Alert.alert('Minus successfully');
+        reLoad();
         NavigationUtils.popToRoot();
       })
       .catch((error) => {
@@ -40,8 +46,6 @@ const MinusMoney = (props) => {
           Alert.alert('Error', errMessage || 'Something was not incorrect, Please try again');
         }
       });
-    await dispatch(getMany(''));
-    await dispatch(getHistoryOut(''));
   };
   return (
     <View style={styles.container}>
