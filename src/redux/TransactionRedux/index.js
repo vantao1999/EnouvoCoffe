@@ -5,6 +5,7 @@ const tranSlice = createSlice({
   name: 'trans',
   initialState: {
     loading: false,
+    plusLoading: false,
     listHistoryTransfer: [],
     listHistoryTransferIn: [],
     listHistoryTransactionIn: [],
@@ -76,14 +77,14 @@ const tranSlice = createSlice({
     /************ Side Admin *************/
     /******************************************/
     [operations.plusMoney.pending]: (state) => {
-      state.loading = true;
+      state.plusLoading = true;
     },
     [operations.plusMoney.fulfilled]: (state, { payload }) => {
-      state.loading = false;
+      state.plusLoading = false;
       state.errMessage = payload;
     },
     [operations.plusMoney.rejected]: (state, { payload }) => {
-      state.loading = false;
+      state.plusLoading = false;
       state.errMessage = payload;
     },
     //Minus

@@ -21,7 +21,7 @@ export async function uploadImageProfile(data) {
 }
 
 export async function accountBalance() {
-  return http.get('client/users/accountbalance');
+  return http.get('/client/users/me/accountbalance');
 }
 
 //Set Token before user can updateProfile

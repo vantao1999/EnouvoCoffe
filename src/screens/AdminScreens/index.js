@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
 import {
   Text,
@@ -7,25 +8,31 @@ import {
   Image,
   TouchableOpacity,
   FlatList,
-  Alert,
+  RefreshControl,
 } from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
 import { NavigationUtils } from '../../navigation';
 import { useSelector, useDispatch } from 'react-redux';
 import { get, includes, toLower } from 'lodash';
-import { getOne } from '../../redux/UserRedux/operations';
-import { unwrapResult } from '@reduxjs/toolkit';
+import { getMany } from '../../redux/UserRedux/operations';
 
 const Index = () => {
+  const dispatch = useDispatch();
+  const [refreshing, setRefreshing] = React.useState(false);
   const [searchTxt, setSearchTxt] = React.useState('');
   const [userData, setUserData] = useState([]);
-  const dispatch = useDispatch();
   const userInfo = useSelector((state) => get(state, 'auth.listUser', null));
-  console.log('LISTUSEr', userInfo);
+  // console.log('LISTUSEr', userInfo);
+
+  const onRefresh = async () => {
+    await dispatch(getMany(''));
+    setRefreshing(true);
+  };
 
   useEffect(() => {
     if (userInfo) {
       setUserData(userInfo);
+      setRefreshing(false);
     }
   }, [userInfo]);
 
@@ -36,7 +43,6 @@ const Index = () => {
     } else {
       setUserData(userInfo);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchTxt]);
 
   const navigateAdduser = () => {
@@ -47,24 +53,11 @@ const Index = () => {
   };
 
   const getUserData = async (item) => {
-    // const result = await dispatch(getOne(userId));
-    // if (getOne.fulfilled.match(result)) {
-    //   const data = unwrapResult(result);
-
-    //   if (data) {
     NavigationUtils.push({
       screen: 'userProfile',
       title: 'User Profile Details',
       passProps: { item },
     });
-    //   }
-    // } else {
-    //   if (result.payload) {
-    //     Alert.alert('Error', result.payload.message || 'error');
-    //   } else {
-    //     Alert.alert('Error', result.error || 'error');
-    //   }
-    // }
   };
   const Item = ({ item }) => (
     <TouchableOpacity
@@ -103,7 +96,7 @@ const Index = () => {
           <Feather name="search" size={20} />
           <TextInput
             style={styles.searchBar}
-            placeholder=" Search by username or email"
+            placeholder=" Search by username"
             value={searchTxt}
             autoCorrect={false}
             onChangeText={(text) => {
@@ -123,6 +116,7 @@ const Index = () => {
           data={userData.filter((item) => item.roleId !== 1)}
           renderItem={Item}
           keyExtractor={(item) => item.username}
+          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
         />
       </View>
     </View>
@@ -201,7 +195,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginHorizontal: 20,
     backgroundColor: '#f2f2f2',
-    borderRadius: 15,
+    borderRadius: 30,
     alignItems: 'center',
     flexDirection: 'row',
   },

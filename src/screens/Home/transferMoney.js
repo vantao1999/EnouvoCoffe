@@ -42,28 +42,12 @@ const TransferMoney = () => {
   }, [searchTxt]);
 
   const getUserData = async (item) => {
-    // const result = await dispatch(getOne(userId));
-    // console.log('USER GET ID', result);
-    // if (getOne.fulfilled.match(result)) {
-    //   const data = unwrapResult(result);
-    //   console.log('UNWRAP RESULT ', data);
-
-    //   if (data) {
     NavigationUtils.push({
       screen: 'userTransfer',
       title: 'Transfer to EnouvoCafe Wallet',
       passProps: { item },
     });
     await dispatch(getMany(''));
-
-    //   }
-    // } else {
-    //   if (result.payload) {
-    //     Alert.alert('Error', result.payload.message || 'error');
-    //   } else {
-    //     Alert.alert('Error', result.error || 'error');
-    //   }
-    // }
   };
 
   const Item = ({ item }) => (

@@ -83,10 +83,17 @@ const Login = () => {
       const user = unwrapResult(result);
 
       if (user && user.scope === 'admin') {
+        await dispatch(getMany(''));
         await dispatch(getHistoryIn(''));
         await dispatch(getHistoryOut(''));
         NavigationUtils.startMainAdminContent();
       } else {
+        await dispatch(getMany(''));
+        await dispatch(getAccount(''));
+        await dispatch(getUserHistoryIn(''));
+        await dispatch(getUserHistoryOut(''));
+        await dispatch(userHistoryTransferIn(''));
+        await dispatch(userHistoryTransferOut(''));
         NavigationUtils.startMainContent();
       }
     } else {
@@ -96,12 +103,6 @@ const Login = () => {
         Alert.alert('Error', result.error || 'error');
       }
     }
-    await dispatch(getMany(''));
-    await dispatch(getAccount(''));
-    await dispatch(getUserHistoryIn(''));
-    await dispatch(getUserHistoryOut(''));
-    await dispatch(userHistoryTransferIn(''));
-    await dispatch(userHistoryTransferOut(''));
   };
 
   return (

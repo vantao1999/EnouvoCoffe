@@ -17,6 +17,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 const Home = () => {
   const [userData, setData] = React.useState({});
   const account = useSelector((state) => get(state, 'auth.account', null));
+  console.log('Account', account);
 
   useEffect(() => {
     if (account) {
@@ -52,6 +53,10 @@ const Home = () => {
             <TouchableOpacity style={styles.btnAction}>
               <Icon name="credit-card" size={30} />
               <Text style={styles.textTransfer}>Payment</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.btnAction}>
+              <Icon name="qrcode" size={30} />
+              <Text style={styles.textTransfer}>QR Code</Text>
             </TouchableOpacity>
           </View>
         </ScrollView>
@@ -118,12 +123,15 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   action: {
+    flex: 1,
     backgroundColor: '#ffffff',
     paddingVertical: 5,
+    paddingHorizontal: 10,
     marginTop: 10,
     flexDirection: 'row',
   },
   btnAction: {
+    flex: 1,
     alignItems: 'center',
     paddingVertical: 10,
     paddingHorizontal: 10,
@@ -131,7 +139,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     borderWidth: 2,
     borderColor: '#e1e1e1',
-    marginLeft: 10,
   },
   textTransfer: {
     fontFamily: 'Roboto',

@@ -111,7 +111,7 @@ export const getAccount = createAsyncThunk(
 );
 //Admin Doing
 export const getMany = createAsyncThunk(
-  'admin/users',
+  'admin/users/getListUser',
   async (data, { rejectWithValue, getState }) => {
     try {
       const accessToken = getState().auth.token;
@@ -129,7 +129,7 @@ export const getMany = createAsyncThunk(
 );
 
 export const createOne = createAsyncThunk(
-  'admin/users',
+  'admin/users/addNewUser',
   async (data, { rejectWithValue, getState }) => {
     try {
       const accessToken = getState().auth.token;

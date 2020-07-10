@@ -1,5 +1,5 @@
 APP_NAME=EnouvoBase
-BASE_URL=http:/$()/f4fdfbf8df01.ngrok.io/api/v1
+BASE_URL=https:/$()/enouvocoffee.hoanglive.me/api/v1
 CODE_PUSH_IOS_KEY=
 CODE_PUSH_ANDROID_KEY=
 ANDROID_STORE_FILE=my-release-key.keystore

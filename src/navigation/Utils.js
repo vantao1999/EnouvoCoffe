@@ -165,6 +165,9 @@ class NavigationUtils {
           topBar: {
             visible: isTopBarEnable,
             drawBehind: false,
+            backButton: {
+              color: Colors.buttonColorYellow,
+            },
             noBorder: noBorder || true,
             title: {
               text: title,

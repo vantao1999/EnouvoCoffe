@@ -8,6 +8,8 @@ import {
   Image,
   FlatList,
   TouchableOpacity,
+  RefreshControl,
+  refreshLoading,
 } from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
 import { useDispatch, useSelector } from 'react-redux';
@@ -37,7 +39,12 @@ const History = () => {
   );
   const FirstRoute = () => (
     <View style={styles.scene}>
-      <FlatList data={userHistoryIn} renderItem={In} keyExtractor={(item) => item.id} />
+      <FlatList
+        data={userHistoryIn}
+        renderItem={In}
+        keyExtractor={(item) => item.id}
+        refreshControl={<RefreshControl refreshing={refreshLoading} onRefresh={refresh} />}
+      />
     </View>
   );
 

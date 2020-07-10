@@ -16,7 +16,6 @@ import Feather from 'react-native-vector-icons/Feather';
 import { NavigationUtils } from '../../navigation';
 import { TouchableOpacity, ScrollView } from 'react-native-gesture-handler';
 import { useFormik } from 'formik';
-import * as Yup from 'yup';
 import { useDispatch } from 'react-redux';
 import { createOne } from '../../redux/UserRedux/operations';
 import { getMany } from '../../redux/UserRedux/operations';
@@ -60,8 +59,6 @@ const AddUser = () => {
     const data = { email, username, password };
 
     const result = await dispatch(createOne(data));
-    const getUser = await dispatch(getMany(''));
-    console.log('USerData', getUser);
     if (createOne.fulfilled.match(result)) {
       Alert.alert('Add successful');
       NavigationUtils.pop();
@@ -72,6 +69,7 @@ const AddUser = () => {
         Alert.alert('Error', result.error || 'error');
       }
     }
+    await dispatch(getMany(''));
   };
 
   const onSubmitEditing = (field) => {

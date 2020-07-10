@@ -22,7 +22,7 @@ import { updateOne, getMany } from '../../redux/UserRedux/operations';
 import { unwrapResult } from '@reduxjs/toolkit';
 
 const UserProfile = (props) => {
-  const loading = useSelector((state) => get(state, 'trans.loading', null));
+  const getManyLoading = useSelector((state) => get(state, 'auth.getManyLoading', null));
   const [userInfo, setData] = React.useState({
     isEdit: false,
   });
@@ -48,13 +48,13 @@ const UserProfile = (props) => {
       .then(unwrapResult)
       .then((success) => {
         Alert.alert('Updated successfully');
-        NavigationUtils.pop();
+        NavigationUtils.popToRoot();
       })
       .catch((err) => {
         if (result.payload) {
           Alert.alert('Error', err.payload.message || 'error');
         } else {
-          Alert.alert('Error', err.error || 'Something was not incorrect, Please try again');
+          Alert.alert('Error', err || 'Something was not incorrect, Please try again');
         }
       });
     const getUser = await dispatch(getMany(''));
@@ -150,6 +150,7 @@ const UserProfile = (props) => {
               defaultValue={props.item.phone}
               editable={userInfo.isEdit}
               placeholder="Enter phone"
+              keyboardType="numeric"
               onChangeText={formik.handleChange('phone')}
               returnKeyType="next"
             />
@@ -173,12 +174,12 @@ const UserProfile = (props) => {
             </TouchableOpacity>
           </View>
         </View>
-        {loading ? (
-          <View style={styles.loading}>
-            <ActivityIndicator size="large" color="#ffcc00" />
-          </View>
-        ) : null}
       </KeyboardAwareScrollView>
+      {getManyLoading ? (
+        <View style={styles.loading}>
+          <ActivityIndicator size="large" color="#ffcc00" />
+        </View>
+      ) : null}
     </View>
   );
 };

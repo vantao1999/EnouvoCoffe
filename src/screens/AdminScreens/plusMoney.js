@@ -1,16 +1,27 @@
 /* eslint-react-native/no-inline-styles */
 import React from 'react';
-import { View, Text, StyleSheet, TextInput, Image, Alert, TouchableOpacity } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  Image,
+  Alert,
+  TouchableOpacity,
+  ActivityIndicator,
+} from 'react-native';
 import { NavigationUtils } from '../../navigation';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useFormik } from 'formik';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { getMany } from '../../redux/UserRedux/operations';
 import { plusMoney, getHistoryIn } from '../../redux/TransactionRedux/operations';
 import { unwrapResult } from '@reduxjs/toolkit';
+import { get } from 'lodash';
 
 const AddMoney = (props) => {
   const dispatch = useDispatch();
+  const loading = useSelector((state) => get(state, 'trans.plusLoading', null));
   const formik = useFormik({
     initialValues: {
       userId: props.item.id,
@@ -87,6 +98,11 @@ const AddMoney = (props) => {
           </View>
         </View>
       </KeyboardAwareScrollView>
+      {loading ? (
+        <View style={styles.loading}>
+          <ActivityIndicator size="large" color="#ffcc00" />
+        </View>
+      ) : null}
     </View>
   );
 };
@@ -148,5 +164,15 @@ const styles = StyleSheet.create({
     fontFamily: 'Roboto-regular',
     fontSize: 18,
     color: 'white',
+  },
+  loading: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: 'rgba(0,0,0,0.2)',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

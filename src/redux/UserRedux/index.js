@@ -6,6 +6,7 @@ const authSlice = createSlice({
   initialState: {
     user: null,
     loading: false,
+    getManyLoading: false,
     location: null,
     fcmToken: null,
     token: null,
@@ -57,11 +58,14 @@ const authSlice = createSlice({
       state.user = payload[0];
     },
     [operations.getMany.pending]: (state) => {
-      state.loading = true;
+      state.getManyLoading = true;
     },
     [operations.getMany.fulfilled]: (state, { payload }) => {
-      state.loading = false;
+      state.getManyLoading = false;
       state.listUser = payload;
+    },
+    [operations.getMany.rejected]: (state) => {
+      state.getManyLoading = false;
     },
     [operations.getAccount.fulfilled]: (state, { payload }) => {
       state.loading = false;
