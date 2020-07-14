@@ -10,18 +10,18 @@ export async function transferMoney(userId, data) {
 }
 //get User history transferred
 export async function getHistoryTransferIn() {
-  return http.get('/client/users/me/transactionTransfer?type=in');
+  return http.get('/client/users/me/transactions?filter={"type":"TRANSFER", "status":"in"}');
 }
 export async function getHistoryTransferOut() {
-  return http.get('/client/users/me/transactionTransfer?type=out');
+  return http.get('/client/users/me/transactions?filter={"type":"TRANSFER", "status":"out"}');
 }
 //get User history when admin did actions
 export async function getHistoryTransactionIn() {
-  return http.get('/client/users/me/transactions?type=in');
+  return http.get('/client/users/me/transactions?filter={"type":"TRANSACTION", "status":"in"}');
 }
 
 export async function getHistoryTransactionOut() {
-  return http.get('/client/users/me/transactions?type=out');
+  return http.get('/client/users/me/transactions?filter={"type":"TRANSACTION", "status":"out"}');
 }
 /******************************************/
 /************ Side Admin *************/

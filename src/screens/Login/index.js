@@ -67,8 +67,8 @@ const Login = () => {
   };
   const formik = useFormik({
     initialValues: {
-      email: 'vantao.dev@gmail.com',
-      password: '123456',
+      email: 'thuy.tran3@gmail.com',
+      password: 'codebase',
     },
 
     onSubmit: (values) => {
@@ -175,11 +175,11 @@ const Login = () => {
           </View>
         </KeyboardAwareScrollView>
       </Animatable.View>
-      {/* {loading ? (
+      {loading ? (
         <View style={styles.loading}>
           <ActivityIndicator size="large" color="#ffcc00" />
         </View>
-      ) : null} */}
+      ) : null}
     </View>
   );
 };
