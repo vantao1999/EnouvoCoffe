@@ -77,7 +77,7 @@ export const uploadImage = createAsyncThunk(
 );
 
 export const updateProfile = createAsyncThunk(
-  '/client/users/me/updateProfile',
+  '/client/users/me/',
   async (data, { rejectWithValue, getState }) => {
     try {
       const accessToken = getState().auth.token;

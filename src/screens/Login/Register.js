@@ -5,18 +5,17 @@ import {
   Text,
   TextInput,
   StyleSheet,
-  KeyboardAvoidingView,
   Platform,
   Alert,
   Keyboard,
+  TouchableOpacity,
 } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import LinearGradient from 'react-native-linear-gradient';
 import * as Animatable from 'react-native-animatable';
 import Feather from 'react-native-vector-icons/Feather';
 import { NavigationUtils } from '../../navigation';
-import { TouchableOpacity, ScrollView } from 'react-native-gesture-handler';
 import { useFormik } from 'formik';
-import * as Yup from 'yup';
 import { useDispatch } from 'react-redux';
 import { register } from '../../redux/UserRedux/operations';
 // import { values } from 'lodash';
@@ -89,16 +88,13 @@ const Register = () => {
   };
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={styles.container}
-    >
+    <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.text_header}>Register Now!</Text>
       </View>
 
       <Animatable.View style={styles.footer} animation="fadeInUp" duration={500}>
-        <ScrollView showsVerticalScrollIndicator={false}>
+        <KeyboardAwareScrollView showsVerticalScrollIndicator={false} enableOnAndroid={true}>
           <Text style={styles.text_footer}>Email</Text>
           <View style={styles.action}>
             <Feather name="mail" color="#05375a" size={20} />
@@ -163,9 +159,9 @@ const Register = () => {
               <Text style={[styles.textSign, { color: '#ffcc00' }]}>Sign In</Text>
             </TouchableOpacity>
           </View>
-        </ScrollView>
+        </KeyboardAwareScrollView>
       </Animatable.View>
-    </KeyboardAvoidingView>
+    </View>
   );
 };
 export default Register;
@@ -185,7 +181,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
-    paddingVertical: 50,
     paddingHorizontal: 30,
   },
   text_header: {
@@ -195,22 +190,23 @@ const styles = StyleSheet.create({
   },
   text_footer: {
     color: '#05375a',
+    marginTop: 20,
     fontSize: 18,
   },
   action: {
     flexDirection: 'row',
-    marginTop: 10,
+    alignItems: 'center',
     borderBottomWidth: 1,
     borderBottomColor: '#f2f2f2',
-    paddingBottom: 5,
   },
   textInput: {
     flex: 1,
     paddingLeft: 10,
+    paddingVertical: Platform.OS === 'ios' ? 10 : null,
     color: '#05375a',
   },
   button: {
-    marginTop: 30,
+    marginTop: Platform.OS === 'ios' ? 50 : 10,
   },
   signIn: {
     width: '100%',

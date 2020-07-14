@@ -1,6 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, TextInput, Image, Alert } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { View, Text, StyleSheet, TextInput, Image, Alert, TouchableOpacity } from 'react-native';
 import { NavigationUtils } from '../../navigation';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useFormik } from 'formik';

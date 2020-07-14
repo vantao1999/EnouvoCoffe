@@ -8,15 +8,12 @@ import {
   TextInput,
   SafeAreaView,
   TouchableOpacity,
-  Alert,
 } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { NavigationUtils } from '../../navigation';
-import Feather from 'react-native-vector-icons/Feather';
-import { unwrapResult } from '@reduxjs/toolkit';
 import { get, includes, toLower } from 'lodash';
 
-import { getOne, getMany } from '../../redux/UserRedux/operations';
+import { getMany } from '../../redux/UserRedux/operations';
 
 const TransferMoney = () => {
   const dispatch = useDispatch();
@@ -52,6 +49,7 @@ const TransferMoney = () => {
 
   const Item = ({ item }) => (
     <TouchableOpacity
+      style={styles.tcbUser}
       onPress={() => {
         getUserData(item);
       }}
@@ -61,7 +59,6 @@ const TransferMoney = () => {
         <View style={styles.viewIn}>
           <Text style={styles.userTitle}>{item.username}</Text>
         </View>
-        <View style={styles.btnViewUser} />
       </View>
     </TouchableOpacity>
   );
@@ -77,9 +74,6 @@ const TransferMoney = () => {
             setSearchTxt(text);
           }}
         />
-        <TouchableOpacity style={styles.btnSearch}>
-          <Feather name="search" size={20} />
-        </TouchableOpacity>
       </View>
       <View style={styles.action}>
         <Text style={styles.textUser}>Recent Contact</Text>
@@ -113,24 +107,18 @@ const styles = StyleSheet.create({
     borderColor: '#7f7f7f',
     backgroundColor: '#ffffff',
     flex: 1,
-    marginRight: 10,
-  },
-  btnSearch: {
-    alignItems: 'center',
-    paddingHorizontal: 10,
-    paddingVertical: 10,
-    backgroundColor: '#ffffff',
-    borderRadius: 10,
   },
   action: {
     flexDirection: 'row',
     marginHorizontal: 20,
   },
+  tcbUser: {
+    marginVertical: 5,
+  },
   viewUser: {
-    marginTop: 10,
     marginHorizontal: 20,
     backgroundColor: '#f2f2f2',
-    borderRadius: 15,
+    borderRadius: 25,
     alignItems: 'center',
     flexDirection: 'row',
   },

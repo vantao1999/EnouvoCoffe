@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
   RefreshControl,
   refreshLoading,
+  Platform,
 } from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
 import { useDispatch, useSelector } from 'react-redux';
@@ -50,7 +51,12 @@ const History = () => {
 
   const SecondRoute = () => (
     <View style={styles.scene}>
-      <FlatList data={userHistoryOut} renderItem={Out} keyExtractor={(item) => item.id} />
+      <FlatList
+        data={userHistoryOut}
+        renderItem={Out}
+        keyExtractor={(item) => item.id}
+        refreshControl={<RefreshControl refreshing={refreshLoading} onRefresh={refresh} />}
+      />
     </View>
   );
 
@@ -60,6 +66,7 @@ const History = () => {
         data={getUserHistoryTransferIn}
         renderItem={Received}
         keyExtractor={(item) => item.id}
+        refreshControl={<RefreshControl refreshing={refreshLoading} onRefresh={refresh} />}
       />
     </View>
   );
@@ -70,6 +77,7 @@ const History = () => {
         data={getUserHistoryTransferOut}
         renderItem={TransferOut}
         keyExtractor={(item) => item.id}
+        refreshControl={<RefreshControl refreshing={refreshLoading} onRefresh={refresh} />}
       />
     </View>
   );
@@ -191,7 +199,7 @@ const History = () => {
           <Text style={styles.textTitle}>HISTORY</Text>
           <Feather name="clock" size={20} color="#56aaff" />
         </TouchableOpacity>
-        {loading ? <ActivityIndicator size="small" color="#ffcc00" /> : null}
+        {/* {loading ? <ActivityIndicator size="small" color="#ffcc00" /> : null} */}
         <TabView
           navigationState={{ index, routes }}
           renderScene={renderScene}
@@ -229,7 +237,7 @@ const styles = StyleSheet.create({
     bottom: 0,
   },
   content: {
-    flex: 3,
+    flex: Platform.OS === 'android' ? 6 : 3,
     marginTop: 30,
     backgroundColor: '#fff',
     paddingVertical: 10,

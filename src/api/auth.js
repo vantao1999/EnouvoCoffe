@@ -30,7 +30,7 @@ export async function setToken(accessToken) {
 }
 
 export async function updateProfile(data) {
-  return http.put('/client/users/me/updateProfile', data);
+  return http.put('/client/users/me', data);
 }
 //For admin
 export async function getMany(data) {

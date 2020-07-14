@@ -8,6 +8,7 @@ import {
   TextInput,
   Keyboard,
   Alert,
+  Platform,
 } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { NavigationUtils } from '../../navigation';
@@ -26,7 +27,7 @@ const Index = () => {
   const user = useSelector((state) => get(state, 'auth.user', null));
   useEffect(() => {
     if (user) {
-      setData(user);
+      setData((data) => ({ ...data, ...user }));
     }
   }, [user]);
 
@@ -51,7 +52,7 @@ const Index = () => {
       .then(unwrapResult)
       .then((success) => {
         Alert.alert('Updated successfully');
-        NavigationUtils.pop();
+        // NavigationUtils.pop();
       })
       .catch((err) => {
         if (result.payload) {
@@ -67,6 +68,9 @@ const Index = () => {
       isTopBarEnable: false,
     });
   };
+
+  console.log('Log userData', userData);
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -107,7 +111,7 @@ const Index = () => {
         </TouchableOpacity>
       </View>
       <View style={styles.footer}>
-        <KeyboardAwareScrollView>
+        <KeyboardAwareScrollView showsVerticalScrollIndicator={false}>
           <View style={styles.footer}>
             <View style={styles.action}>
               <Text style={styles.textTitle}>Name</Text>
@@ -116,7 +120,6 @@ const Index = () => {
                 defaultValue={userData.username}
                 editable={userData.isEdit}
                 placeholder="Enter name"
-                autoFocus={true}
                 onChangeText={formik.handleChange('username')}
                 returnKeyType="next"
               />
@@ -192,8 +195,8 @@ const styles = StyleSheet.create({
   },
   action: {
     backgroundColor: '#fff',
-    marginHorizontal: 10,
     paddingVertical: 10,
+    paddingHorizontal: 20,
     borderBottomColor: '#f2f2f2',
     borderBottomWidth: 1.5,
   },
@@ -203,9 +206,10 @@ const styles = StyleSheet.create({
   },
   textContent: {
     fontSize: 20,
-    marginTop: 5,
-    fontWeight: '600',
+    paddingVertical: 5,
     fontFamily: 'Roboto',
+    fontWeight: Platform.OS === 'android' ? 'bold' : '600',
+    color: Platform.OS === 'android' ? '#000' : null,
   },
   edit: {
     position: 'absolute',
@@ -215,8 +219,8 @@ const styles = StyleSheet.create({
   },
   textEditContent: {
     fontSize: 22,
-    marginTop: 5,
     fontFamily: 'Roboto',
+    paddingVertical: 5,
   },
   textSave: {
     fontFamily: 'Roboto-Regular',

@@ -7,11 +7,11 @@ import {
   StyleSheet,
   Platform,
   Alert,
-  KeyboardAvoidingView,
   Keyboard,
   TouchableOpacity,
   ActivityIndicator,
 } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import LinearGradient from 'react-native-linear-gradient';
 import * as Animatable from 'react-native-animatable';
 import { useFormik } from 'formik';
@@ -106,82 +106,81 @@ const Login = () => {
   };
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={styles.container}
-    >
+    <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.text_header}>Life Begins After Coffee</Text>
       </View>
 
       <Animatable.View style={styles.footer} animation="fadeInUp" duration={500}>
-        <Text style={styles.text_footer}>Email</Text>
-        <View style={styles.action}>
-          <Feather name="mail" color="#05375a" size={20} />
-          <TextInput
-            style={styles.textInput}
-            type="email"
-            ref={emailRef}
-            defaultValue={formik.values.email}
-            placeholder="Enter your email"
-            onChangeText={formik.handleChange('email')}
-            onSubmitEditing={() => onSubmitEditing(TEXT_INPUT_EMAIL)}
-            errorMessage={formik.errors.email}
-            returnKeyType="next"
-          />
-        </View>
+        <KeyboardAwareScrollView showsVerticalScrollIndicator={false} enableOnAndroid={true}>
+          <Text style={styles.text_footer}>Email</Text>
+          <View style={styles.action}>
+            <Feather name="mail" color="#05375a" size={20} />
+            <TextInput
+              style={styles.textInput}
+              type="email"
+              ref={emailRef}
+              defaultValue={formik.values.email}
+              placeholder="Enter your email"
+              onChangeText={formik.handleChange('email')}
+              onSubmitEditing={() => onSubmitEditing(TEXT_INPUT_EMAIL)}
+              errorMessage={formik.errors.email}
+              returnKeyType="next"
+            />
+          </View>
 
-        <Text style={[styles.text_footer, { marginTop: 35 }]}>Password</Text>
-        <View style={styles.action}>
-          <Feather name="lock" color="#05375a" size={20} />
-          <TextInput
-            style={styles.textInput}
-            ref={passRef}
-            defaultValue={formik.values.password}
-            placeholder="Enter your password"
-            onChangeText={formik.handleChange('password')}
-            onSubmitEditing={() => onSubmitEditing(TEXT_INPUT_PASSWORD)}
-            secureTextEntry={data.secureTextEntry ? true : false}
-            errorMessage={formik.errors.password}
-            returnKeyType="go"
-          />
-          <TouchableOpacity onPress={updateSecureTextEntry}>
-            {data.secureTextEntry ? (
-              <Feather name="eye-off" color="#05375a" size={20} />
-            ) : (
-              <Feather name="eye" color="#05375a" size={20} />
-            )}
+          <Text style={[styles.text_footer, { marginTop: 20 }]}>Password</Text>
+          <View style={styles.action}>
+            <Feather name="lock" color="#05375a" size={20} />
+            <TextInput
+              style={styles.textInput}
+              ref={passRef}
+              defaultValue={formik.values.password}
+              placeholder="Enter your password"
+              onChangeText={formik.handleChange('password')}
+              onSubmitEditing={() => onSubmitEditing(TEXT_INPUT_PASSWORD)}
+              secureTextEntry={data.secureTextEntry ? true : false}
+              errorMessage={formik.errors.password}
+              returnKeyType="go"
+            />
+            <TouchableOpacity onPress={updateSecureTextEntry}>
+              {data.secureTextEntry ? (
+                <Feather name="eye-off" color="#05375a" size={20} />
+              ) : (
+                <Feather name="eye" color="#05375a" size={20} />
+              )}
+            </TouchableOpacity>
+          </View>
+          <TouchableOpacity
+            style={styles.btnForgot}
+            onPress={() => {
+              NavigationUtils.push({
+                screen: 'ForgetPassword',
+                title: 'ForgotPassword',
+              });
+            }}
+          >
+            <Text style={styles.textForgot}>Forgot password?</Text>
           </TouchableOpacity>
-        </View>
-        <TouchableOpacity
-          style={styles.btnForgot}
-          onPress={() => {
-            NavigationUtils.push({
-              screen: 'ForgetPassword',
-              title: 'ForgotPassword',
-            });
-          }}
-        >
-          <Text style={styles.textForgot}>Forgot password?</Text>
-        </TouchableOpacity>
 
-        <View style={styles.button}>
-          <TouchableOpacity onPress={formik.handleSubmit}>
-            <LinearGradient colors={['#f7e120', '#fcdb55']} style={styles.signIn}>
-              <Text style={[styles.textSign, { color: 'black' }]}>Sign In</Text>
-            </LinearGradient>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigateScreen('Register')} style={styles.signUp}>
-            <Text style={[styles.textSign, { color: '#ffcc00' }]}>Sign Up</Text>
-          </TouchableOpacity>
-        </View>
+          <View style={styles.button}>
+            <TouchableOpacity onPress={formik.handleSubmit}>
+              <LinearGradient colors={['#f7e120', '#fcdb55']} style={styles.signIn}>
+                <Text style={[styles.textSign, { color: 'black' }]}>Sign In</Text>
+              </LinearGradient>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => navigateScreen('Register')} style={styles.signUp}>
+              <Text style={[styles.textSign, { color: '#ffcc00' }]}>Sign Up</Text>
+            </TouchableOpacity>
+          </View>
+        </KeyboardAwareScrollView>
       </Animatable.View>
       {/* {loading ? (
         <View style={styles.loading}>
           <ActivityIndicator size="large" color="#ffcc00" />
         </View>
       ) : null} */}
-    </KeyboardAvoidingView>
+    </View>
   );
 };
 export default Login;
@@ -201,7 +200,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
-    paddingVertical: 50,
     paddingHorizontal: 30,
   },
   text_header: {
@@ -210,23 +208,24 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   text_footer: {
+    marginTop: 20,
     color: '#05375a',
     fontSize: 18,
   },
   action: {
     flexDirection: 'row',
-    marginTop: 10,
+    alignItems: 'center',
     borderBottomWidth: 1,
     borderBottomColor: '#f2f2f2',
-    paddingBottom: 5,
   },
   textInput: {
     flex: 1,
     paddingLeft: 10,
+    paddingVertical: 10,
     color: '#05375a',
   },
   button: {
-    marginTop: 50,
+    marginTop: Platform.OS === 'ios' ? 50 : 10,
   },
   signIn: {
     width: '100%',

@@ -7,6 +7,7 @@ import {
   Image,
   SafeAreaView,
   TouchableOpacity,
+  Platform,
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import { NavigationUtils } from '../../navigation';
@@ -28,6 +29,13 @@ const Home = () => {
   const navigate = () => {
     NavigationUtils.push({
       screen: 'transferMoney',
+      isTopBarEnable: false,
+    });
+  };
+  const qrCode = () => {
+    NavigationUtils.push({
+      screen: 'QRcode',
+      isTopBarEnable: false,
     });
   };
   return (
@@ -56,7 +64,9 @@ const Home = () => {
             </TouchableOpacity>
             <TouchableOpacity style={styles.btnAction}>
               <Icon name="qrcode" size={30} />
-              <Text style={styles.textTransfer}>QR Code</Text>
+              <Text style={styles.textTransfer} onPress={qrCode}>
+                QR Code
+              </Text>
             </TouchableOpacity>
           </View>
         </ScrollView>
@@ -81,6 +91,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     borderRadius: 20,
+    marginTop: Platform.OS === 'android' ? 10 : null,
   },
   title: {
     fontSize: 35,

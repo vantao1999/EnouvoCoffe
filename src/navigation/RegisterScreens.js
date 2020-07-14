@@ -5,6 +5,7 @@ import Login from '../screens/Login';
 import Register from '../screens/Login/Register';
 import ForgetPassword from '../screens/Login/ForgetPassword';
 import VerifyCode from '../screens/Login/VerifyCode';
+import QRcode from '../screens/Home/qrCode';
 
 import Loading from '../screens/Utils/Loading';
 import InAppNotification from '../screens/Utils/InAppNotification';
@@ -35,6 +36,7 @@ const SCREENS_WITH_REDUX = {
   Home,
   History,
   transferMoney,
+  QRcode,
   UploadImage,
   User,
 
