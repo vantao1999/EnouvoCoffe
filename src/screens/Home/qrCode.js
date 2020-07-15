@@ -4,7 +4,7 @@ import React from 'react';
 import { Alert, Text, TouchableOpacity, Linking } from 'react-native';
 
 import QRCodeScanner from 'react-native-qrcode-scanner';
-import { log } from 'react-native-reanimated';
+// import { log } from 'react-native-reanimated';
 
 const ScanQR = () => {
   const onSuccess = (e) => {

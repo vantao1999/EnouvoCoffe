@@ -25,9 +25,8 @@ import {
 
 const History = () => {
   const dispatch = useDispatch();
-  const loading = useSelector((state) => get(state, 'trans.loading', null));
-
-  console.log('LOADING', loading);
+  // const loading = useSelector((state) => get(state, 'trans.loading', null));
+  // console.log('LOADING', loading);
   const userHistoryIn = useSelector((state) => get(state, 'trans.listHistoryTransactionIn', null));
   const userHistoryOut = useSelector((state) =>
     get(state, 'trans.listHistoryTransactionOut', null),
@@ -38,6 +37,7 @@ const History = () => {
   const getUserHistoryTransferOut = useSelector((state) =>
     get(state, 'trans.listHistoryTransfer', null),
   );
+  console.log('TRNAFEROUT', getUserHistoryTransferOut);
   const FirstRoute = () => (
     <View style={styles.scene}>
       <FlatList
@@ -48,7 +48,6 @@ const History = () => {
       />
     </View>
   );
-
   const SecondRoute = () => (
     <View style={styles.scene}>
       <FlatList
@@ -59,7 +58,6 @@ const History = () => {
       />
     </View>
   );
-
   const ThirdRoute = () => (
     <View style={styles.scene}>
       <FlatList
@@ -70,7 +68,6 @@ const History = () => {
       />
     </View>
   );
-
   const FourthRoute = () => (
     <View style={styles.scene}>
       <FlatList
@@ -108,9 +105,7 @@ const History = () => {
 
   const In = ({ item }) => (
     <View>
-      <Text style={styles.textDate}>
-        Date: {moment(item.createdAt).format('MMMM D, YYYY - h:mm a')}
-      </Text>
+      <Text style={styles.textDate}>{moment(item.createdAt).format('MMMM D, YYYY - h:mm a')}</Text>
       <View style={styles.historyContainer}>
         <View style={styles.textContainer}>
           <Text style={styles.textHistoryTitle}>Enouvo Cafe plus money:</Text>
@@ -126,9 +121,7 @@ const History = () => {
 
   const Out = ({ item }) => (
     <View>
-      <Text style={styles.textDate}>
-        Date: {moment(item.createdAt).format('MMMM D, YYYY - h:mm a')}
-      </Text>
+      <Text style={styles.textDate}>{moment(item.createdAt).format('MMMM D, YYYY - h:mm a')}</Text>
       <View style={styles.historyContainer}>
         <View style={styles.textContainer}>
           <Text style={styles.textHistoryTitle}>Enouvo Cafe minus:</Text>
@@ -144,9 +137,7 @@ const History = () => {
 
   const Received = ({ item }) => (
     <View>
-      <Text style={styles.textDate}>
-        Date: {moment(item.createdAt).format('MMMM D, YYYY - h:mm a')}
-      </Text>
+      <Text style={styles.textDate}>{moment(item.createdAt).format('MMMM D, YYYY - h:mm a')}</Text>
       <View style={styles.historyContainer}>
         <View style={styles.textContainer}>
           <Text style={styles.textHistoryTitle}>{item.username} has transferred to you:</Text>
@@ -161,9 +152,7 @@ const History = () => {
   );
   const TransferOut = ({ item }) => (
     <View>
-      <Text style={styles.textDate}>
-        Date: {moment(item.createdAt).format('MMMM D, YYYY - h:mm a')}
-      </Text>
+      <Text style={styles.textDate}>{moment(item.createdAt).format('MMMM D, YYYY - h:mm a')}</Text>
       <View style={styles.historyContainer}>
         <View style={styles.textContainer}>
           <Text style={styles.textHistoryTitle}>You has transferred to {item.username}:</Text>
@@ -237,11 +226,9 @@ const styles = StyleSheet.create({
     bottom: 0,
   },
   content: {
-    flex: Platform.OS === 'android' ? 6 : 3,
-    marginTop: 30,
+    flex: Platform.OS === 'android' ? 5 : 3,
     backgroundColor: '#fff',
     paddingVertical: 10,
-    paddingHorizontal: 10,
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
   },
@@ -272,6 +259,7 @@ const styles = StyleSheet.create({
   },
   textDate: {
     marginTop: 20,
+    marginLeft: 10,
     fontFamily: 'Roboto-bold',
     fontSize: 17,
   },

@@ -128,7 +128,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header: {
-    flex: 1.5,
+    flex: 1,
     borderBottomLeftRadius: 25,
     borderBottomRightRadius: 25,
     justifyContent: 'center',
@@ -137,13 +137,13 @@ const styles = StyleSheet.create({
   },
   textIncome: {
     position: 'absolute',
-    top: 40,
+    top: 20,
     left: 20,
     fontFamily: 'Roboto-bold',
     fontSize: 20,
   },
   footer: {
-    flex: 2,
+    flex: 3,
   },
   viewBalance: {
     paddingHorizontal: 10,
@@ -168,7 +168,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   searchBar: {
-    paddingVertical: 10,
+    paddingVertical: 5,
     flex: 1,
   },
   action: {
@@ -184,7 +184,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     backgroundColor: '#2eaa6a',
     paddingHorizontal: 5,
-    paddingVertical: 10,
+    paddingVertical: 5,
     borderRadius: 15,
   },
   textCreate: {

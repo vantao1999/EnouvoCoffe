@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Image,
   FlatList,
+  Platform,
   TouchableOpacity,
   ActivityIndicator,
 } from 'react-native';
@@ -60,9 +61,7 @@ const AdminHistory = () => {
 
   const Plus = ({ item }) => (
     <View>
-      <Text style={styles.textDate}>
-        Date: {moment(item.createdAt).format('MMMM D, YYYY - h:mm a')}
-      </Text>
+      <Text style={styles.textDate}>{moment(item.createdAt).format('MMMM D, YYYY - h:mm a')}</Text>
       <View style={styles.historyContainer}>
         <View style={styles.textContainer}>
           <Text style={styles.textHistoryTitle}>Add money for {item.username}:</Text>
@@ -78,9 +77,7 @@ const AdminHistory = () => {
 
   const Minus = ({ item }) => (
     <View>
-      <Text style={styles.textDate}>
-        Date: {moment(item.createdAt).format('MMMM DD, YYYY - h:mm a')}
-      </Text>
+      <Text style={styles.textDate}>{moment(item.createdAt).format('MMMM DD, YYYY - h:mm a')}</Text>
       <View style={styles.historyContainer}>
         <View style={styles.textContainer}>
           <Text style={styles.textHistoryTitle}>Minus {item.username}'s account:</Text>
@@ -156,11 +153,9 @@ const styles = StyleSheet.create({
     bottom: 0,
   },
   content: {
-    flex: 3,
-    marginTop: 30,
+    flex: Platform.OS === 'android' ? 5 : 3,
     backgroundColor: '#fff',
     paddingVertical: 10,
-    paddingHorizontal: 10,
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
   },
@@ -191,6 +186,7 @@ const styles = StyleSheet.create({
   },
   textDate: {
     marginTop: 20,
+    marginLeft: 10,
     fontFamily: 'Roboto-bold',
     fontSize: 17,
   },

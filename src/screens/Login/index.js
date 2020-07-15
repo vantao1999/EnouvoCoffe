@@ -35,7 +35,8 @@ const TEXT_INPUT_PASSWORD = 'TEXT_INPUT_PASSWORD';
 
 const Login = () => {
   const dispatch = useDispatch();
-  const loading = useSelector((state) => state.auth.loading);
+  const loading = useSelector((state) => state.trans.loading);
+  // console.log('LOADING Login', loading);
   const [data, setData] = React.useState({
     secureTextEntry: true,
   });
@@ -252,14 +253,14 @@ const styles = StyleSheet.create({
     color: 'white',
     fontWeight: 'bold',
   },
-  // loading: {
-  //   position: 'absolute',
-  //   top: 0,
-  //   bottom: 0,
-  //   left: 0,
-  //   right: 0,
-  //   backgroundColor: 'rgba(0,0,0,0.2)',
-  //   justifyContent: 'center',
-  //   alignItems: 'center',
-  // },
+  loading: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: 'rgba(0,0,0,0.2)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 });

@@ -18,7 +18,6 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 const Home = () => {
   const [userData, setData] = React.useState({});
   const account = useSelector((state) => get(state, 'auth.account', null));
-  console.log('Account', account);
 
   useEffect(() => {
     if (account) {

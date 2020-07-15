@@ -52,7 +52,7 @@ const Index = () => {
       .then(unwrapResult)
       .then((success) => {
         Alert.alert('Updated successfully');
-        // NavigationUtils.pop();
+        NavigationUtils.pop();
       })
       .catch((err) => {
         if (result.payload) {
@@ -68,8 +68,6 @@ const Index = () => {
       isTopBarEnable: false,
     });
   };
-
-  console.log('Log userData', userData);
 
   return (
     <View style={styles.container}>

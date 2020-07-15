@@ -5,37 +5,37 @@ export async function setToken(accessToken) {
   return http.setAuthorizationHeader(accessToken);
 }
 
-export async function transferMoney(userId, data) {
-  return http.post(`/client/users/me/transactionTransfer/${userId}`, data);
+export async function transferMoney(data) {
+  return http.post('/client/users/me/transactions', data);
 }
 //get User history transferred
 export async function getHistoryTransferIn() {
-  return http.get('/client/users/me/transactions?filter={"type":"TRANSFER", "status":"in"}');
+  return http.get('/client/users/me/transactions?filter={"type":"TRANSFER","status":"in"}');
 }
 export async function getHistoryTransferOut() {
-  return http.get('/client/users/me/transactions?filter={"type":"TRANSFER", "status":"out"}');
+  return http.get('/client/users/me/transactions?filter={"type":"TRANSFER","status":"out"}');
 }
 //get User history when admin did actions
 export async function getHistoryTransactionIn() {
-  return http.get('/client/users/me/transactions?filter={"type":"TRANSACTION", "status":"in"}');
+  return http.get('/client/users/me/transactions?filter={"type":"TRANSACTION","status":"in"}');
 }
 
 export async function getHistoryTransactionOut() {
-  return http.get('/client/users/me/transactions?filter={"type":"TRANSACTION", "status":"out"}');
+  return http.get('/client/users/me/transactions?filter={"type":"TRANSACTION","status":"out"}');
 }
 /******************************************/
 /************ Side Admin *************/
 /******************************************/
 
-export async function plusMoney(userId, data) {
-  return http.post(`/admin/transactions/${userId}?type=in`, data);
+export async function plusMoney(data) {
+  return http.post('/admin/transactions', data);
 }
-export async function minusMoney(userId, data) {
-  return http.post(`/admin/transactions/${userId}?type=out`, data);
+export async function minusMoney(data) {
+  return http.post('/admin/transactions', data);
 }
 export async function adminGetHistoryTransactionIn() {
-  return http.get('/admin/transactions?type=in');
+  return http.get('/admin/transactions?filter={"type":"TRANSACTION","status":"in"}');
 }
 export async function adminGetHistoryTransactionOut() {
-  return http.get('/admin/transactions?type=out');
+  return http.get('/admin/transactions?filter={"type":"TRANSACTION","status":"out"}');
 }

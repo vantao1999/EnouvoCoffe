@@ -8,10 +8,11 @@ export const transferMoney = createAsyncThunk(
       const accessToken = getState().auth.token;
       await TransApis.setToken(accessToken);
       const userData = {
+        receiverId: data.userId,
         payment: data.payment,
         notes: data.notes,
       };
-      const response = await TransApis.transferMoney(data.userId, userData);
+      const response = await TransApis.transferMoney(userData);
       return response?.data;
     } catch (err) {
       if (!err.data) {
@@ -100,10 +101,12 @@ export const plusMoney = createAsyncThunk(
       const accessToken = getState().auth.token;
       await TransApis.setToken(accessToken);
       const userData = {
+        receiverId: data.userId,
         payment: data.payment,
         notes: data.notes,
+        type: 'plus',
       };
-      const response = await TransApis.plusMoney(data.userId, userData);
+      const response = await TransApis.plusMoney(userData);
       return response?.data;
     } catch (err) {
       if (!err.data) {
@@ -121,10 +124,12 @@ export const minusMoney = createAsyncThunk(
       const accessToken = getState().auth.token;
       await TransApis.setToken(accessToken);
       const userData = {
+        receiverId: data.userId,
         payment: data.payment,
         notes: data.notes,
+        type: 'minus',
       };
-      const response = await TransApis.minusMoney(data.userId, userData);
+      const response = await TransApis.minusMoney(userData);
       return response?.data;
     } catch (err) {
       if (!err.data) {
