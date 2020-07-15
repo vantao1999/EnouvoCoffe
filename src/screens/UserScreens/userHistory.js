@@ -35,46 +35,62 @@ const History = () => {
     get(state, 'trans.listHistoryTransferIn', null),
   );
   const getUserHistoryTransferOut = useSelector((state) =>
-    get(state, 'trans.listHistoryTransfer', null),
+    get(state, 'trans.listHistoryTransferOut', null),
   );
-  console.log('TRNAFEROUT', getUserHistoryTransferOut);
+  console.log('TRANSFEROUT', getUserHistoryTransferOut);
+
+  const firstReload = async () => {
+    await dispatch(getUserHistoryIn(''));
+  };
   const FirstRoute = () => (
     <View style={styles.scene}>
       <FlatList
         data={userHistoryIn}
         renderItem={In}
         keyExtractor={(item) => item.id}
-        refreshControl={<RefreshControl refreshing={refreshLoading} onRefresh={refresh} />}
+        refreshControl={<RefreshControl refreshing={refreshLoading} onRefresh={firstReload} />}
       />
     </View>
   );
+
+  const secondReload = async () => {
+    await dispatch(getUserHistoryOut(''));
+  };
   const SecondRoute = () => (
     <View style={styles.scene}>
       <FlatList
         data={userHistoryOut}
         renderItem={Out}
         keyExtractor={(item) => item.id}
-        refreshControl={<RefreshControl refreshing={refreshLoading} onRefresh={refresh} />}
+        refreshControl={<RefreshControl refreshing={refreshLoading} onRefresh={secondReload} />}
       />
     </View>
   );
+
+  const thirdReload = async () => {
+    await dispatch(userHistoryTransferIn(''));
+  };
   const ThirdRoute = () => (
     <View style={styles.scene}>
       <FlatList
         data={getUserHistoryTransferIn}
         renderItem={Received}
         keyExtractor={(item) => item.id}
-        refreshControl={<RefreshControl refreshing={refreshLoading} onRefresh={refresh} />}
+        refreshControl={<RefreshControl refreshing={refreshLoading} onRefresh={thirdReload} />}
       />
     </View>
   );
+
+  const fourthRefresh = async () => {
+    await dispatch(userHistoryTransferOut(''));
+  };
   const FourthRoute = () => (
     <View style={styles.scene}>
       <FlatList
         data={getUserHistoryTransferOut}
         renderItem={TransferOut}
         keyExtractor={(item) => item.id}
-        refreshControl={<RefreshControl refreshing={refreshLoading} onRefresh={refresh} />}
+        refreshControl={<RefreshControl refreshing={refreshLoading} onRefresh={fourthRefresh} />}
       />
     </View>
   );
@@ -125,7 +141,7 @@ const History = () => {
       <View style={styles.historyContainer}>
         <View style={styles.textContainer}>
           <Text style={styles.textHistoryTitle}>Enouvo Cafe minus:</Text>
-          <Text style={styles.textPayment}>{item.payment} vnd</Text>
+          <Text style={styles.textPayment}>-{item.payment} vnd</Text>
         </View>
         <View style={styles.textContainer}>
           <Text style={styles.textTitleNotes}>Message:</Text>
@@ -166,12 +182,6 @@ const History = () => {
     </View>
   );
 
-  const refresh = async () => {
-    await dispatch(getUserHistoryIn(''));
-    await dispatch(getUserHistoryOut(''));
-    await dispatch(userHistoryTransferIn(''));
-    await dispatch(userHistoryTransferOut(''));
-  };
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -184,7 +194,7 @@ const History = () => {
       </View>
 
       <View style={styles.content}>
-        <TouchableOpacity style={styles.viewTitle} onPress={refresh}>
+        <TouchableOpacity style={styles.viewTitle}>
           <Text style={styles.textTitle}>HISTORY</Text>
           <Feather name="clock" size={20} color="#56aaff" />
         </TouchableOpacity>

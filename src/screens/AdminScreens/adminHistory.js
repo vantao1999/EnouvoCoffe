@@ -9,6 +9,8 @@ import {
   Platform,
   TouchableOpacity,
   ActivityIndicator,
+  RefreshControl,
+  refreshLoading,
 } from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
 import { useDispatch, useSelector } from 'react-redux';
@@ -18,16 +20,26 @@ import { getHistoryIn, getHistoryOut } from '../../redux/TransactionRedux/operat
 
 const AdminHistory = () => {
   const dispatch = useDispatch();
-  const loading = useSelector((state) => get(state, 'trans.loading', null));
   const historyIn = useSelector((state) => get(state, 'trans.listAdminHistoryIn', null));
   const historyOut = useSelector((state) => get(state, 'trans.listAdminHistoryOut', null));
 
+  const addRefresh = async () => {
+    await dispatch(getHistoryIn(''));
+  };
   const AddMoney = () => (
     <View style={styles.scene}>
-      <FlatList data={historyIn} renderItem={Plus} keyExtractor={(item) => item.id} />
+      <FlatList
+        data={historyIn}
+        renderItem={Plus}
+        keyExtractor={(item) => item.id}
+        refreshControl={<RefreshControl refreshing={refreshLoading} onRefresh={addRefresh} />}
+      />
     </View>
   );
 
+  const minusRefresh = async () => {
+    await dispatch(getHistoryOut(''));
+  };
   const MinusMoney = () => (
     <View style={styles.scene}>
       <FlatList
@@ -35,6 +47,7 @@ const AdminHistory = () => {
         renderItem={Minus}
         refreshing={true}
         keyExtractor={(item) => item.username}
+        refreshControl={<RefreshControl refreshing={refreshLoading} onRefresh={minusRefresh} />}
       />
     </View>
   );
@@ -91,10 +104,6 @@ const AdminHistory = () => {
     </View>
   );
 
-  const refresh = async () => {
-    await dispatch(getHistoryIn(''));
-    await dispatch(getHistoryOut(''));
-  };
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -107,7 +116,7 @@ const AdminHistory = () => {
       </View>
 
       <View style={styles.content}>
-        <TouchableOpacity style={styles.viewTitle} onPress={refresh}>
+        <TouchableOpacity style={styles.viewTitle}>
           <Text style={styles.textTitle}>HISTORY</Text>
           <Feather name="clock" size={20} color="#56aaff" />
         </TouchableOpacity>
@@ -118,11 +127,11 @@ const AdminHistory = () => {
           renderTabBar={renderTabBar}
         />
       </View>
-      {loading ? (
+      {/* {loading ? (
         <View style={styles.loading}>
           <ActivityIndicator size="large" color="#ffcc00" />
         </View>
-      ) : null}
+      ) : null} */}
     </View>
   );
 };

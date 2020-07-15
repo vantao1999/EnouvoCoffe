@@ -15,7 +15,7 @@ export async function getHistoryTransferIn() {
 export async function getHistoryTransferOut() {
   return http.get('/client/users/me/transactions?filter={"type":"TRANSFER","status":"out"}');
 }
-//get User history when admin did actions
+//get User history when admin transaction
 export async function getHistoryTransactionIn() {
   return http.get('/client/users/me/transactions?filter={"type":"TRANSACTION","status":"in"}');
 }

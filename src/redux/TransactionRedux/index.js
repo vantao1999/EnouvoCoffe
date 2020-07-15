@@ -5,8 +5,9 @@ const tranSlice = createSlice({
   name: 'trans',
   initialState: {
     loading: false,
+    transLoading: false,
     plusLoading: false,
-    listHistoryTransfer: [],
+    listHistoryTransferOut: [],
     listHistoryTransferIn: [],
     listHistoryTransactionIn: [],
     listHistoryTransactionOut: [],
@@ -19,14 +20,13 @@ const tranSlice = createSlice({
   extraReducers: {
     // User Transfer Money
     [operations.transferMoney.pending]: (state) => {
-      state.loading = true;
+      state.transLoading = true;
     },
     [operations.transferMoney.fulfilled]: (state, { payload }) => {
-      state.loading = false;
-      state.listUser = payload;
+      state.transLoading = false;
     },
     [operations.transferMoney.rejected]: (state, { payload }) => {
-      state.loading = false;
+      state.transLoading = false;
     },
     //History Transfer Out
     [operations.userHistoryTransferOut.pending]: (state) => {
@@ -34,7 +34,7 @@ const tranSlice = createSlice({
     },
     [operations.userHistoryTransferOut.fulfilled]: (state, { payload }) => {
       state.loading = false;
-      state.listHistoryTransfer = payload;
+      state.listHistoryTransferOut = payload;
     },
     [operations.userHistoryTransferOut.rejected]: (state, { payload }) => {
       state.loading = false;

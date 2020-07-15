@@ -1,14 +1,25 @@
 import React from 'react';
-import { View, Text, StyleSheet, TextInput, Image, Alert, TouchableOpacity } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  Image,
+  Alert,
+  TouchableOpacity,
+  ActivityIndicator,
+} from 'react-native';
 import { NavigationUtils } from '../../navigation';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useFormik } from 'formik';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { getMany, getAccount } from '../../redux/UserRedux/operations';
 import { userHistoryTransferOut, transferMoney } from '../../redux/TransactionRedux/operations';
 import { unwrapResult } from '@reduxjs/toolkit';
+import { get } from 'lodash';
 
 const UserTransfer = (props) => {
+  const loading = useSelector((state) => get(state, 'trans.transLoading', null));
   const dispatch = useDispatch();
   const formik = useFormik({
     initialValues: {
@@ -22,7 +33,6 @@ const UserTransfer = (props) => {
   });
 
   const reLoad = async () => {
-    await dispatch(getMany(''));
     await dispatch(getAccount(''));
     await dispatch(userHistoryTransferOut(''));
   };
@@ -86,6 +96,11 @@ const UserTransfer = (props) => {
           </TouchableOpacity>
         </View>
       </KeyboardAwareScrollView>
+      {loading ? (
+        <View style={styles.loading}>
+          <ActivityIndicator size="large" color="#ffcc00" />
+        </View>
+      ) : null}
     </View>
   );
 };
@@ -143,5 +158,15 @@ const styles = StyleSheet.create({
   textTransfer: {
     fontFamily: 'Roboto-regular',
     fontSize: 18,
+  },
+  loading: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: 'rgba(0,0,0,0.2)',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

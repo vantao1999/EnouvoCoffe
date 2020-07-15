@@ -52,7 +52,6 @@ const Index = () => {
       .then(unwrapResult)
       .then((success) => {
         Alert.alert('Updated successfully');
-        NavigationUtils.pop();
       })
       .catch((err) => {
         if (result.payload) {
