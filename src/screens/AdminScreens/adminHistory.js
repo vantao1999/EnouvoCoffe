@@ -15,6 +15,7 @@ import {
 import Feather from 'react-native-vector-icons/Feather';
 import { useDispatch, useSelector } from 'react-redux';
 import { get } from 'lodash';
+import _ from 'lodash';
 import moment from 'moment';
 import { getHistoryIn, getHistoryOut } from '../../redux/TransactionRedux/operations';
 
@@ -29,7 +30,7 @@ const AdminHistory = () => {
   const AddMoney = () => (
     <View style={styles.scene}>
       <FlatList
-        data={historyIn}
+        data={_.orderBy(historyIn, ['createdAt'], ['desc'])}
         renderItem={Plus}
         keyExtractor={(item) => item.id}
         refreshControl={<RefreshControl refreshing={refreshLoading} onRefresh={addRefresh} />}
@@ -43,7 +44,7 @@ const AdminHistory = () => {
   const MinusMoney = () => (
     <View style={styles.scene}>
       <FlatList
-        data={historyOut}
+        data={_.orderBy(historyOut, ['createdAt'], ['desc'])}
         renderItem={Minus}
         refreshing={true}
         keyExtractor={(item) => item.username}

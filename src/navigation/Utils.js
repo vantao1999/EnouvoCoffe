@@ -166,7 +166,7 @@ class NavigationUtils {
             visible: isTopBarEnable,
             drawBehind: false,
             backButton: {
-              color: Colors.buttonColorYellow,
+              color: Colors.iconNav,
             },
             noBorder: noBorder || true,
             title: {
@@ -184,7 +184,7 @@ class NavigationUtils {
                   {
                     id: 'backBtt',
                     icon: Images.icBack,
-                    color: Platform.OS === 'android' ? 'white' : '',
+                    color: Platform.OS === 'android' ? 'white' : 'black',
                   },
                 ]
               : leftButtons || [],

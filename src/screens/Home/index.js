@@ -18,6 +18,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 const Home = () => {
   const [userData, setData] = React.useState({});
   const account = useSelector((state) => get(state, 'auth.account', null));
+  const user = useSelector((state) => get(state, 'auth.user', null));
 
   useEffect(() => {
     if (account) {
@@ -37,16 +38,21 @@ const Home = () => {
       isTopBarEnable: false,
     });
   };
+  const userName = user.username.trim().split(' ');
+  const balance = userData.accountBalance;
   return (
     <SafeAreaView style={styles.container}>
       <Animatable.View style={styles.header} animation="bounceInLeft">
-        <Text style={styles.title}>Welcome Back!</Text>
+        <View style={styles.infoContainer}>
+          <Text style={styles.title}>Welcome!</Text>
+          <Text style={styles.title}>{userName[userName.length - 1]}</Text>
+        </View>
         <Image source={require('../../assets/Images/user.jpeg')} style={styles.logo} />
       </Animatable.View>
 
       <Animatable.View style={styles.balance} animation="bounceInRight">
         <Text style={styles.textAccount}>Account Balance:</Text>
-        <Text style={styles.textBalance}>{userData.accountBalance} VND</Text>
+        <Text style={styles.textBalance}>{balance} VND</Text>
       </Animatable.View>
 
       <Animatable.View style={styles.footer} animation="fadeInUp" duration={700}>
@@ -92,10 +98,12 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     marginTop: Platform.OS === 'android' ? 10 : null,
   },
-  title: {
-    fontSize: 35,
-    fontWeight: 'bold',
+  infoContainer: {
     flex: 1,
+  },
+  title: {
+    fontSize: 25,
+    fontWeight: 'bold',
   },
   logo: {
     width: 100,

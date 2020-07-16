@@ -69,7 +69,6 @@ const UserTransfer = (props) => {
               onChangeText={formik.handleChange('payment')}
               keyboardType="decimal-pad"
               maxLength={8}
-              autoFocus={true}
               returnKeyType="next"
             />
             <Text style={styles.currency}>VND</Text>
@@ -112,8 +111,8 @@ const styles = StyleSheet.create({
   },
   header: {
     backgroundColor: '#ffcc00',
-    borderBottomLeftRadius: 50,
-    borderBottomRightRadius: 50,
+    borderBottomLeftRadius: 25,
+    borderBottomRightRadius: 25,
     alignItems: 'center',
     justifyContent: 'center',
   },

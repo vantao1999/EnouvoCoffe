@@ -1,7 +1,6 @@
 import React from 'react';
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 import {
-  ActivityIndicator,
   View,
   Text,
   StyleSheet,
@@ -22,6 +21,7 @@ import {
   getUserHistoryIn,
   getUserHistoryOut,
 } from '../../redux/TransactionRedux/operations';
+import _ from 'lodash';
 
 const History = () => {
   const dispatch = useDispatch();
@@ -37,15 +37,14 @@ const History = () => {
   const getUserHistoryTransferOut = useSelector((state) =>
     get(state, 'trans.listHistoryTransferOut', null),
   );
-  console.log('TRANSFEROUT', getUserHistoryTransferOut);
-
+  console.log('LISTHISTORY', getUserHistoryTransferOut);
   const firstReload = async () => {
     await dispatch(getUserHistoryIn(''));
   };
   const FirstRoute = () => (
     <View style={styles.scene}>
       <FlatList
-        data={userHistoryIn}
+        data={_.orderBy(userHistoryIn, ['createdAt'], ['desc'])}
         renderItem={In}
         keyExtractor={(item) => item.id}
         refreshControl={<RefreshControl refreshing={refreshLoading} onRefresh={firstReload} />}
@@ -59,7 +58,7 @@ const History = () => {
   const SecondRoute = () => (
     <View style={styles.scene}>
       <FlatList
-        data={userHistoryOut}
+        data={_.orderBy(userHistoryOut, ['createdAt'], ['desc'])}
         renderItem={Out}
         keyExtractor={(item) => item.id}
         refreshControl={<RefreshControl refreshing={refreshLoading} onRefresh={secondReload} />}
@@ -73,7 +72,7 @@ const History = () => {
   const ThirdRoute = () => (
     <View style={styles.scene}>
       <FlatList
-        data={getUserHistoryTransferIn}
+        data={_.orderBy(getUserHistoryTransferIn, ['createdAt'], ['desc'])}
         renderItem={Received}
         keyExtractor={(item) => item.id}
         refreshControl={<RefreshControl refreshing={refreshLoading} onRefresh={thirdReload} />}
@@ -87,7 +86,7 @@ const History = () => {
   const FourthRoute = () => (
     <View style={styles.scene}>
       <FlatList
-        data={getUserHistoryTransferOut}
+        data={_.orderBy(getUserHistoryTransferOut, ['createdAt'], ['desc'])}
         renderItem={TransferOut}
         keyExtractor={(item) => item.id}
         refreshControl={<RefreshControl refreshing={refreshLoading} onRefresh={fourthRefresh} />}
@@ -156,7 +155,9 @@ const History = () => {
       <Text style={styles.textDate}>{moment(item.createdAt).format('MMMM D, YYYY - h:mm a')}</Text>
       <View style={styles.historyContainer}>
         <View style={styles.textContainer}>
-          <Text style={styles.textHistoryTitle}>{item.username} has transferred to you:</Text>
+          <Text style={styles.textHistoryTitle}>
+            {item.userCreator[0].username} has transferred to you:
+          </Text>
           <Text style={styles.textPayment}>+{item.payment} vnd</Text>
         </View>
         <View style={styles.textContainer}>
@@ -171,7 +172,9 @@ const History = () => {
       <Text style={styles.textDate}>{moment(item.createdAt).format('MMMM D, YYYY - h:mm a')}</Text>
       <View style={styles.historyContainer}>
         <View style={styles.textContainer}>
-          <Text style={styles.textHistoryTitle}>You has transferred to {item.username}:</Text>
+          <Text style={styles.textHistoryTitle}>
+            You has transferred to {item.userReceiver[0].username}:
+          </Text>
           <Text style={styles.textPayment}>{item.payment} vnd</Text>
         </View>
         <View style={styles.textContainer}>
@@ -268,7 +271,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   textDate: {
-    marginTop: 20,
+    marginTop: 10,
     marginLeft: 10,
     fontFamily: 'Roboto-bold',
     fontSize: 17,
