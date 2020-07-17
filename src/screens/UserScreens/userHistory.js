@@ -37,7 +37,6 @@ const History = () => {
   const getUserHistoryTransferOut = useSelector((state) =>
     get(state, 'trans.listHistoryTransferOut', null),
   );
-  console.log('LISTHISTORY', getUserHistoryTransferOut);
   const firstReload = async () => {
     await dispatch(getUserHistoryIn(''));
   };
@@ -156,7 +155,7 @@ const History = () => {
       <View style={styles.historyContainer}>
         <View style={styles.textContainer}>
           <Text style={styles.textHistoryTitle}>
-            {item.userCreator[0].username} has transferred to you:
+            {item.userCreator[0].username}has transferred to you:
           </Text>
           <Text style={styles.textPayment}>+{item.payment} vnd</Text>
         </View>

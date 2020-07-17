@@ -14,17 +14,20 @@ import { NavigationUtils } from '../../navigation';
 import { useSelector } from 'react-redux';
 import { get } from 'lodash';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { MaskService } from 'react-native-masked-text';
 
 const Home = () => {
-  const [userData, setData] = React.useState({});
+  const [userData, setData] = React.useState({
+    userName: '',
+  });
   const account = useSelector((state) => get(state, 'auth.account', null));
   const user = useSelector((state) => get(state, 'auth.user', null));
 
-  useEffect(() => {
-    if (account) {
-      setData(account);
-    }
-  }, [account]);
+  // useEffect(() => {
+  //   if (account) {
+  //     setData(account);
+  //   }
+  // }, [account]);
 
   const navigate = () => {
     NavigationUtils.push({
@@ -38,21 +41,34 @@ const Home = () => {
       isTopBarEnable: false,
     });
   };
-  const userName = user.username.trim().split(' ');
-  const balance = userData.accountBalance;
+  useEffect(() => {
+    if (user) {
+      setData({
+        userName: user.username.trim().split(' '),
+      });
+    }
+  }, [user]);
+
   return (
     <SafeAreaView style={styles.container}>
       <Animatable.View style={styles.header} animation="bounceInLeft">
         <View style={styles.infoContainer}>
           <Text style={styles.title}>Welcome!</Text>
-          <Text style={styles.title}>{userName[userName.length - 1]}</Text>
+          <Text style={styles.title}>{userData.userName[userData.userName.length - 1]}</Text>
         </View>
         <Image source={require('../../assets/Images/user.jpeg')} style={styles.logo} />
       </Animatable.View>
 
       <Animatable.View style={styles.balance} animation="bounceInRight">
         <Text style={styles.textAccount}>Account Balance:</Text>
-        <Text style={styles.textBalance}>{balance} VND</Text>
+        <Text style={styles.textBalance}>
+          {MaskService.toMask('money', account.accountBalance, {
+            unit: '',
+            precision: 0,
+            delimiter: '.',
+          })}{' '}
+          VND
+        </Text>
       </Animatable.View>
 
       <Animatable.View style={styles.footer} animation="fadeInUp" duration={700}>
@@ -124,7 +140,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Roboto-regular',
   },
   textBalance: {
-    fontSize: 40,
+    fontSize: 25,
     fontWeight: 'bold',
     color: 'green',
   },

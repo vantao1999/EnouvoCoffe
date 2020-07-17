@@ -13,12 +13,14 @@ import { NavigationUtils } from '../../navigation';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useFormik } from 'formik';
 import { useDispatch, useSelector } from 'react-redux';
-import { getMany, getAccount } from '../../redux/UserRedux/operations';
+import { getAccount } from '../../redux/UserRedux/operations';
 import { userHistoryTransferOut, transferMoney } from '../../redux/TransactionRedux/operations';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { get } from 'lodash';
+import { TextInputMask } from 'react-native-masked-text';
 
 const UserTransfer = (props) => {
+  const [advanced, setAdvanced] = React.useState('');
   const loading = useSelector((state) => get(state, 'trans.transLoading', null));
   const dispatch = useDispatch();
   const formik = useFormik({
@@ -28,7 +30,7 @@ const UserTransfer = (props) => {
       notes: '',
     },
     onSubmit: (values) => {
-      usertransferMoney(values);
+      userTransferMoney(values);
     },
   });
 
@@ -36,7 +38,7 @@ const UserTransfer = (props) => {
     await dispatch(getAccount(''));
     await dispatch(userHistoryTransferOut(''));
   };
-  const usertransferMoney = async (values) => {
+  const userTransferMoney = async (values) => {
     const result = dispatch(transferMoney(values))
       .then(unwrapResult)
       .then((success) => {
@@ -61,15 +63,31 @@ const UserTransfer = (props) => {
       </View>
       <KeyboardAwareScrollView>
         <View style={styles.footer}>
-          <View style={styles.action}>
+          {/* <View style={styles.action}>
             <TextInput
-              style={styles.textContent}
               value={formik.values.payment}
               placeholder="Enter money"
               onChangeText={formik.handleChange('payment')}
               keyboardType="decimal-pad"
               maxLength={8}
               returnKeyType="next"
+            />
+            <Text style={styles.currency}>VND</Text>
+          </View> */}
+          <View style={styles.action}>
+            <TextInputMask
+              type={'money'}
+              options={{
+                precision: 0,
+                delimiter: '.',
+                unit: '',
+              }}
+              value={formik.values.payment}
+              onChangeText={formik.handleChange('payment')}
+              style={styles.textContent}
+              maxLength={11}
+              placeholder="Enter money"
+              keyboardType="decimal-pad"
             />
             <Text style={styles.currency}>VND</Text>
           </View>
@@ -80,11 +98,12 @@ const UserTransfer = (props) => {
               Value={formik.values.notes}
               placeholder="Enter message to ..."
               onChangeText={formik.handleChange('notes')}
-              maxLength={160}
+              maxLength={60}
               autoCorrect={false}
               returnKeyType="go"
             />
           </View>
+
           <TouchableOpacity
             onPress={() => {
               formik.handleSubmit();
