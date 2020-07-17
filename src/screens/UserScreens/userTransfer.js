@@ -17,10 +17,9 @@ import { getAccount } from '../../redux/UserRedux/operations';
 import { userHistoryTransferOut, transferMoney } from '../../redux/TransactionRedux/operations';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { get } from 'lodash';
-import { TextInputMask } from 'react-native-masked-text';
+import NumberFormat from 'react-number-format';
 
 const UserTransfer = (props) => {
-  const [advanced, setAdvanced] = React.useState('');
   const loading = useSelector((state) => get(state, 'trans.transLoading', null));
   const dispatch = useDispatch();
   const formik = useFormik({
@@ -63,31 +62,20 @@ const UserTransfer = (props) => {
       </View>
       <KeyboardAwareScrollView>
         <View style={styles.footer}>
-          {/* <View style={styles.action}>
-            <TextInput
-              value={formik.values.payment}
-              placeholder="Enter money"
-              onChangeText={formik.handleChange('payment')}
-              keyboardType="decimal-pad"
-              maxLength={8}
-              returnKeyType="next"
-            />
-            <Text style={styles.currency}>VND</Text>
-          </View> */}
           <View style={styles.action}>
-            <TextInputMask
-              type={'money'}
-              options={{
-                precision: 0,
-                delimiter: '.',
-                unit: '',
-              }}
+            <NumberFormat
               value={formik.values.payment}
-              onChangeText={formik.handleChange('payment')}
-              style={styles.textContent}
-              maxLength={11}
-              placeholder="Enter money"
-              keyboardType="decimal-pad"
+              displayType={'text'}
+              thousandSeparator={true}
+              renderText={(value) => (
+                <TextInput
+                  style={styles.textContent}
+                  onChangeText={formik.handleChange('payment')}
+                  value={value}
+                  placeholder="Enter money"
+                  keyboardType="numeric"
+                />
+              )}
             />
             <Text style={styles.currency}>VND</Text>
           </View>
@@ -102,6 +90,7 @@ const UserTransfer = (props) => {
               autoCorrect={false}
               returnKeyType="go"
             />
+            <Text style={styles.currency}>(60)</Text>
           </View>
 
           <TouchableOpacity

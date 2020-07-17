@@ -14,7 +14,7 @@ import { NavigationUtils } from '../../navigation';
 import { useSelector } from 'react-redux';
 import { get } from 'lodash';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { MaskService } from 'react-native-masked-text';
+import NumberFormat from 'react-number-format';
 
 const Home = () => {
   const [userData, setData] = React.useState({
@@ -61,12 +61,14 @@ const Home = () => {
 
       <Animatable.View style={styles.balance} animation="bounceInRight">
         <Text style={styles.textAccount}>Account Balance:</Text>
+
         <Text style={styles.textBalance}>
-          {MaskService.toMask('money', account.accountBalance, {
-            unit: '',
-            precision: 0,
-            delimiter: '.',
-          })}{' '}
+          <NumberFormat
+            value={account.accountBalance}
+            displayType={'text'}
+            thousandSeparator={true}
+            renderText={(value) => <Text>{value}</Text>}
+          />
           VND
         </Text>
       </Animatable.View>
