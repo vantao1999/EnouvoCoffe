@@ -9,10 +9,12 @@ const tranSlice = createSlice({
     plusLoading: false,
     listHistoryTransferOut: [],
     listHistoryTransferIn: [],
+    totalItem: null,
     listHistoryTransactionIn: [],
     listHistoryTransactionOut: [],
     //Admin
     errMessage: null,
+    errTrans: null,
     listAdminHistoryIn: [],
     listAdminHistoryOut: [],
   },
@@ -27,6 +29,7 @@ const tranSlice = createSlice({
     },
     [operations.transferMoney.rejected]: (state, { payload }) => {
       state.transLoading = false;
+      state.errTrans = payload.message;
     },
     //History Transfer Out
     [operations.userHistoryTransferOut.pending]: (state) => {
@@ -34,7 +37,7 @@ const tranSlice = createSlice({
     },
     [operations.userHistoryTransferOut.fulfilled]: (state, { payload }) => {
       state.loading = false;
-      state.listHistoryTransferOut = payload;
+      state.listHistoryTransferOut = payload.data;
     },
     [operations.userHistoryTransferOut.rejected]: (state, { payload }) => {
       state.loading = false;
@@ -45,7 +48,8 @@ const tranSlice = createSlice({
     },
     [operations.userHistoryTransferIn.fulfilled]: (state, { payload }) => {
       state.loading = false;
-      state.listHistoryTransferIn = payload;
+      state.totalItem = payload.total;
+      state.listHistoryTransferIn = payload.data;
     },
     [operations.userHistoryTransferIn.rejected]: (state, { payload }) => {
       state.loading = false;
@@ -56,7 +60,7 @@ const tranSlice = createSlice({
     },
     [operations.getUserHistoryIn.fulfilled]: (state, { payload }) => {
       state.loading = false;
-      state.listHistoryTransactionIn = payload;
+      state.listHistoryTransactionIn = payload.data;
     },
     [operations.getUserHistoryIn.rejected]: (state, { payload }) => {
       state.loading = false;
@@ -67,7 +71,7 @@ const tranSlice = createSlice({
     },
     [operations.getUserHistoryOut.fulfilled]: (state, { payload }) => {
       state.loading = false;
-      state.listHistoryTransactionOut = payload;
+      state.listHistoryTransactionOut = payload.data;
     },
     [operations.getUserHistoryOut.rejected]: (state, { payload }) => {
       state.loading = false;

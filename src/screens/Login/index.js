@@ -36,7 +36,7 @@ const TEXT_INPUT_PASSWORD = 'TEXT_INPUT_PASSWORD';
 const Login = () => {
   const dispatch = useDispatch();
   const loading = useSelector((state) => state.trans.loading);
-  // console.log('LOADING Login', loading);
+  const authLoading = useSelector((state) => state.auth.loading);
   const [data, setData] = React.useState({
     secureTextEntry: true,
   });
@@ -68,7 +68,7 @@ const Login = () => {
   };
   const formik = useFormik({
     initialValues: {
-      email: 'thuy.tran3@gmail.com',
+      email: 'thuy.tran6@gmail.com',
       password: 'codebase',
     },
 
@@ -93,7 +93,7 @@ const Login = () => {
         await dispatch(getAccount(''));
         await dispatch(getUserHistoryIn(''));
         await dispatch(getUserHistoryOut(''));
-        await dispatch(userHistoryTransferIn(''));
+        // await dispatch(userHistoryTransferIn({ page: 1 }));
         await dispatch(userHistoryTransferOut(''));
         NavigationUtils.startMainContent();
       }
@@ -176,7 +176,7 @@ const Login = () => {
           </View>
         </KeyboardAwareScrollView>
       </Animatable.View>
-      {loading ? (
+      {authLoading || loading ? (
         <View style={styles.loading}>
           <ActivityIndicator size="large" color="#ffcc00" />
         </View>

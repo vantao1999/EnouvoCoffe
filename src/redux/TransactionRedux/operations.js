@@ -43,11 +43,12 @@ export const userHistoryTransferOut = createAsyncThunk(
 );
 export const userHistoryTransferIn = createAsyncThunk(
   'client/users/me/transfer/in',
-  async (data, { rejectWithValue, getState }) => {
+  async ({ page }, { rejectWithValue, getState }) => {
     try {
       const accessToken = getState().auth.token;
       await TransApis.setToken(accessToken);
-      const response = await TransApis.getHistoryTransferIn(data);
+      console.log('userHistoryTransferIn', page);
+      const response = await TransApis.getHistoryTransferIn(page);
       return response?.data;
     } catch (err) {
       if (!err.data) {

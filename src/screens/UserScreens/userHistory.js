@@ -26,7 +26,6 @@ import _ from 'lodash';
 const History = () => {
   const dispatch = useDispatch();
   // const loading = useSelector((state) => get(state, 'trans.loading', null));
-  // console.log('LOADING', loading);
   const userHistoryIn = useSelector((state) => get(state, 'trans.listHistoryTransactionIn', null));
   const userHistoryOut = useSelector((state) =>
     get(state, 'trans.listHistoryTransactionOut', null),
@@ -34,9 +33,21 @@ const History = () => {
   const getUserHistoryTransferIn = useSelector((state) =>
     get(state, 'trans.listHistoryTransferIn', null),
   );
+  console.log('getUserHistoryTransferIn', getUserHistoryTransferIn);
   const getUserHistoryTransferOut = useSelector((state) =>
     get(state, 'trans.listHistoryTransferOut', null),
   );
+  const currentTotal = useSelector((state) => get(state, 'trans.totalItem', null));
+  console.log('currentTotal', currentTotal);
+  const [page, setPage] = React.useState(1);
+
+  const handleLoadMore = () => {
+    if (page * 4 <= currentTotal) {
+      setPage(page + 1);
+      thirdReload(page);
+    }
+  };
+
   const firstReload = async () => {
     await dispatch(getUserHistoryIn(''));
   };
@@ -65,8 +76,8 @@ const History = () => {
     </View>
   );
 
-  const thirdReload = async () => {
-    await dispatch(userHistoryTransferIn(''));
+  const thirdReload = async (page) => {
+    await dispatch(userHistoryTransferIn({ page }));
   };
   const ThirdRoute = () => (
     <View style={styles.scene}>
@@ -74,7 +85,13 @@ const History = () => {
         data={_.orderBy(getUserHistoryTransferIn, ['createdAt'], ['desc'])}
         renderItem={Received}
         keyExtractor={(item) => item.id}
-        refreshControl={<RefreshControl refreshing={refreshLoading} onRefresh={thirdReload} />}
+        onEndReached={handleLoadMore}
+        onEndReachedThreshold={0.05}
+        initialNumToRender={10}
+        maxToRenderPerBatch={2}
+        refreshControl={
+          <RefreshControl refreshing={refreshLoading} onRefresh={() => thirdReload(page)} />
+        }
       />
     </View>
   );
@@ -155,7 +172,7 @@ const History = () => {
       <View style={styles.historyContainer}>
         <View style={styles.textContainer}>
           <Text style={styles.textHistoryTitle}>
-            {item.userCreator[0].username}has transferred to you:
+            {item.userCreator[0].username} has transferred to you:
           </Text>
           <Text style={styles.textPayment}>+{item.payment} vnd</Text>
         </View>
@@ -272,8 +289,9 @@ const styles = StyleSheet.create({
   textDate: {
     marginTop: 10,
     marginLeft: 10,
-    fontFamily: 'Roboto-bold',
-    fontSize: 17,
+    fontFamily: 'Roboto',
+    fontWeight: 'bold',
+    fontSize: 16,
   },
 
   historyContainer: {
@@ -287,21 +305,21 @@ const styles = StyleSheet.create({
   },
   textHistoryTitle: {
     fontFamily: 'Roboto-regular',
-    fontSize: 18,
+    fontSize: 16,
   },
   textTitleNotes: {
     fontFamily: 'Roboto-regular',
-    fontSize: 18,
+    fontSize: 16,
     color: '#56aaff',
   },
   textNotes: {
     fontFamily: 'Roboto-regular',
-    fontSize: 18,
+    fontSize: 16,
     marginLeft: 5,
   },
   textPayment: {
     fontFamily: 'Roboto-regular',
-    fontSize: 18,
+    fontSize: 16,
     color: '#ff5656',
     marginLeft: 5,
   },

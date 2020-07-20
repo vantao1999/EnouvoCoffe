@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -18,9 +18,12 @@ import { userHistoryTransferOut, transferMoney } from '../../redux/TransactionRe
 import { unwrapResult } from '@reduxjs/toolkit';
 import { get } from 'lodash';
 import NumberFormat from 'react-number-format';
+import * as Yup from 'yup';
 
 const UserTransfer = (props) => {
   const loading = useSelector((state) => get(state, 'trans.transLoading', null));
+  const errMessage = useSelector((state) => state.trans.errTrans);
+
   const dispatch = useDispatch();
   const formik = useFormik({
     initialValues: {
@@ -29,27 +32,31 @@ const UserTransfer = (props) => {
       notes: '',
     },
     onSubmit: (values) => {
-      userTransferMoney(values);
+      let data = {
+        userId: values.userId,
+        payment: parseInt(values.payment.replace(',', ''), 10),
+        notes: values.notes,
+      };
+      userTransferMoney(data);
     },
   });
-
   const reLoad = async () => {
     await dispatch(getAccount(''));
     await dispatch(userHistoryTransferOut(''));
   };
   const userTransferMoney = async (values) => {
-    const result = dispatch(transferMoney(values))
+    await dispatch(transferMoney(values))
       .then(unwrapResult)
       .then((success) => {
         Alert.alert('Transfer successfully');
         reLoad();
         NavigationUtils.startMainContent();
       })
-      .catch((err) => {
-        if (result.payload) {
-          Alert.alert('Error', err.payload.message || 'error');
+      .catch((error) => {
+        if (error) {
+          Alert.alert('Error!', errMessage);
         } else {
-          Alert.alert('Error', err.error || 'Something was not incorrect, Please try again');
+          Alert.alert('Error!', errMessage || 'Something was not incorrect, Please try again');
         }
       });
   };
@@ -71,6 +78,7 @@ const UserTransfer = (props) => {
                 <TextInput
                   style={styles.textContent}
                   onChangeText={formik.handleChange('payment')}
+                  onBlur={formik.handleBlur('payment')}
                   value={value}
                   placeholder="Enter money"
                   keyboardType="numeric"

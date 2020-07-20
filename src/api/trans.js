@@ -9,8 +9,11 @@ export async function transferMoney(data) {
   return http.post('/client/users/me/transactions', data);
 }
 //get User history transferred
-export async function getHistoryTransferIn() {
-  return http.get('/client/users/me/transactions?filter={"type":"TRANSFER","status":"in"}');
+export async function getHistoryTransferIn(page) {
+  console.log('page', page);
+  return http.get(
+    '/client/users/me/transactions?filter={"type":"TRANSFER","status":"in"}&limit=4&page=' + page,
+  );
 }
 export async function getHistoryTransferOut() {
   return http.get('/client/users/me/transactions?filter={"type":"TRANSFER","status":"out"}');

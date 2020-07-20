@@ -62,6 +62,9 @@ const TransferMoney = () => {
       </View>
     </TouchableOpacity>
   );
+  console.log(userData);
+  const data =
+    userData && userData.data ? userData.data.filter((item) => item.id !== currentUserId) : [];
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.viewSearch}>
@@ -80,7 +83,7 @@ const TransferMoney = () => {
       </View>
       <FlatList
         showsVerticalScrollIndicator={false}
-        data={userData.filter((item) => item.id !== currentUserId)}
+        data={data}
         renderItem={Item}
         keyExtractor={(item) => item.email}
       />
