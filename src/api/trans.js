@@ -12,7 +12,7 @@ export async function transferMoney(data) {
 export async function getHistoryTransferIn(page) {
   console.log('page', page);
   return http.get(
-    '/client/users/me/transactions?filter={"type":"TRANSFER","status":"in"}&limit=4&page=' + page,
+    '/client/users/me/transactions?filter={"type":"TRANSFER","status":"in"}&limit=6&page=' + page,
   );
 }
 export async function getHistoryTransferOut() {

@@ -93,7 +93,7 @@ const Login = () => {
         await dispatch(getAccount(''));
         await dispatch(getUserHistoryIn(''));
         await dispatch(getUserHistoryOut(''));
-        // await dispatch(userHistoryTransferIn({ page: 1 }));
+        await dispatch(userHistoryTransferIn({ page: 1 }));
         await dispatch(userHistoryTransferOut(''));
         NavigationUtils.startMainContent();
       }

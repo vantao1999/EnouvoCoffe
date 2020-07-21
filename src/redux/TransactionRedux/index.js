@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import * as operations from './operations';
+import _ from 'lodash';
 
 const tranSlice = createSlice({
   name: 'trans',
@@ -9,7 +10,7 @@ const tranSlice = createSlice({
     plusLoading: false,
     listHistoryTransferOut: [],
     listHistoryTransferIn: [],
-    totalItem: null,
+    historyData: [],
     listHistoryTransactionIn: [],
     listHistoryTransactionOut: [],
     //Admin
@@ -48,8 +49,9 @@ const tranSlice = createSlice({
     },
     [operations.userHistoryTransferIn.fulfilled]: (state, { payload }) => {
       state.loading = false;
-      state.totalItem = payload.total;
-      state.listHistoryTransferIn = payload.data;
+      state.historyData = payload;
+      state.listHistoryTransferIn = state.listHistoryTransferIn.concat(payload.data);
+      // console.log('listHistoryTransferIn', state.listHistoryTransferIn);
     },
     [operations.userHistoryTransferIn.rejected]: (state, { payload }) => {
       state.loading = false;

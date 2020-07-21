@@ -47,8 +47,8 @@ export const userHistoryTransferIn = createAsyncThunk(
     try {
       const accessToken = getState().auth.token;
       await TransApis.setToken(accessToken);
-      console.log('userHistoryTransferIn', page);
       const response = await TransApis.getHistoryTransferIn(page);
+      console.log('Response', response);
       return response?.data;
     } catch (err) {
       if (!err.data) {

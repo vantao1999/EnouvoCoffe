@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 import {
   View,
@@ -33,79 +33,88 @@ const History = () => {
   const getUserHistoryTransferIn = useSelector((state) =>
     get(state, 'trans.listHistoryTransferIn', null),
   );
-  console.log('getUserHistoryTransferIn', getUserHistoryTransferIn);
+  console.log('listHistoryTransferIn', getUserHistoryTransferIn);
+
   const getUserHistoryTransferOut = useSelector((state) =>
     get(state, 'trans.listHistoryTransferOut', null),
   );
-  const currentTotal = useSelector((state) => get(state, 'trans.totalItem', null));
-  console.log('currentTotal', currentTotal);
+  const historyTransferIn = useSelector((state) => get(state, 'trans.historyData', null));
+  console.log('historyTransferIn', historyTransferIn);
+
   const [page, setPage] = React.useState(1);
 
-  const handleLoadMore = () => {
-    if (page * 4 <= currentTotal) {
-      setPage(page + 1);
-      thirdReload(page);
+  const handleLoadMore = async () => {
+    if (historyTransferIn.current_page <= historyTransferIn.page_count) {
+      await setPage(page + 1);
+      let temPage = page + 1;
+      await dispatch(userHistoryTransferIn({ page: temPage }));
     }
   };
 
-  const firstReload = async () => {
+  const MoneyInReload = async () => {
     await dispatch(getUserHistoryIn(''));
   };
-  const FirstRoute = () => (
+
+  const MoneyInRoute = () => (
     <View style={styles.scene}>
       <FlatList
         data={_.orderBy(userHistoryIn, ['createdAt'], ['desc'])}
-        renderItem={In}
-        keyExtractor={(item) => item.id}
-        refreshControl={<RefreshControl refreshing={refreshLoading} onRefresh={firstReload} />}
+        renderItem={MoneyIn}
+        keyExtractor={(item, index) => `${index}`}
+        refreshControl={<RefreshControl refreshing={refreshLoading} onRefresh={MoneyInReload} />}
       />
     </View>
   );
 
-  const secondReload = async () => {
+  const MoneyOutReload = async () => {
     await dispatch(getUserHistoryOut(''));
   };
-  const SecondRoute = () => (
+  const MoneyOutRoute = () => (
     <View style={styles.scene}>
       <FlatList
         data={_.orderBy(userHistoryOut, ['createdAt'], ['desc'])}
-        renderItem={Out}
-        keyExtractor={(item) => item.id}
-        refreshControl={<RefreshControl refreshing={refreshLoading} onRefresh={secondReload} />}
+        renderItem={MoneyOut}
+        keyExtractor={(item, index) => `${index}`}
+        refreshControl={<RefreshControl refreshing={refreshLoading} onRefresh={MoneyOutReload} />}
       />
     </View>
   );
 
-  const thirdReload = async (page) => {
+  const TransferReceivedReload = async (page) => {
     await dispatch(userHistoryTransferIn({ page }));
   };
-  const ThirdRoute = () => (
+  const ReceivedRoute = () => (
     <View style={styles.scene}>
       <FlatList
         data={_.orderBy(getUserHistoryTransferIn, ['createdAt'], ['desc'])}
-        renderItem={Received}
-        keyExtractor={(item) => item.id}
+        renderItem={TransferReceived}
+        keyExtractor={(item, index) => `${index}`}
         onEndReached={handleLoadMore}
         onEndReachedThreshold={0.05}
-        initialNumToRender={10}
+        initialNumToRender={6}
         maxToRenderPerBatch={2}
         refreshControl={
-          <RefreshControl refreshing={refreshLoading} onRefresh={() => thirdReload(page)} />
+          <RefreshControl
+            refreshing={refreshLoading}
+            onRefresh={() => TransferReceivedReload(page)}
+          />
         }
       />
     </View>
   );
 
-  const fourthRefresh = async () => {
+  const TransferOutReload = async () => {
     await dispatch(userHistoryTransferOut(''));
   };
-  const FourthRoute = () => (
+  const TransferOutRoute = () => (
     <View style={styles.scene}>
       <FlatList
         data={_.orderBy(getUserHistoryTransferOut, ['createdAt'], ['desc'])}
         renderItem={TransferOut}
-        keyExtractor={(item) => item.id}
-        refreshControl={<RefreshControl refreshing={refreshLoading} onRefresh={fourthRefresh} />}
+        keyExtractor={(item, index) => `${index}`}
+        refreshControl={
+          <RefreshControl refreshing={refreshLoading} onRefresh={TransferOutReload} />
+        }
       />
     </View>
   );
@@ -119,10 +128,10 @@ const History = () => {
   ]);
 
   const renderScene = SceneMap({
-    first: FirstRoute,
-    second: SecondRoute,
-    third: ThirdRoute,
-    fourth: FourthRoute,
+    first: MoneyInRoute,
+    second: MoneyOutRoute,
+    third: ReceivedRoute,
+    fourth: TransferOutRoute,
   });
 
   const renderTabBar = (props) => (
@@ -134,7 +143,7 @@ const History = () => {
     />
   );
 
-  const In = ({ item }) => (
+  const MoneyIn = ({ item }) => (
     <View>
       <Text style={styles.textDate}>{moment(item.createdAt).format('MMMM D, YYYY - h:mm a')}</Text>
       <View style={styles.historyContainer}>
@@ -150,7 +159,7 @@ const History = () => {
     </View>
   );
 
-  const Out = ({ item }) => (
+  const MoneyOut = ({ item }) => (
     <View>
       <Text style={styles.textDate}>{moment(item.createdAt).format('MMMM D, YYYY - h:mm a')}</Text>
       <View style={styles.historyContainer}>
@@ -166,7 +175,7 @@ const History = () => {
     </View>
   );
 
-  const Received = ({ item }) => (
+  const TransferReceived = ({ item }) => (
     <View>
       <Text style={styles.textDate}>{moment(item.createdAt).format('MMMM D, YYYY - h:mm a')}</Text>
       <View style={styles.historyContainer}>
@@ -272,7 +281,8 @@ const styles = StyleSheet.create({
   textTitle: {
     marginRight: 5,
     fontFamily: 'Roboto-bold',
-    fontSize: 20,
+    fontWeight: 'bold',
+    fontSize: 17,
   },
   tabView: {
     marginTop: 10,
