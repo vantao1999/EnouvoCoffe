@@ -32,11 +32,8 @@ const UserTransfer = (props) => {
       notes: '',
     },
     validationSchema: Yup.object({
-      payment: Yup.string()
-        .min(4, 'At least 1000 vnd')
-        .max(11, "It's looks a big number (Max is 100,000,000 vnd)")
-        .required('Can not be null'),
-      notes: Yup.string().max(20, 'Too long'),
+      payment: Yup.string().min(4, 'At least 1000 vnd').required('Can not be null'),
+      notes: Yup.string().max(44, 'Too long'),
     }),
     onSubmit: (values) => {
       let data = {
@@ -87,7 +84,7 @@ const UserTransfer = (props) => {
                   onChangeText={formik.handleChange('payment')}
                   onBlur={formik.handleBlur('payment')}
                   value={value}
-                  maxLength={13}
+                  maxLength={11}
                   placeholder="Enter money"
                   keyboardType="number-pad"
                 />
@@ -103,11 +100,11 @@ const UserTransfer = (props) => {
               placeholder="Enter message to ..."
               onChangeText={formik.handleChange('notes')}
               onBlur={formik.handleBlur('notes')}
-              maxLength={30}
+              maxLength={45}
               autoCorrect={false}
               returnKeyType="go"
             />
-            <Text style={styles.currency}>(30)</Text>
+            <Text style={styles.currency}>(45)</Text>
           </View>
           <Text style={styles.mesValidate}>{formik.touched.notes && formik.errors.notes}</Text>
           <TouchableOpacity
