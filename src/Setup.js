@@ -1,6 +1,3 @@
-import * as RNLocalize from 'react-native-localize';
-import { getData } from './utils/PersistUtil';
-import { actions } from './redux/AppRedux';
 import { registerScreens, NavigationUtils } from './navigation';
 import { iconsLoaded } from './utils/AppIcons';
 import { store } from './redux/store';

@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import * as operations from './operations';
 import _ from 'lodash';
+import { logOut } from '../UserRedux/operations';
 
 const tranSlice = createSlice({
   name: 'trans',
@@ -8,11 +9,18 @@ const tranSlice = createSlice({
     loading: false,
     transLoading: false,
     plusLoading: false,
+
     listHistoryTransferOut: [],
+    dataHistoryTransferOut: [],
+
     listHistoryTransferIn: [],
-    historyData: [],
+    dataHistoryTransferIn: [],
+
     listHistoryTransactionIn: [],
+    dataHistoryTransactionIn: [],
+
     listHistoryTransactionOut: [],
+    dataHistoryTransactionOut: [],
     //Admin
     errMessage: null,
     errTrans: null,
@@ -33,49 +41,55 @@ const tranSlice = createSlice({
       state.errTrans = payload.message;
     },
     //History Transfer Out
-    [operations.userHistoryTransferOut.pending]: (state) => {
+    [operations.getTransferOut.pending]: (state) => {
       state.loading = true;
     },
-    [operations.userHistoryTransferOut.fulfilled]: (state, { payload }) => {
+    [operations.getTransferOut.fulfilled]: (state, { payload }) => {
       state.loading = false;
-      state.listHistoryTransferOut = payload.data;
+      state.dataHistoryTransferOut = payload;
+      state.listHistoryTransferOut = state.listHistoryTransferOut.concat(payload.data);
     },
-    [operations.userHistoryTransferOut.rejected]: (state, { payload }) => {
+    [operations.getTransferOut.rejected]: (state, { payload }) => {
       state.loading = false;
     },
+
     //History Transfer In
-    [operations.userHistoryTransferIn.pending]: (state) => {
+    [operations.getTransferIn.pending]: (state) => {
       state.loading = true;
     },
-    [operations.userHistoryTransferIn.fulfilled]: (state, { payload }) => {
+    [operations.getTransferIn.fulfilled]: (state, { payload }) => {
       state.loading = false;
-      state.historyData = payload;
+      state.dataHistoryTransferIn = payload;
       state.listHistoryTransferIn = state.listHistoryTransferIn.concat(payload.data);
       // console.log('listHistoryTransferIn', state.listHistoryTransferIn);
     },
-    [operations.userHistoryTransferIn.rejected]: (state, { payload }) => {
+    [operations.getTransferIn.rejected]: (state, { payload }) => {
       state.loading = false;
     },
+
     //History Transaction In
-    [operations.getUserHistoryIn.pending]: (state) => {
+    [operations.getTransactionIn.pending]: (state) => {
       state.loading = true;
     },
-    [operations.getUserHistoryIn.fulfilled]: (state, { payload }) => {
+    [operations.getTransactionIn.fulfilled]: (state, { payload }) => {
       state.loading = false;
-      state.listHistoryTransactionIn = payload.data;
+      state.dataHistoryTransactionIn = payload;
+      state.listHistoryTransactionIn = state.listHistoryTransactionIn.concat(payload.data);
     },
-    [operations.getUserHistoryIn.rejected]: (state, { payload }) => {
+    [operations.getTransactionIn.rejected]: (state, { payload }) => {
       state.loading = false;
     },
+
     //History Transaction Out
-    [operations.getUserHistoryOut.pending]: (state) => {
+    [operations.getTransactionOut.pending]: (state) => {
       state.loading = true;
     },
-    [operations.getUserHistoryOut.fulfilled]: (state, { payload }) => {
+    [operations.getTransactionOut.fulfilled]: (state, { payload }) => {
       state.loading = false;
-      state.listHistoryTransactionOut = payload.data;
+      state.dataHistoryTransactionOut = payload;
+      state.listHistoryTransactionOut = state.listHistoryTransactionOut.concat(payload.data);
     },
-    [operations.getUserHistoryOut.rejected]: (state, { payload }) => {
+    [operations.getTransactionOut.rejected]: (state, { payload }) => {
       state.loading = false;
     },
 
@@ -126,6 +140,17 @@ const tranSlice = createSlice({
     },
     [operations.getHistoryOut.rejected]: (state, { payload }) => {
       state.loading = false;
+    },
+    [logOut.fulfilled]: (state) => {
+      // state = { ...state, state: {} };
+      state.dataHistoryTransactionIn = [];
+      state.listHistoryTransactionIn = [];
+      state.dataHistoryTransactionOut = [];
+      state.listHistoryTransactionOut = [];
+      state.dataHistoryTransferIn = [];
+      state.listHistoryTransferIn = [];
+      state.dataHistoryTransferOut = [];
+      state.listHistoryTransferOut = [];
     },
   },
 });

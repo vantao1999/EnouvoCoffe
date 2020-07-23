@@ -14,11 +14,12 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { NavigationUtils } from '../../navigation';
 import Feather from 'react-native-vector-icons/Feather';
 import { useDispatch, useSelector } from 'react-redux';
-import { actions } from '../../redux/UserRedux';
 import { useFormik } from 'formik';
 import { get } from 'lodash';
-import { updateProfile } from '../../redux/UserRedux/operations';
+import { updateProfile, logOut } from '../../redux/UserRedux/operations';
 import { unwrapResult } from '@reduxjs/toolkit';
+import * as Yup from 'yup';
+
 const Index = () => {
   const [userData, setData] = React.useState({
     isEdit: false,
@@ -32,7 +33,7 @@ const Index = () => {
   }, [user]);
 
   const LogOut = async () => {
-    await dispatch(actions.logout());
+    await dispatch(logOut());
     NavigationUtils.startLoginContent();
   };
 
@@ -42,6 +43,9 @@ const Index = () => {
       address: userData.address,
       phone: userData.phone,
     },
+    validationSchema: Yup.object({
+      phone: Yup.string().min(10, 'At least 10 characters'),
+    }),
     onSubmit: (values) => {
       userUpdateProfile(values);
     },
@@ -147,8 +151,12 @@ const Index = () => {
                 editable={userData.isEdit}
                 placeholder="Enter phone"
                 onChangeText={formik.handleChange('phone')}
+                onBlur={formik.handleBlur('phone')}
+                keyboardType="phone-pad"
+                maxLength={10}
                 returnKeyType="next"
               />
+              <Text style={styles.mesValidate}>{formik.touched.phone && formik.errors.phone}</Text>
             </View>
           </View>
         </KeyboardAwareScrollView>
@@ -228,5 +236,8 @@ const styles = StyleSheet.create({
     position: 'absolute',
     left: 50,
     top: 50,
+  },
+  mesValidate: {
+    color: 'red',
   },
 });

@@ -2,10 +2,13 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import * as AuthApis from '../../api/auth';
 // import { NavigationUtils } from '../../navigation';
 
+//LogOut
+export const logOut = createAsyncThunk('user/logout', async () => {
+  return true;
+});
 export const login = createAsyncThunk('auth/login', async (data, { rejectWithValue }) => {
   try {
     const response = await AuthApis.login(data);
-
     return response?.data;
   } catch (err) {
     if (!err.data) {

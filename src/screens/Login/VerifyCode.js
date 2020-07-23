@@ -16,12 +16,11 @@ import { NavigationUtils } from '../../navigation';
 import { useFormik } from 'formik';
 import { useDispatch } from 'react-redux';
 import { resetPassword } from '../../redux/UserRedux/operations';
+import * as Yup from 'yup';
 
 const VerifyCode = () => {
   const [data, setData] = React.useState({
     secureTextEntry: true,
-    confirm_secureTextEntry: true,
-    errorPassword: '',
   });
 
   const showSecureTextEntry = () => {
@@ -30,37 +29,19 @@ const VerifyCode = () => {
       secureTextEntry: !data.secureTextEntry,
     });
   };
-  const showConfirmPassword = () => {
-    setData({
-      ...data,
-      confirm_secureTextEntry: !data.confirm_secureTextEntry,
-    });
-  };
 
-  const checkConfirmPass = () => {
-    const pass = formik.values.newPassword;
-    const confirmPass = formik.values.confirmPassword;
-    console.log('CONSOLE PASS', pass);
-    console.log('CONSOLE CONFIRM_PASS', confirmPass);
-    if (pass !== confirmPass) {
-      setData({
-        ...data,
-        errorPassword: 'Confirm password does not match',
-      });
-    } else {
-      setData({
-        ...data,
-        errorPassword: '',
-      });
-    }
-  };
   const dispatch = useDispatch();
   const formik = useFormik({
     initialValues: {
       code: '',
       newPassword: '',
-      confirmPassword: '',
     },
+    validationSchema: Yup.object({
+      code: Yup.string().min(6, 'Invalid code').required('Code is required'),
+      newPassword: Yup.string()
+        .min(6, 'At least 6 characters')
+        .max(20, 'Max length is 20 characters'),
+    }),
     onSubmit: (values) => {
       resetNewpassword(values);
     },
@@ -98,15 +79,17 @@ const VerifyCode = () => {
           <TextInput
             style={styles.textInput}
             type="code"
-            maxLength={6}
             placeholder="Enter code here"
             keyboardType="numeric"
             Value={formik.values.code}
             onChangeText={formik.handleChange('code')}
-            errorMessage={formik.errors.code}
+            onBlur={formik.handleBlur('code')}
+            maxLength={7}
             returnKeyType="next"
           />
         </View>
+        <Text style={styles.mesValidate}>{formik.touched.code && formik.errors.code}</Text>
+
         <Text style={styles.textPass}>New Password</Text>
         <View style={styles.action}>
           <Feather name="lock" color="#05375a" size={20} />
@@ -117,8 +100,9 @@ const VerifyCode = () => {
             secureTextEntry={data.secureTextEntry ? true : false}
             Value={formik.values.newPassword}
             onChangeText={formik.handleChange('newPassword')}
-            errorMessage={formik.errors.newPassword}
-            returnKeyType="next"
+            onBlur={formik.handleBlur('newPassword')}
+            maxLength={21}
+            returnKeyType="go"
           />
           <TouchableOpacity onPress={showSecureTextEntry}>
             {data.secureTextEntry ? (
@@ -128,32 +112,9 @@ const VerifyCode = () => {
             )}
           </TouchableOpacity>
         </View>
-
-        <Text style={styles.textPass}>Confirm Password</Text>
-        <View style={styles.action}>
-          <Feather name="lock" color="#05375a" size={20} />
-          <TextInput
-            style={styles.textInput}
-            type="confirmPassword"
-            placeholder="Enter your confirm password"
-            secureTextEntry={data.confirm_secureTextEntry ? true : false}
-            Value={formik.values.confirmPassword}
-            onChangeText={formik.handleChange('confirmPassword')}
-            onBlur={() => {
-              checkConfirmPass();
-            }}
-            errorMessage={formik.errors.confirmPassword}
-            returnKeyType="go"
-          />
-          <TouchableOpacity onPress={showConfirmPassword}>
-            {data.secureTextEntry ? (
-              <Feather name="eye-off" color="#05375a" size={20} />
-            ) : (
-              <Feather name="eye" color="#05375a" size={20} />
-            )}
-          </TouchableOpacity>
-        </View>
-        <Text style={{ color: 'red', fontFamily: 'Roboto-Light' }}>{data.errorPassword}</Text>
+        <Text style={styles.mesValidate}>
+          {formik.touched.newPassword && formik.errors.newPassword}
+        </Text>
       </View>
       <TouchableOpacity style={styles.btnSubmit} onPress={formik.handleSubmit}>
         <Text style={styles.textSend}>Submit</Text>
@@ -207,5 +168,8 @@ const styles = StyleSheet.create({
   textSend: {
     fontSize: 20,
     fontFamily: 'Roboto-bold',
+  },
+  mesValidate: {
+    color: 'red',
   },
 });

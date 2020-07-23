@@ -14,7 +14,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { useFormik } from 'formik';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAccount } from '../../redux/UserRedux/operations';
-import { userHistoryTransferOut, transferMoney } from '../../redux/TransactionRedux/operations';
+import { getTransferOut, transferMoney } from '../../redux/TransactionRedux/operations';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { get } from 'lodash';
 import NumberFormat from 'react-number-format';
@@ -31,6 +31,13 @@ const UserTransfer = (props) => {
       payment: '',
       notes: '',
     },
+    validationSchema: Yup.object({
+      payment: Yup.string()
+        .min(4, 'At least 1000 vnd')
+        .max(11, "It's looks a big number (Max is 100,000,000 vnd)")
+        .required('Can not be null'),
+      notes: Yup.string().max(20, 'Too long'),
+    }),
     onSubmit: (values) => {
       let data = {
         userId: values.userId,
@@ -42,7 +49,7 @@ const UserTransfer = (props) => {
   });
   const reLoad = async () => {
     await dispatch(getAccount(''));
-    await dispatch(userHistoryTransferOut(''));
+    await dispatch(getTransferOut(''));
   };
   const userTransferMoney = async (values) => {
     await dispatch(transferMoney(values))
@@ -80,27 +87,29 @@ const UserTransfer = (props) => {
                   onChangeText={formik.handleChange('payment')}
                   onBlur={formik.handleBlur('payment')}
                   value={value}
+                  maxLength={13}
                   placeholder="Enter money"
-                  keyboardType="numeric"
+                  keyboardType="number-pad"
                 />
               )}
             />
             <Text style={styles.currency}>VND</Text>
           </View>
-
+          <Text style={styles.mesValidate}>{formik.touched.payment && formik.errors.payment}</Text>
           <View style={styles.action}>
             <TextInput
               style={styles.textContent}
               Value={formik.values.notes}
               placeholder="Enter message to ..."
               onChangeText={formik.handleChange('notes')}
-              maxLength={60}
+              onBlur={formik.handleBlur('notes')}
+              maxLength={30}
               autoCorrect={false}
               returnKeyType="go"
             />
-            <Text style={styles.currency}>(60)</Text>
+            <Text style={styles.currency}>(30)</Text>
           </View>
-
+          <Text style={styles.mesValidate}>{formik.touched.notes && formik.errors.notes}</Text>
           <TouchableOpacity
             onPress={() => {
               formik.handleSubmit();
@@ -183,5 +192,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0,0,0,0.2)',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  mesValidate: {
+    color: 'red',
   },
 });

@@ -25,13 +25,13 @@ export const transferMoney = createAsyncThunk(
 );
 
 //getHistory User transfer
-export const userHistoryTransferOut = createAsyncThunk(
+export const getTransferOut = createAsyncThunk(
   'client/users/me/transfer/out',
-  async (data, { rejectWithValue, getState }) => {
+  async ({ page }, { rejectWithValue, getState }) => {
     try {
       const accessToken = getState().auth.token;
       await TransApis.setToken(accessToken);
-      const response = await TransApis.getHistoryTransferOut(data);
+      const response = await TransApis.getHistoryTransferOut(page);
       return response?.data;
     } catch (err) {
       if (!err.data) {
@@ -41,7 +41,7 @@ export const userHistoryTransferOut = createAsyncThunk(
     }
   },
 );
-export const userHistoryTransferIn = createAsyncThunk(
+export const getTransferIn = createAsyncThunk(
   'client/users/me/transfer/in',
   async ({ page }, { rejectWithValue, getState }) => {
     try {
@@ -59,13 +59,13 @@ export const userHistoryTransferIn = createAsyncThunk(
   },
 );
 // User getHistory side admin doing
-export const getUserHistoryIn = createAsyncThunk(
+export const getTransactionIn = createAsyncThunk(
   'client/users/me/transactions/in',
-  async (data, { rejectWithValue, getState }) => {
+  async ({ page }, { rejectWithValue, getState }) => {
     try {
       const accessToken = getState().auth.token;
       await TransApis.setToken(accessToken);
-      const response = await TransApis.getHistoryTransactionIn(data);
+      const response = await TransApis.getHistoryTransactionIn(page);
       return response?.data;
     } catch (err) {
       if (!err.data) {
@@ -75,13 +75,13 @@ export const getUserHistoryIn = createAsyncThunk(
     }
   },
 );
-export const getUserHistoryOut = createAsyncThunk(
+export const getTransactionOut = createAsyncThunk(
   'client/users/me/transactions/out',
-  async (data, { rejectWithValue, getState }) => {
+  async ({ page }, { rejectWithValue, getState }) => {
     try {
       const accessToken = getState().auth.token;
       await TransApis.setToken(accessToken);
-      const response = await TransApis.getHistoryTransactionOut(data);
+      const response = await TransApis.getHistoryTransactionOut(page);
       return response?.data;
     } catch (err) {
       if (!err.data) {

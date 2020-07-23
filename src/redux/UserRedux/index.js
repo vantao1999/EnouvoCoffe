@@ -71,6 +71,12 @@ const authSlice = createSlice({
       state.loading = false;
       state.account = payload;
     },
+    [operations.logOut.fulfilled]: (state) => {
+      state.user = null;
+      state.token = null;
+      // state = { ...state, state: null };
+      // console.log('LogUSerWhenLogOut', state);
+    },
   },
 });
 

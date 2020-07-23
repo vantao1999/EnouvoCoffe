@@ -15,6 +15,7 @@ import { NavigationUtils } from '../../navigation';
 import { useFormik } from 'formik';
 import { forgotPassword } from '../../redux/UserRedux/operations';
 import { useDispatch } from 'react-redux';
+import * as Yup from 'yup';
 
 const ForgetPassword = () => {
   const dispatch = useDispatch();
@@ -22,7 +23,9 @@ const ForgetPassword = () => {
     initialValues: {
       email: '',
     },
-
+    validationSchema: Yup.object({
+      email: Yup.string().email('Invalid email type').required('Email is required'),
+    }),
     onSubmit: (values) => {
       handleForgotPassword(values);
     },
@@ -55,10 +58,11 @@ const ForgetPassword = () => {
             placeholder="Enter your email"
             Value={formik.values.email}
             onChangeText={formik.handleChange('email')}
-            errorMessage={formik.errors.email}
+            onBlur={formik.handleBlur('email')}
             returnKeyType="go"
           />
         </View>
+        <Text style={styles.mesValidate}>{formik.touched.email && formik.errors.email}</Text>
       </View>
       <TouchableOpacity style={styles.btnSend} onPress={formik.handleSubmit}>
         <Text style={styles.textSend}>Send Email</Text>
@@ -100,5 +104,8 @@ const styles = StyleSheet.create({
   },
   textSend: {
     fontSize: 20,
+  },
+  mesValidate: {
+    color: 'red',
   },
 });

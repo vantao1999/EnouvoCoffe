@@ -15,16 +15,13 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import LinearGradient from 'react-native-linear-gradient';
 import * as Animatable from 'react-native-animatable';
 import { useFormik } from 'formik';
+import * as Yup from 'yup';
 import { NavigationUtils } from '../../navigation';
 import { useDispatch, useSelector } from 'react-redux';
 import Feather from 'react-native-vector-icons/Feather';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { getMany, getAccount, login } from '../../redux/UserRedux/operations';
 import {
-  userHistoryTransferOut,
-  userHistoryTransferIn,
-  getUserHistoryIn,
-  getUserHistoryOut,
   //admin
   getHistoryIn,
   getHistoryOut,
@@ -71,7 +68,10 @@ const Login = () => {
       email: 'thuy.tran6@gmail.com',
       password: 'codebase',
     },
-
+    validationSchema: Yup.object({
+      email: Yup.string().email('Invalid email type').required('Email is required'),
+      password: Yup.string().min(6, 'At least 6 characters').max(20, 'Max length is 20 characters'),
+    }),
     onSubmit: (values) => {
       handleLogin(values);
     },
@@ -91,10 +91,6 @@ const Login = () => {
       } else {
         await dispatch(getMany(''));
         await dispatch(getAccount(''));
-        await dispatch(getUserHistoryIn(''));
-        await dispatch(getUserHistoryOut(''));
-        await dispatch(userHistoryTransferIn({ page: 1 }));
-        await dispatch(userHistoryTransferOut(''));
         NavigationUtils.startMainContent();
       }
     } else {
@@ -125,11 +121,11 @@ const Login = () => {
               placeholder="Enter your email"
               onChangeText={formik.handleChange('email')}
               onSubmitEditing={() => onSubmitEditing(TEXT_INPUT_EMAIL)}
-              errorMessage={formik.errors.email}
+              onBlur={formik.handleBlur('email')}
               returnKeyType="next"
             />
           </View>
-
+          <Text style={styles.mesValidate}>{formik.touched.email && formik.errors.email}</Text>
           <Text style={[styles.text_footer, { marginTop: 20 }]}>Password</Text>
           <View style={styles.action}>
             <Feather name="lock" color="#05375a" size={20} />
@@ -140,8 +136,9 @@ const Login = () => {
               placeholder="Enter your password"
               onChangeText={formik.handleChange('password')}
               onSubmitEditing={() => onSubmitEditing(TEXT_INPUT_PASSWORD)}
+              onBlur={formik.handleBlur('password')}
+              maxLength={21}
               secureTextEntry={data.secureTextEntry ? true : false}
-              errorMessage={formik.errors.password}
               returnKeyType="go"
             />
             <TouchableOpacity onPress={updateSecureTextEntry}>
@@ -152,6 +149,9 @@ const Login = () => {
               )}
             </TouchableOpacity>
           </View>
+          <Text style={styles.mesValidate}>
+            {formik.touched.password && formik.errors.password}
+          </Text>
           <TouchableOpacity
             style={styles.btnForgot}
             onPress={() => {
@@ -262,5 +262,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0,0,0,0.2)',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  mesValidate: {
+    color: 'red',
   },
 });

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect } from 'react';
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 import {
@@ -16,104 +17,272 @@ import { useDispatch, useSelector } from 'react-redux';
 import { get } from 'lodash';
 import moment from 'moment';
 import {
-  userHistoryTransferOut,
-  userHistoryTransferIn,
-  getUserHistoryIn,
-  getUserHistoryOut,
+  getTransferOut,
+  getTransferIn,
+  getTransactionIn,
+  getTransactionOut,
 } from '../../redux/TransactionRedux/operations';
-import _ from 'lodash';
+import NumberFormat from 'react-number-format';
 
 const History = () => {
   const dispatch = useDispatch();
   // const loading = useSelector((state) => get(state, 'trans.loading', null));
-  const userHistoryIn = useSelector((state) => get(state, 'trans.listHistoryTransactionIn', null));
-  const userHistoryOut = useSelector((state) =>
-    get(state, 'trans.listHistoryTransactionOut', null),
-  );
-  const getUserHistoryTransferIn = useSelector((state) =>
-    get(state, 'trans.listHistoryTransferIn', null),
-  );
-  console.log('listHistoryTransferIn', getUserHistoryTransferIn);
 
-  const getUserHistoryTransferOut = useSelector((state) =>
-    get(state, 'trans.listHistoryTransferOut', null),
+  useEffect(() => {
+    firstRender();
+  }, [firstRender]);
+
+  const firstRender = async () => {
+    await dispatch(getTransactionIn({ page: pageMoneyIn }));
+    await dispatch(getTransactionOut({ page: 1 }));
+    await dispatch(getTransferIn({ page: 1 }));
+    await dispatch(getTransferOut({ page: 1 }));
+  };
+
+  const dataTransactionIn = useSelector((state) =>
+    get(state, 'trans.listHistoryTransactionIn', null),
   );
-  const historyTransferIn = useSelector((state) => get(state, 'trans.historyData', null));
-  console.log('historyTransferIn', historyTransferIn);
-
-  const [page, setPage] = React.useState(1);
-
-  const handleLoadMore = async () => {
-    if (historyTransferIn.current_page <= historyTransferIn.page_count) {
-      await setPage(page + 1);
-      let temPage = page + 1;
-      await dispatch(userHistoryTransferIn({ page: temPage }));
+  console.log('dataTransactionIn', dataTransactionIn);
+  const historyTransactionIn = useSelector((state) =>
+    get(state, 'trans.dataHistoryTransactionIn', null),
+  );
+  const [pageMoneyIn, setPageMoneyIn] = React.useState(1);
+  const handleLoadTransactionIn = async () => {
+    if (historyTransactionIn.current_page <= historyTransactionIn.page_count) {
+      await setPageMoneyIn(pageMoneyIn + 1);
+      let temPage = pageMoneyIn + 1;
+      await dispatch(getTransactionIn({ page: temPage }));
     }
   };
-
-  const MoneyInReload = async () => {
-    await dispatch(getUserHistoryIn(''));
+  const MoneyInReload = async (page) => {
+    await dispatch(getTransactionIn({ page }));
   };
-
+  const MoneyIn = ({ item }) => (
+    <View>
+      <Text style={styles.textDate}>{moment(item.createdAt).format('MMMM D, YYYY - h:mm a')}</Text>
+      <View style={styles.historyContainer}>
+        <View style={styles.textContainer}>
+          <Text style={styles.textHistoryTitle}>Enouvo Cafe plus money:</Text>
+          <Text style={styles.textPayment}>
+            +
+            <NumberFormat
+              value={item.payment}
+              displayType={'text'}
+              thousandSeparator={true}
+              renderText={(value) => <Text>{value}</Text>}
+            />{' '}
+            vnd
+          </Text>
+        </View>
+        <View style={styles.textContainer}>
+          <Text style={styles.textTitleNotes}>Message:</Text>
+          <Text style={styles.textNotes}>{item.notes}</Text>
+        </View>
+      </View>
+    </View>
+  );
   const MoneyInRoute = () => (
     <View style={styles.scene}>
       <FlatList
-        data={_.orderBy(userHistoryIn, ['createdAt'], ['desc'])}
+        // data={_.orderBy(dataTransactionIn, ['createdAt'], ['desc'])}
+        data={dataTransactionIn}
         renderItem={MoneyIn}
         keyExtractor={(item, index) => `${index}`}
-        refreshControl={<RefreshControl refreshing={refreshLoading} onRefresh={MoneyInReload} />}
-      />
-    </View>
-  );
-
-  const MoneyOutReload = async () => {
-    await dispatch(getUserHistoryOut(''));
-  };
-  const MoneyOutRoute = () => (
-    <View style={styles.scene}>
-      <FlatList
-        data={_.orderBy(userHistoryOut, ['createdAt'], ['desc'])}
-        renderItem={MoneyOut}
-        keyExtractor={(item, index) => `${index}`}
-        refreshControl={<RefreshControl refreshing={refreshLoading} onRefresh={MoneyOutReload} />}
-      />
-    </View>
-  );
-
-  const TransferReceivedReload = async (page) => {
-    await dispatch(userHistoryTransferIn({ page }));
-  };
-  const ReceivedRoute = () => (
-    <View style={styles.scene}>
-      <FlatList
-        data={_.orderBy(getUserHistoryTransferIn, ['createdAt'], ['desc'])}
-        renderItem={TransferReceived}
-        keyExtractor={(item, index) => `${index}`}
-        onEndReached={handleLoadMore}
+        onEndReached={handleLoadTransactionIn}
         onEndReachedThreshold={0.05}
         initialNumToRender={6}
         maxToRenderPerBatch={2}
         refreshControl={
           <RefreshControl
             refreshing={refreshLoading}
-            onRefresh={() => TransferReceivedReload(page)}
+            onRefresh={() => MoneyInReload(pageMoneyIn)}
           />
         }
       />
     </View>
   );
 
-  const TransferOutReload = async () => {
-    await dispatch(userHistoryTransferOut(''));
+  const dataTransactionOut = useSelector((state) =>
+    get(state, 'trans.listHistoryTransactionOut', null),
+  );
+  const historyTransactionOut = useSelector((state) =>
+    get(state, 'trans.dataHistoryTransactionOut', null),
+  );
+  const [pageMoneyOut, setPageMoneyOut] = React.useState(1);
+  const handleLoadTransactionOut = async () => {
+    if (historyTransactionOut.current_page <= historyTransactionOut.page_count) {
+      await setPageMoneyOut(pageMoneyOut + 1);
+      let temPage = pageMoneyOut + 1;
+      await dispatch(getTransactionOut({ page: temPage }));
+    }
   };
+  const MoneyOutReload = async (page) => {
+    await dispatch(getTransactionOut({ page }));
+  };
+  const MoneyOut = ({ item }) => (
+    <View>
+      <Text style={styles.textDate}>{moment(item.createdAt).format('MMMM D, YYYY - h:mm a')}</Text>
+      <View style={styles.historyContainer}>
+        <View style={styles.textContainer}>
+          <Text style={styles.textHistoryTitle}>Enouvo Cafe minus:</Text>
+          <Text style={styles.textPayment}>
+            -
+            <NumberFormat
+              value={item.payment}
+              displayType={'text'}
+              thousandSeparator={true}
+              renderText={(value) => <Text>{value}</Text>}
+            />{' '}
+            vnd
+          </Text>
+        </View>
+        <View style={styles.textContainer}>
+          <Text style={styles.textTitleNotes}>Message:</Text>
+          <Text style={styles.textNotes}>{item.notes}</Text>
+        </View>
+      </View>
+    </View>
+  );
+  const MoneyOutRoute = () => (
+    <View style={styles.scene}>
+      <FlatList
+        // data={_.orderBy(dataTransactionOut, ['createdAt'], ['desc'])}
+        data={dataTransactionOut}
+        renderItem={MoneyOut}
+        keyExtractor={(item, index) => `${index}`}
+        onEndReached={handleLoadTransactionOut}
+        onEndReachedThreshold={0.05}
+        initialNumToRender={6}
+        maxToRenderPerBatch={2}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshLoading}
+            onRefresh={() => MoneyOutReload(pageMoneyOut)}
+          />
+        }
+      />
+    </View>
+  );
+
+  const dataTransferIn = useSelector((state) => get(state, 'trans.listHistoryTransferIn', null));
+  const historyTransferIn = useSelector((state) => get(state, 'trans.dataHistoryTransferIn', null));
+  const [pageTransferIn, setPageTransferIn] = React.useState(1);
+  const handleLoadTransferIn = async () => {
+    if (historyTransferIn.current_page <= historyTransferIn.page_count) {
+      await setPageTransferIn(pageTransferIn + 1);
+      let temPage = pageTransferIn + 1;
+      await dispatch(getTransferIn({ page: temPage }));
+    }
+  };
+  const TransferReceivedReload = async (page) => {
+    await dispatch(getTransferIn({ page }));
+  };
+  const TransferReceived = ({ item }) => (
+    <View>
+      <Text style={styles.textDate}>{moment(item.createdAt).format('MMMM D, YYYY - h:mm a')}</Text>
+      <View style={styles.historyContainer}>
+        <View style={styles.textContainer}>
+          <Text style={styles.textHistoryTitle}>
+            {item.userCreator[0].username} has transferred to you:
+          </Text>
+          <Text style={styles.textPayment}>
+            +
+            <NumberFormat
+              value={item.payment}
+              displayType={'text'}
+              thousandSeparator={true}
+              renderText={(value) => <Text>{value}</Text>}
+            />{' '}
+            vnd
+          </Text>
+        </View>
+        <View style={styles.textContainer}>
+          <Text style={styles.textTitleNotes}>Message:</Text>
+          <Text style={styles.textNotes}>{item.notes}</Text>
+        </View>
+      </View>
+    </View>
+  );
+  const ReceivedRoute = () => (
+    <View style={styles.scene}>
+      <FlatList
+        // data={_.orderBy(dataTransferIn, ['createdAt'], ['desc'])}
+        data={dataTransferIn}
+        renderItem={TransferReceived}
+        keyExtractor={(item, index) => `${index}`}
+        onEndReached={handleLoadTransferIn}
+        onEndReachedThreshold={0.05}
+        initialNumToRender={6}
+        maxToRenderPerBatch={2}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshLoading}
+            onRefresh={() => {
+              TransferReceivedReload(pageTransferIn);
+            }}
+          />
+        }
+      />
+    </View>
+  );
+
+  const dataTransferOut = useSelector((state) => get(state, 'trans.listHistoryTransferOut', null));
+  const historyTransferOut = useSelector((state) =>
+    get(state, 'trans.dataHistoryTransferOut', null),
+  );
+  const [pageTransferOut, setPageTransferOut] = React.useState(1);
+  const handleLoadTransferOut = async () => {
+    if (historyTransferOut.current_page <= historyTransferOut.page_count) {
+      await setPageTransferOut(pageTransferOut + 1);
+      let temPage = pageTransferOut + 1;
+      await dispatch(getTransferOut({ page: temPage }));
+    }
+  };
+  const TransferOutReload = async (page) => {
+    await dispatch(getTransferOut({ page }));
+  };
+  const TransferOut = ({ item }) => (
+    <View>
+      <Text style={styles.textDate}>{moment(item.createdAt).format('MMMM D, YYYY - h:mm a')}</Text>
+      <View style={styles.historyContainer}>
+        <View style={styles.textContainer}>
+          <Text style={styles.textHistoryTitle}>
+            You has transferred to {item.userReceiver[0].username}:
+          </Text>
+          <Text style={styles.textPayment}>
+            -
+            <NumberFormat
+              value={item.payment}
+              displayType={'text'}
+              thousandSeparator={true}
+              renderText={(value) => <Text>{value}</Text>}
+            />{' '}
+            vnd
+          </Text>
+        </View>
+        <View style={styles.textContainer}>
+          <Text style={styles.textTitleNotes}>Message:</Text>
+          <Text style={styles.textNotes}>{item.notes}</Text>
+        </View>
+      </View>
+    </View>
+  );
   const TransferOutRoute = () => (
     <View style={styles.scene}>
       <FlatList
-        data={_.orderBy(getUserHistoryTransferOut, ['createdAt'], ['desc'])}
+        // data={_.orderBy(dataTransferOut, ['createdAt'], ['desc'])}
+        data={dataTransferOut}
         renderItem={TransferOut}
         keyExtractor={(item, index) => `${index}`}
+        onEndReached={handleLoadTransferOut}
+        onEndReachedThreshold={0.05}
+        initialNumToRender={6}
+        maxToRenderPerBatch={2}
         refreshControl={
-          <RefreshControl refreshing={refreshLoading} onRefresh={TransferOutReload} />
+          <RefreshControl
+            refreshing={refreshLoading}
+            onRefresh={() => TransferOutReload(pageTransferOut)}
+          />
         }
       />
     </View>
@@ -141,73 +310,6 @@ const History = () => {
       style={styles.tabView}
       renderLabel={({ route, focused }) => <Text style={styles.tabTitle}>{route.title}</Text>}
     />
-  );
-
-  const MoneyIn = ({ item }) => (
-    <View>
-      <Text style={styles.textDate}>{moment(item.createdAt).format('MMMM D, YYYY - h:mm a')}</Text>
-      <View style={styles.historyContainer}>
-        <View style={styles.textContainer}>
-          <Text style={styles.textHistoryTitle}>Enouvo Cafe plus money:</Text>
-          <Text style={styles.textPayment}>+{item.payment} vnd</Text>
-        </View>
-        <View style={styles.textContainer}>
-          <Text style={styles.textTitleNotes}>Message:</Text>
-          <Text style={styles.textNotes}>{item.notes}</Text>
-        </View>
-      </View>
-    </View>
-  );
-
-  const MoneyOut = ({ item }) => (
-    <View>
-      <Text style={styles.textDate}>{moment(item.createdAt).format('MMMM D, YYYY - h:mm a')}</Text>
-      <View style={styles.historyContainer}>
-        <View style={styles.textContainer}>
-          <Text style={styles.textHistoryTitle}>Enouvo Cafe minus:</Text>
-          <Text style={styles.textPayment}>-{item.payment} vnd</Text>
-        </View>
-        <View style={styles.textContainer}>
-          <Text style={styles.textTitleNotes}>Message:</Text>
-          <Text style={styles.textNotes}>{item.notes}</Text>
-        </View>
-      </View>
-    </View>
-  );
-
-  const TransferReceived = ({ item }) => (
-    <View>
-      <Text style={styles.textDate}>{moment(item.createdAt).format('MMMM D, YYYY - h:mm a')}</Text>
-      <View style={styles.historyContainer}>
-        <View style={styles.textContainer}>
-          <Text style={styles.textHistoryTitle}>
-            {item.userCreator[0].username} has transferred to you:
-          </Text>
-          <Text style={styles.textPayment}>+{item.payment} vnd</Text>
-        </View>
-        <View style={styles.textContainer}>
-          <Text style={styles.textTitleNotes}>Message:</Text>
-          <Text style={styles.textNotes}>{item.notes}</Text>
-        </View>
-      </View>
-    </View>
-  );
-  const TransferOut = ({ item }) => (
-    <View>
-      <Text style={styles.textDate}>{moment(item.createdAt).format('MMMM D, YYYY - h:mm a')}</Text>
-      <View style={styles.historyContainer}>
-        <View style={styles.textContainer}>
-          <Text style={styles.textHistoryTitle}>
-            You has transferred to {item.userReceiver[0].username}:
-          </Text>
-          <Text style={styles.textPayment}>{item.payment} vnd</Text>
-        </View>
-        <View style={styles.textContainer}>
-          <Text style={styles.textTitleNotes}>Message:</Text>
-          <Text style={styles.textNotes}>{item.notes}</Text>
-        </View>
-      </View>
-    </View>
   );
 
   return (
@@ -306,7 +408,7 @@ const styles = StyleSheet.create({
 
   historyContainer: {
     backgroundColor: '#f2f2f2',
-    paddingVertical: 5,
+    paddingVertical: 10,
     paddingHorizontal: 10,
   },
   textContainer: {

@@ -23,12 +23,6 @@ const Home = () => {
   const account = useSelector((state) => get(state, 'auth.account', null));
   const user = useSelector((state) => get(state, 'auth.user', null));
 
-  // useEffect(() => {
-  //   if (account) {
-  //     setData(account);
-  //   }
-  // }, [account]);
-
   const navigate = () => {
     NavigationUtils.push({
       screen: 'transferMoney',
