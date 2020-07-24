@@ -10,11 +10,6 @@ const ScanQR = () => {
   const onSuccess = (e) => {
     Linking.openURL(e.data).catch((err) => Alert.alert('Invalid QR code', e.data));
   };
-  //   const data = {
-  //     onGoogleVisionBarcodesDetected: ({ barcodes }) => {
-  //       console.log(barcodes);
-  //     },
-  //   };
 
   return (
     <QRCodeScanner

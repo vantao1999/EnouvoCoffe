@@ -86,6 +86,7 @@ const authSlice = createSlice({
     [operations.logOut.fulfilled]: (state) => {
       state.user = null;
       state.token = null;
+      // state.avatar = null;
       // state = { ...state, state: null };
       // console.log('LogUSerWhenLogOut', state);
     },

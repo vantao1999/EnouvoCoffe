@@ -20,18 +20,19 @@ import { getMany } from '../../redux/UserRedux/operations';
 const Home = () => {
   const [userData, setData] = React.useState({
     userName: '',
+    userAvatar: '',
   });
   const [imgAvatar, setAvatar] = React.useState('');
 
   const dispatch = useDispatch();
   const account = useSelector((state) => get(state, 'auth.account', null));
   const user = useSelector((state) => get(state, 'auth.user', null));
-  const avatar = useSelector((state) => get(state, 'auth.avatar', null));
+  console.log('USEr,', user);
   useEffect(() => {
-    if (avatar) {
-      setAvatar(avatar);
+    if (user) {
+      setAvatar(user.avatar);
     }
-  }, [avatar]);
+  }, [user]);
 
   const navigate = async () => {
     await dispatch(getMany(''));

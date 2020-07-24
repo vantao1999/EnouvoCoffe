@@ -27,14 +27,14 @@ const Index = () => {
   const [imgAvatar, setAvatar] = React.useState('');
   const dispatch = useDispatch();
   const user = useSelector((state) => get(state, 'auth.user', null));
-  const avatar = useSelector((state) => get(state, 'auth.avatar', null));
-  console.log('User', avatar);
+  // const avatar = useSelector((state) => get(state, 'auth.avatar', null));
+  // console.log('User', avatar);
 
   useEffect(() => {
-    if (avatar) {
-      setAvatar(avatar);
+    if (user) {
+      setAvatar(user.avatar);
     }
-  }, [avatar]);
+  }, [user]);
   useEffect(() => {
     if (user) {
       setData((data) => ({ ...data, ...user }));

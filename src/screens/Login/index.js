@@ -117,7 +117,7 @@ const Login = () => {
               style={styles.textInput}
               type="email"
               ref={emailRef}
-              defaultValue={formik.values.email}
+              Value={formik.values.email}
               placeholder="Enter your email"
               onChangeText={formik.handleChange('email')}
               onSubmitEditing={() => onSubmitEditing(TEXT_INPUT_EMAIL)}
@@ -132,7 +132,7 @@ const Login = () => {
             <TextInput
               style={styles.textInput}
               ref={passRef}
-              defaultValue={formik.values.password}
+              Value={formik.values.password}
               placeholder="Enter your password"
               onChangeText={formik.handleChange('password')}
               onSubmitEditing={() => onSubmitEditing(TEXT_INPUT_PASSWORD)}
