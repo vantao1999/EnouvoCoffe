@@ -32,6 +32,8 @@ const http = {
   setAuthorizationHeader(accessToken) {
     // console.log('accessToken', accessToken);
     axios.defaults.headers.Authorization = `bearer ${accessToken}`;
+    // axios.defaults.headers.common['Accept'] = 'application/json';
+    // axios.defaults.headers.Accept['Content-Type'] = 'multipart/form-data';
   },
   request(config = {}) {
     return axios.request(config);
@@ -64,14 +66,12 @@ const http = {
   // },
   postUploadFile(url, data = {}) {
     let formData = new FormData();
-
-    formData.append('photos', {
-      uri: data,
-      type: 'image/jpg',
-      name: `${new Date().getTime()}.jpg`,
+    data.photos((file) => {
+      formData.append('file', {
+        uri: file,
+      });
     });
-    return axios.post(url, formData);
+    return this.put(url, formData);
   },
 };
-
 export default http;

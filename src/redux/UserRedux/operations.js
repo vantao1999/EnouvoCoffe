@@ -79,6 +79,22 @@ export const uploadImage = createAsyncThunk(
   },
 );
 
+export const saveImage = createAsyncThunk(
+  'client/users/me/avatar',
+  async (data, { rejectWithValue }) => {
+    try {
+      const response = await AuthApis.saveImageToDB(data);
+      return response?.data;
+    } catch (err) {
+      if (!err.data) {
+        throw err;
+      }
+
+      return rejectWithValue(err.data);
+    }
+  },
+);
+
 export const updateProfile = createAsyncThunk(
   '/client/users/me/',
   async (data, { rejectWithValue, getState }) => {
@@ -120,7 +136,7 @@ export const getMany = createAsyncThunk(
       const accessToken = getState().auth.token;
       await AuthApis.setToken(accessToken);
 
-      const response = await AuthApis.getMany(data);
+      const response = await AuthApis.getMany('');
       return response?.data;
     } catch (err) {
       if (!err) {

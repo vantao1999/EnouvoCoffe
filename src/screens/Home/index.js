@@ -11,19 +11,30 @@ import {
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import { NavigationUtils } from '../../navigation';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { get } from 'lodash';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import NumberFormat from 'react-number-format';
+import { getMany } from '../../redux/UserRedux/operations';
 
 const Home = () => {
   const [userData, setData] = React.useState({
     userName: '',
   });
+  const [imgAvatar, setAvatar] = React.useState('');
+
+  const dispatch = useDispatch();
   const account = useSelector((state) => get(state, 'auth.account', null));
   const user = useSelector((state) => get(state, 'auth.user', null));
+  const avatar = useSelector((state) => get(state, 'auth.avatar', null));
+  useEffect(() => {
+    if (avatar) {
+      setAvatar(avatar);
+    }
+  }, [avatar]);
 
-  const navigate = () => {
+  const navigate = async () => {
+    await dispatch(getMany(''));
     NavigationUtils.push({
       screen: 'transferMoney',
       isTopBarEnable: false,
@@ -50,7 +61,11 @@ const Home = () => {
           <Text style={styles.title}>Welcome!</Text>
           <Text style={styles.title}>{userData.userName[userData.userName.length - 1]}</Text>
         </View>
-        <Image source={require('../../assets/Images/user.jpeg')} style={styles.logo} />
+        {imgAvatar ? (
+          <Image source={{ uri: imgAvatar }} style={styles.logo} />
+        ) : (
+          <Image source={require('../../assets/Images/user.jpeg')} style={styles.logo} />
+        )}
       </Animatable.View>
 
       <Animatable.View style={styles.balance} animation="bounceInRight">

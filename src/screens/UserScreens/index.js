@@ -24,8 +24,17 @@ const Index = () => {
   const [userData, setData] = React.useState({
     isEdit: false,
   });
+  const [imgAvatar, setAvatar] = React.useState('');
   const dispatch = useDispatch();
   const user = useSelector((state) => get(state, 'auth.user', null));
+  const avatar = useSelector((state) => get(state, 'auth.avatar', null));
+  console.log('User', avatar);
+
+  useEffect(() => {
+    if (avatar) {
+      setAvatar(avatar);
+    }
+  }, [avatar]);
   useEffect(() => {
     if (user) {
       setData((data) => ({ ...data, ...user }));
@@ -80,9 +89,7 @@ const Index = () => {
             <TouchableOpacity onPress={() => setData({ ...userData, isEdit: !userData.isEdit })}>
               <Feather name="x" size={20} />
             </TouchableOpacity>
-          ) : (
-            <TouchableOpacity />
-          )}
+          ) : null}
         </View>
 
         <View style={styles.edit}>
@@ -102,14 +109,26 @@ const Index = () => {
         </View>
         {userData.isEdit ? (
           <TouchableOpacity onPress={navigate}>
-            <Image source={require('../../assets/Images/user.jpeg')} style={styles.imageUser} />
+            {imgAvatar ? (
+              <Image source={{ uri: imgAvatar }} style={styles.imageUser} />
+            ) : (
+              <Image source={require('../../assets/Images/user.jpeg')} style={styles.imageUser} />
+            )}
           </TouchableOpacity>
         ) : (
-          <Image source={require('../../assets/Images/user.jpeg')} style={styles.imageUser} />
+          <View onPress={navigate}>
+            {imgAvatar ? (
+              <Image source={{ uri: imgAvatar }} style={styles.imageUser} />
+            ) : (
+              <Image source={require('../../assets/Images/user.jpeg')} style={styles.imageUser} />
+            )}
+          </View>
         )}
-        <TouchableOpacity style={styles.btnLogout} onPress={LogOut}>
-          <Text style={styles.textLogout}>LogOut</Text>
-        </TouchableOpacity>
+        {!userData.isEdit ? (
+          <TouchableOpacity style={styles.btnLogout} onPress={LogOut}>
+            <Text style={styles.textLogout}>LogOut</Text>
+          </TouchableOpacity>
+        ) : null}
       </View>
       <View style={styles.footer}>
         <KeyboardAwareScrollView showsVerticalScrollIndicator={false}>

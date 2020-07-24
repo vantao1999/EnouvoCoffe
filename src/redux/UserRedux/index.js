@@ -13,6 +13,8 @@ const authSlice = createSlice({
     listUser: [],
     account: null,
     data: null,
+    avatar: null,
+    uploading: false,
   },
   reducers: {
     login: (state, action) => {},
@@ -49,7 +51,7 @@ const authSlice = createSlice({
     [operations.register.rejected]: (state) => {
       state.loading = false;
     },
-
+    //Update user profile
     [operations.updateProfile.pending]: (state) => {
       state.loading = true;
     },
@@ -57,12 +59,13 @@ const authSlice = createSlice({
       state.loading = false;
       state.user = payload[0];
     },
+    //get All users in DB
     [operations.getMany.pending]: (state) => {
       state.getManyLoading = true;
     },
     [operations.getMany.fulfilled]: (state, { payload }) => {
       state.getManyLoading = false;
-      state.listUser = payload;
+      state.listUser = payload.data;
     },
     [operations.getMany.rejected]: (state) => {
       state.getManyLoading = false;
@@ -70,6 +73,15 @@ const authSlice = createSlice({
     [operations.getAccount.fulfilled]: (state, { payload }) => {
       state.loading = false;
       state.account = payload;
+    },
+    //Update user Image
+    [operations.saveImage.pending]: (state) => {
+      state.uploading = true;
+    },
+    [operations.saveImage.fulfilled]: (state, { payload }) => {
+      state.uploading = false;
+      state.avatar = payload.data.avatar;
+      console.log('a va a tar', state.avatar);
     },
     [operations.logOut.fulfilled]: (state) => {
       state.user = null;

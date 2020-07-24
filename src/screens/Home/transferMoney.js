@@ -62,9 +62,7 @@ const TransferMoney = () => {
       </View>
     </TouchableOpacity>
   );
-  console.log(userData);
-  const data =
-    userData && userData.data ? userData.data.filter((item) => item.id !== currentUserId) : [];
+  const data = userData && userData ? userData.filter((item) => item.id !== currentUserId) : [];
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.viewSearch}>

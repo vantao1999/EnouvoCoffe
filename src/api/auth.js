@@ -20,6 +20,10 @@ export async function uploadImageProfile(data) {
   return http.postUploadFile('/user/upload', data);
 }
 
+export async function saveImageToDB(data) {
+  return http.put('/client/users/me/avatar', data);
+}
+
 export async function accountBalance() {
   return http.get('/client/users/me/accountbalance');
 }
