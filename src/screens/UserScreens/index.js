@@ -4,11 +4,14 @@ import {
   Text,
   StyleSheet,
   Image,
+  ScrollView,
   TouchableOpacity,
   TextInput,
   Keyboard,
   Alert,
   Platform,
+  RefreshControl,
+  Dimensions,
 } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { NavigationUtils } from '../../navigation';
@@ -16,7 +19,7 @@ import Feather from 'react-native-vector-icons/Feather';
 import { useDispatch, useSelector } from 'react-redux';
 import { useFormik } from 'formik';
 import { get } from 'lodash';
-import { updateProfile, logOut } from '../../redux/UserRedux/operations';
+import { updateProfile, logOut, getMany, getAccount } from '../../redux/UserRedux/operations';
 import { unwrapResult } from '@reduxjs/toolkit';
 import * as Yup from 'yup';
 
@@ -27,17 +30,22 @@ const Index = () => {
   const [imgAvatar, setAvatar] = React.useState('');
   const dispatch = useDispatch();
   const user = useSelector((state) => get(state, 'auth.user', null));
-  // const avatar = useSelector((state) => get(state, 'auth.avatar', null));
-  // console.log('User', avatar);
+  const [refreshing, setRefreshing] = React.useState(false);
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await dispatch(getMany(''));
+    await dispatch(getAccount(''));
+    setRefreshing(false);
+  };
 
-  useEffect(() => {
-    if (user) {
-      setAvatar(user.avatar);
-    }
-  }, [user]);
+  // useEffect(() => {
+  //   if (user) {
+  //   }
+  // }, [user]);
   useEffect(() => {
     if (user) {
       setData((data) => ({ ...data, ...user }));
+      setAvatar(user.avatar);
     }
   }, [user]);
 
@@ -180,6 +188,10 @@ const Index = () => {
           </View>
         </KeyboardAwareScrollView>
       </View>
+      <ScrollView
+        style={styles.srlViewHeader}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+      />
     </View>
   );
 };
@@ -196,6 +208,13 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 50,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  srlViewHeader: {
+    position: 'absolute',
+    top: 0,
+    left: 70,
+    right: 70,
+    height: Dimensions.get('window').height / 12,
   },
   imageUser: {
     width: 150,

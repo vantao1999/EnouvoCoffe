@@ -13,11 +13,13 @@ import {
 import { NavigationUtils } from '../../navigation';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useFormik } from 'formik';
+import * as Yup from 'yup';
 import { useDispatch, useSelector } from 'react-redux';
 import { getMany } from '../../redux/UserRedux/operations';
 import { plusMoney, getHistoryIn } from '../../redux/TransactionRedux/operations';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { get } from 'lodash';
+import NumberFormat from 'react-number-format';
 
 const AddMoney = (props) => {
   const dispatch = useDispatch();
@@ -27,9 +29,20 @@ const AddMoney = (props) => {
       userId: props.item.id,
       payment: '',
       notes: '',
+      type: 'plus',
     },
+    validationSchema: Yup.object({
+      payment: Yup.string().min(4, 'At least 1000 vnd').required('Can not be null'),
+      notes: Yup.string().max(44, 'Too long'),
+    }),
     onSubmit: (values) => {
-      plusUserMoney(values);
+      let data = {
+        userId: values.userId,
+        payment: parseInt(values.payment.replace(',', ''), 10),
+        notes: values.notes,
+        type: values.type,
+      };
+      plusUserMoney(data);
     },
   });
 
@@ -57,25 +70,35 @@ const AddMoney = (props) => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Image source={require('../../assets/Images/user.jpeg')} style={styles.imageUser} />
-        <View />
+        {props.item.avatar ? (
+          <Image source={{ uri: props.item.avatar }} style={styles.imageUser} />
+        ) : (
+          <Image source={require('../../assets/Images/user.jpeg')} style={styles.imageUser} />
+        )}
         <Text style={styles.textName}>{props.item.username}</Text>
       </View>
       <KeyboardAwareScrollView>
         <View style={styles.footer}>
           <View style={styles.action}>
-            <TextInput
-              style={styles.textContent}
+            <NumberFormat
               value={formik.values.payment}
-              placeholder="Enter money"
-              onChangeText={formik.handleChange('payment')}
-              keyboardType="numeric"
-              maxLength={8}
-              autoFocus={true}
-              returnKeyType="next"
+              displayType={'text'}
+              thousandSeparator={true}
+              renderText={(value) => (
+                <TextInput
+                  style={styles.textContent}
+                  onChangeText={formik.handleChange('payment')}
+                  onBlur={formik.handleBlur('payment')}
+                  value={value}
+                  maxLength={11}
+                  placeholder="Enter money"
+                  keyboardType="number-pad"
+                />
+              )}
             />
             <Text style={styles.currency}>VND</Text>
           </View>
+          <Text style={styles.mesValidate}>{formik.touched.payment && formik.errors.payment}</Text>
 
           <View style={styles.action}>
             <TextInput
@@ -83,11 +106,13 @@ const AddMoney = (props) => {
               Value={formik.values.notes}
               placeholder="Description..."
               onChangeText={formik.handleChange('notes')}
-              maxLength={160}
+              maxLength={45}
               autoCorrect={false}
               returnKeyType="go"
             />
+            <Text style={styles.currency}>(45)</Text>
           </View>
+          <Text style={styles.mesValidate}>{formik.touched.notes && formik.errors.notes}</Text>
           <View style={styles.action}>
             <TouchableOpacity
               onPress={() => {
@@ -96,7 +121,7 @@ const AddMoney = (props) => {
               }}
               style={styles.btnPlus}
             >
-              <Text style={styles.textTransfer}>+ Plus</Text>
+              <Text style={styles.textTransfer}>Plus (+)</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -116,7 +141,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header: {
-    flex: 1,
     backgroundColor: '#ffcc00',
     borderBottomLeftRadius: 50,
     borderBottomRightRadius: 50,
@@ -133,7 +157,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   footer: {
-    flex: 2,
+    flex: 1,
     paddingHorizontal: 20,
   },
   action: {
@@ -154,7 +178,7 @@ const styles = StyleSheet.create({
   },
   btnPlus: {
     flex: 1,
-    backgroundColor: '#4ba0f4',
+    backgroundColor: '#00d600',
     paddingVertical: 5,
     paddingHorizontal: 20,
     marginHorizontal: 10,
@@ -177,5 +201,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0,0,0,0.2)',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  mesValidate: {
+    color: 'red',
   },
 });

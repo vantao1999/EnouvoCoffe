@@ -7,6 +7,7 @@ import {
   Alert,
   StyleSheet,
   Image,
+  Platform,
   TextInput,
   TouchableOpacity,
   ActivityIndicator,
@@ -20,6 +21,7 @@ import { disable } from '../../redux/UserRedux/operations';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateOne, getMany } from '../../redux/UserRedux/operations';
 import { unwrapResult } from '@reduxjs/toolkit';
+import NumberFormat from 'react-number-format';
 
 const UserProfile = (props) => {
   const getManyLoading = useSelector((state) => get(state, 'auth.getManyLoading', null));
@@ -111,8 +113,20 @@ const UserProfile = (props) => {
             </TouchableOpacity>
           )}
         </View>
-        <Image source={require('../../assets/Images/user.jpeg')} style={styles.imageUser} />
-        <Text style={styles.textBalance}>{props.item.accountBalance} VND</Text>
+        {props.item.avatar ? (
+          <Image source={{ uri: props.item.avatar }} style={styles.imageUser} />
+        ) : (
+          <Image source={require('../../assets/Images/user.jpeg')} style={styles.imageUser} />
+        )}
+        <Text style={styles.textBalance}>
+          <NumberFormat
+            value={props.item.accountBalance}
+            displayType={'text'}
+            thousandSeparator={true}
+            renderText={(value) => <Text>{value}</Text>}
+          />{' '}
+          VND
+        </Text>
       </View>
       <KeyboardAwareScrollView>
         <View style={styles.footer}>
@@ -123,7 +137,6 @@ const UserProfile = (props) => {
               defaultValue={props.item.username}
               editable={userInfo.isEdit}
               placeholder="Enter name"
-              autoFocus={true}
               onChangeText={formik.handleChange('username')}
               returnKeyType="next"
             />
@@ -165,7 +178,7 @@ const UserProfile = (props) => {
               }}
               style={styles.btnPlus}
             >
-              <Text style={styles.textTransfer}>+ Plus Money</Text>
+              <Text style={styles.textTransfer}>Add Account (+)</Text>
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
@@ -173,7 +186,7 @@ const UserProfile = (props) => {
               }}
               style={[styles.btnPlus, { backgroundColor: '#ff8282' }]}
             >
-              <Text style={styles.textTransfer}>- Minus Money</Text>
+              <Text style={styles.textTransfer}> Minus Account (-)</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -193,10 +206,11 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header: {
-    flex: 1,
+    flex: Platform.OS === 'android' ? 3 : 1,
     backgroundColor: '#ffcc00',
     borderBottomLeftRadius: 50,
     borderBottomRightRadius: 50,
+    paddingVertical: 20,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -206,12 +220,12 @@ const styles = StyleSheet.create({
     borderRadius: 100,
   },
   footer: {
-    flex: 3,
+    flex: Platform.OS === 'android' ? 3 : 3,
   },
   action: {
     backgroundColor: '#fff',
     marginHorizontal: 10,
-    paddingVertical: 10,
+    paddingVertical: Platform.OS === 'ios' ? 10 : 5,
     borderBottomColor: '#f2f2f2',
     borderBottomWidth: 1.5,
   },
@@ -221,7 +235,8 @@ const styles = StyleSheet.create({
   },
   textContent: {
     fontSize: 20,
-    marginTop: 5,
+    fontWeight: Platform.OS === 'android' ? 'bold' : '600',
+    color: Platform.OS === 'android' ? '#000' : null,
     fontFamily: 'Roboto',
   },
   edit: {
@@ -249,20 +264,22 @@ const styles = StyleSheet.create({
   },
   textEditContent: {
     fontSize: 22,
-    marginTop: 5,
+    fontWeight: '600',
     fontFamily: 'Roboto',
   },
   btnAction: {
-    marginTop: 30,
+    // flex: Platform.OS === 'android' ? 1 : 1,
+    backgroundColor: '#8dc4fc',
+    marginHorizontal: 10,
+    paddingVertical: 10,
     flexDirection: 'row',
-    alignItems: 'center',
     justifyContent: 'center',
   },
   btnPlus: {
     flex: 1,
-    backgroundColor: '#4ba0f4',
-    alignItems: 'center',
-    paddingVertical: 5,
+    backgroundColor: '#00d600',
+    paddingHorizontal: 5,
+    textAlign: 'center',
     marginHorizontal: 20,
     borderRadius: 20,
   },
@@ -270,6 +287,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Roboto-regular',
     fontSize: 18,
     color: 'white',
+    textAlign: 'center',
   },
   loading: {
     position: 'absolute',

@@ -15,6 +15,7 @@ import { NavigationUtils } from '../../navigation';
 import { useSelector, useDispatch } from 'react-redux';
 import { get, includes, toLower } from 'lodash';
 import { getMany } from '../../redux/UserRedux/operations';
+import NumberFormat from 'react-number-format';
 
 const Index = () => {
   const dispatch = useDispatch();
@@ -22,7 +23,6 @@ const Index = () => {
   const [searchTxt, setSearchTxt] = React.useState('');
   const [userData, setUserData] = useState([]);
   const userInfo = useSelector((state) => get(state, 'auth.listUser', null));
-  // console.log('LISTUSEr', userInfo);
 
   const onRefresh = async () => {
     await dispatch(getMany(''));
@@ -66,10 +66,22 @@ const Index = () => {
       }}
     >
       <View style={styles.viewUser}>
-        <Image source={require('../../assets/Images/user.jpeg')} style={styles.imageUser} />
+        {item.avatar ? (
+          <Image source={{ uri: item.avatar }} style={styles.imageUser} />
+        ) : (
+          <Image source={require('../../assets/Images/user.jpeg')} style={styles.imageUser} />
+        )}
         <View style={styles.viewIn}>
           <Text style={styles.userTitle}>{item.username}</Text>
-          <Text style={styles.userBalance}>{item.accountBalance}</Text>
+          <Text style={styles.userBalance}>
+            <NumberFormat
+              value={item.accountBalance}
+              displayType={'text'}
+              thousandSeparator={true}
+              renderText={(value) => <Text>{value}</Text>}
+            />{' '}
+            VND
+          </Text>
         </View>
         <View style={styles.btnViewUser}>
           <Text>Details</Text>
@@ -87,9 +99,6 @@ const Index = () => {
           resizeMode={'stretch'}
         />
         <Text style={styles.textIncome}> INCOME IN THIS WEEK: </Text>
-        <View style={styles.viewBalance}>
-          <Text style={styles.textBalance}>+ 2.560.000 VND</Text>
-        </View>
       </View>
       <View style={styles.footer}>
         <View style={styles.viewSearch}>
@@ -115,7 +124,7 @@ const Index = () => {
           showsVerticalScrollIndicator={false}
           data={userData.filter((item) => item.roleId !== 1)}
           renderItem={Item}
-          keyExtractor={(item) => item.username}
+          keyExtractor={(item, index) => `${index}`}
           refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
         />
       </View>
@@ -144,16 +153,6 @@ const styles = StyleSheet.create({
   },
   footer: {
     flex: 3,
-  },
-  viewBalance: {
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    borderRadius: 10,
-  },
-  textBalance: {
-    fontFamily: 'Roboto-bold',
-    fontSize: 40,
-    color: '#eabb00',
   },
   imageHeader: {
     position: 'absolute',

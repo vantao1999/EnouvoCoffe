@@ -13,11 +13,13 @@ import {
 import { NavigationUtils } from '../../navigation';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useFormik } from 'formik';
+import * as Yup from 'yup';
 import { useDispatch, useSelector } from 'react-redux';
 import { getMany } from '../../redux/UserRedux/operations';
 import { minusMoney, getHistoryOut } from '../../redux/TransactionRedux/operations';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { get } from 'lodash';
+import NumberFormat from 'react-number-format';
 
 const MinusMoney = (props) => {
   const dispatch = useDispatch();
@@ -29,9 +31,20 @@ const MinusMoney = (props) => {
       userId: props.item.id,
       payment: '',
       notes: '',
+      type: 'minus',
     },
+    validationSchema: Yup.object({
+      payment: Yup.string().min(4, 'At least 1000 vnd').required('Can not be null'),
+      notes: Yup.string().max(44, 'Too long'),
+    }),
     onSubmit: (values) => {
-      minusUserMoney(values);
+      let data = {
+        userId: values.userId,
+        payment: parseInt(values.payment.replace(',', ''), 10),
+        notes: values.notes,
+        type: values.type,
+      };
+      minusUserMoney(data);
     },
   });
 
@@ -59,25 +72,35 @@ const MinusMoney = (props) => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Image source={require('../../assets/Images/user.jpeg')} style={styles.imageUser} />
-        <View />
+        {props.item.avatar ? (
+          <Image source={{ uri: props.item.avatar }} style={styles.imageUser} />
+        ) : (
+          <Image source={require('../../assets/Images/user.jpeg')} style={styles.imageUser} />
+        )}
         <Text style={styles.textName}>{props.item.username}</Text>
       </View>
       <KeyboardAwareScrollView>
         <View style={styles.footer}>
           <View style={styles.action}>
-            <TextInput
-              style={styles.textContent}
+            <NumberFormat
               value={formik.values.payment}
-              placeholder="Enter money"
-              onChangeText={formik.handleChange('payment')}
-              keyboardType="decimal-pad"
-              maxLength={8}
-              autoFocus={true}
-              returnKeyType="next"
+              displayType={'text'}
+              thousandSeparator={true}
+              renderText={(value) => (
+                <TextInput
+                  style={styles.textContent}
+                  onChangeText={formik.handleChange('payment')}
+                  onBlur={formik.handleBlur('payment')}
+                  value={value}
+                  maxLength={11}
+                  placeholder="Enter money"
+                  keyboardType="number-pad"
+                />
+              )}
             />
             <Text style={styles.currency}>VND</Text>
           </View>
+          <Text style={styles.mesValidate}>{formik.touched.payment && formik.errors.payment}</Text>
 
           <View style={styles.action}>
             <TextInput
@@ -85,19 +108,22 @@ const MinusMoney = (props) => {
               Value={formik.values.notes}
               placeholder="Description..."
               onChangeText={formik.handleChange('notes')}
-              maxLength={160}
+              maxLength={45}
               autoCorrect={false}
               returnKeyType="go"
             />
+            <Text style={styles.currency}>(45)</Text>
           </View>
+          <Text style={styles.mesValidate}>{formik.touched.notes && formik.errors.notes}</Text>
           <View style={styles.action}>
             <TouchableOpacity
               onPress={() => {
+                // console.log(formik.values);
                 formik.handleSubmit();
               }}
               style={styles.btnPlus}
             >
-              <Text style={styles.textTransfer}>- Minus</Text>
+              <Text style={styles.textTransfer}>Minus (-)</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -178,5 +204,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0,0,0,0.2)',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  mesValidate: {
+    color: 'red',
   },
 });

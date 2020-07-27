@@ -32,7 +32,7 @@ const AdminHistory = () => {
       <FlatList
         data={_.orderBy(historyIn, ['createdAt'], ['desc'])}
         renderItem={Plus}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item, index) => `${index}`}
         refreshControl={<RefreshControl refreshing={refreshLoading} onRefresh={addRefresh} />}
       />
     </View>
@@ -47,7 +47,7 @@ const AdminHistory = () => {
         data={_.orderBy(historyOut, ['createdAt'], ['desc'])}
         renderItem={Minus}
         refreshing={true}
-        keyExtractor={(item) => item.username}
+        keyExtractor={(item, index) => `${index}`}
         refreshControl={<RefreshControl refreshing={refreshLoading} onRefresh={minusRefresh} />}
       />
     </View>

@@ -4,10 +4,12 @@ import {
   View,
   StyleSheet,
   ScrollView,
+  RefreshControl,
   Image,
   SafeAreaView,
   TouchableOpacity,
   Platform,
+  Dimensions,
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import { NavigationUtils } from '../../navigation';
@@ -15,19 +17,24 @@ import { useSelector, useDispatch } from 'react-redux';
 import { get } from 'lodash';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import NumberFormat from 'react-number-format';
-import { getMany } from '../../redux/UserRedux/operations';
+import { getMany, getAccount } from '../../redux/UserRedux/operations';
 
 const Home = () => {
   const [userData, setData] = React.useState({
     userName: '',
-    userAvatar: '',
   });
   const [imgAvatar, setAvatar] = React.useState('');
+  const [refreshing, setRefreshing] = React.useState(false);
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await dispatch(getMany(''));
+    await dispatch(getAccount(''));
+    setRefreshing(false);
+  };
 
   const dispatch = useDispatch();
   const account = useSelector((state) => get(state, 'auth.account', null));
   const user = useSelector((state) => get(state, 'auth.user', null));
-  console.log('USEr,', user);
   useEffect(() => {
     if (user) {
       setAvatar(user.avatar);
@@ -63,26 +70,30 @@ const Home = () => {
           <Text style={styles.title}>{userData.userName[userData.userName.length - 1]}</Text>
         </View>
         {imgAvatar ? (
-          <Image source={{ uri: imgAvatar }} style={styles.logo} />
+          <Image source={{ uri: imgAvatar }} style={styles.logo} resizeMode="cover" />
         ) : (
-          <Image source={require('../../assets/Images/user.jpeg')} style={styles.logo} />
+          <Image
+            source={require('../../assets/Images/user.jpeg')}
+            style={styles.logo}
+            resizeMode="cover"
+          />
         )}
       </Animatable.View>
+      {user && user.scope === 'user' ? (
+        <Animatable.View style={styles.balance} animation="bounceInRight">
+          <Text style={styles.textAccount}>Account Balance:</Text>
 
-      <Animatable.View style={styles.balance} animation="bounceInRight">
-        <Text style={styles.textAccount}>Account Balance:</Text>
-
-        <Text style={styles.textBalance}>
-          <NumberFormat
-            value={account.accountBalance}
-            displayType={'text'}
-            thousandSeparator={true}
-            renderText={(value) => <Text>{value}</Text>}
-          />
-          VND
-        </Text>
-      </Animatable.View>
-
+          <Text style={styles.textBalance}>
+            <NumberFormat
+              value={account.accountBalance}
+              displayType={'text'}
+              thousandSeparator={true}
+              renderText={(value) => <Text>{value}</Text>}
+            />
+            VND
+          </Text>
+        </Animatable.View>
+      ) : null}
       <Animatable.View style={styles.footer} animation="fadeInUp" duration={700}>
         <Text style={styles.texFeature}>Features</Text>
         <ScrollView showsVerticalScrollIndicator={false}>
@@ -104,6 +115,10 @@ const Home = () => {
           </View>
         </ScrollView>
       </Animatable.View>
+      <ScrollView
+        style={styles.srlViewHeader}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+      />
     </SafeAreaView>
   );
 };
@@ -114,13 +129,19 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#ffcc00',
   },
+  srlViewHeader: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    height: Dimensions.get('window').height / 3,
+  },
   header: {
     opacity: 0.7,
     flex: 1,
     backgroundColor: '#f4f4f4',
     marginHorizontal: 20,
     paddingHorizontal: 20,
-    paddingVertical: 10,
     flexDirection: 'row',
     alignItems: 'center',
     borderRadius: 20,
@@ -134,8 +155,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   logo: {
-    width: 100,
-    height: 100,
+    width: 70,
+    height: 70,
     borderRadius: 50,
   },
   balance: {
@@ -169,7 +190,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   action: {
-    flex: 1,
+    flex: 3,
     backgroundColor: '#ffffff',
     paddingVertical: 5,
     paddingHorizontal: 10,

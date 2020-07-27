@@ -65,8 +65,8 @@ const Login = () => {
   };
   const formik = useFormik({
     initialValues: {
-      email: 'quyen.trandev@gmail.com',
-      password: '123456',
+      email: 'admin@gmail.com',
+      password: 'admin123',
     },
     validationSchema: Yup.object({
       email: Yup.string().email('Invalid email type').required('Email is required'),
@@ -117,7 +117,7 @@ const Login = () => {
               style={styles.textInput}
               type="email"
               ref={emailRef}
-              Value={formik.values.email}
+              defaultValue={formik.values.email}
               placeholder="Enter your email"
               onChangeText={formik.handleChange('email')}
               onSubmitEditing={() => onSubmitEditing(TEXT_INPUT_EMAIL)}
@@ -132,7 +132,7 @@ const Login = () => {
             <TextInput
               style={styles.textInput}
               ref={passRef}
-              Value={formik.values.password}
+              defaultValue={formik.values.password}
               placeholder="Enter your password"
               onChangeText={formik.handleChange('password')}
               onSubmitEditing={() => onSubmitEditing(TEXT_INPUT_PASSWORD)}
